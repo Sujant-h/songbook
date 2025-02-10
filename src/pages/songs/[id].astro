@@ -51,7 +51,7 @@ function formatSongText(text) {
         <div class="mt-8">
           <a 
             href="/" 
-            onclick="event.preventDefault(); (document.referrer ? window.history.back() : window.location.href = '/');"
+            onclick="event.preventDefault(); (document.referrer ? window.history.back() : window.location.href = '${import.meta.env.BASE_URL}');"
             class="inline-block text-blue-600 hover:text-blue-800 transition-colors"
           >
             &larr; Back to Songs
