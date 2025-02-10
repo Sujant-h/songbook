@@ -9,7 +9,9 @@ import '../styles/global.css';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Songs Collection</title>
+    <title>Tamil Christian Songs</title>
+  <!-- Other head elements -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;700&display=swap" rel="stylesheet">
     <style>
       .highlight {
         background-color: #fef08a;
@@ -63,7 +65,7 @@ import '../styles/global.css';
       </div>
 
       <!-- Songs List -->
-      <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" id="songsList">
+      <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 tamil-text" id="songsList">
         {songs.map((song, index) => (
           <li 
             key={song.id}
