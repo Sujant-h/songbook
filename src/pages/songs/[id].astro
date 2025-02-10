@@ -1,0 +1,85 @@
+---
+import '../../styles/global.css';
+import songs from '../../data/data_cleaned.json';
+
+// Generate dynamic paths for each song
+export async function getStaticPaths() {
+  return songs.map(song => ({ params: { id: song.id } }));
+}
+
+// Get song by ID
+const { id } = Astro.params;
+const song = songs.find(song => song.id === id);
+if (!song) {
+  throw new Error('Song not found');
+}
+
+// Format song text into paragraphs
+function formatSongText(text) {
+  return text
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
+    .trim()
+    .split(/\n\s*\n/)
+    .map(paragraph => `<p>${paragraph.replace(/\n/g, '<br>')}</p>`)
+    .join('');
+}
+---
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{song.title}</title>
+    <style>
+      .highlight {
+        background-color: #fef08a;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+      <div class="max-w-3xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-lg">
+        <!-- Song Title -->
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-6 text-center sm:text-left">
+          {song.title}
+        </h1>
+        <!-- Song Text -->
+        <div class="prose prose-lg text-gray-700">
+          <div class="song-text" set:html={formatSongText(song.text)}></div>
+        </div>
+        <!-- Back Link -->
+        <div class="mt-8">
+          <a 
+            href="/" 
+            onclick="event.preventDefault(); (document.referrer ? window.history.back() : window.location.href = '/');"
+            class="inline-block text-blue-600 hover:text-blue-800 transition-colors"
+          >
+            &larr; Back to Songs
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Client-Side Script to Highlight Search Query -->
+    <script>
+      // Utility to escape regex special characters
+      const escapeRegExp = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const highlightElement = (el, query) => {
+        const words = query.split(/\s+/).filter(Boolean);
+        if (!words.length) return;
+        const regex = new RegExp('(' + words.map(escapeRegExp).join('|') + ')', 'giu');
+        el.innerHTML = el.innerHTML.replace(regex, '<span class="highlight">$1</span>');
+      };
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const searchQuery = sessionStorage.getItem('searchQuery');
+        if (searchQuery && searchQuery.trim() !== '') {
+          const titleEl = document.querySelector('h1');
+          const songTextEl = document.querySelector('.song-text');
+          if (titleEl) highlightElement(titleEl, searchQuery);
+          if (songTextEl) highlightElement(songTextEl, searchQuery);
+        }
+      });
+    </script>
+  </body>
+</html>

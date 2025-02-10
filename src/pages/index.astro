@@ -1,11 +1,230 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import songs from '../data/data_cleaned.json';
+import '../styles/global.css';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+
+
 ---
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Songs Collection</title>
+    <style>
+      .highlight {
+        background-color: #fef08a;
+      }
+      /* Search Bar enhancements */
+      .search-bar {
+        position: relative;
+      }
+      .search-bar input {
+        padding-left: 2.5rem; /* space for the icon */
+      }
+      .search-icon {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <div class="w-full px-4 py-8 sm:container sm:mx-auto">
+      <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-8">
+        Songs Collection
+      </h1>
 
-<Layout>
-	<Welcome />
-</Layout>
+      <!-- Improved Search Bar -->
+      <div class="search-bar relative mb-8">
+        <span class="search-icon">
+          <!-- Inline SVG for search icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+               viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </span>
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Search songs..."
+          class="w-full pl-10 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <button
+          id="clearButton"
+          type="button"
+          class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hidden focus:outline-none"
+          aria-label="Clear search"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Songs List -->
+      <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" id="songsList">
+        {songs.map((song, index) => (
+          <li 
+            key={song.id}
+            data-index={index}
+            data-title={song.title}
+            data-text={song.text}
+            class="song-item w-full bg-white p-4 sm:p-6 rounded-lg shadow hover:shadow-lg transition-shadow"
+          >
+            <a href={`/songs/${song.id}`} class="block">
+              <div class="title-hit text-xl font-semibold text-gray-800 hover:text-blue-800 transition-colors">
+                {song.title}
+              </div>
+              <div class="text-hit text-sm text-gray-600"></div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- Optimized Client-Side Script -->
+    <script>
+      // Utility functions
+      const escapeRegExp = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const cleanText = text => text.replace(/(\\n|\r\n|\n|\r)/g, ' ').replace(/\s+/g, ' ').trim();
+      const highlight = (text, query) => {
+        if (!query) return text;
+        text = cleanText(text);
+        const words = query.split(/\s+/).filter(Boolean);
+        const regex = new RegExp('(' + words.map(escapeRegExp).join('|') + ')', 'giu');
+        return text.replace(regex, '<span class="highlight">$1</span>');
+      };
+      const getSnippet = (text, query, snippetLength = 50) => {
+        if (!query) return '';
+        const cleaned = cleanText(text);
+        const lowerText = cleaned.toLowerCase();
+        const queryWords = query.split(/\s+/).filter(Boolean);
+        let firstIndex = Infinity;
+        queryWords.forEach(word => {
+          const i = lowerText.indexOf(word.toLowerCase());
+          if (i !== -1 && i < firstIndex) firstIndex = i;
+        });
+        if (firstIndex === Infinity) return '';
+        let start = Math.max(0, firstIndex - snippetLength);
+        let end = Math.min(cleaned.length, firstIndex + snippetLength + queryWords[0].length);
+        if (start > 0) {
+          const prevSpace = cleaned.lastIndexOf(' ', start);
+          if (prevSpace !== -1) start = prevSpace + 1;
+        }
+        if (end < cleaned.length) {
+          const nextSpace = cleaned.indexOf(' ', end);
+          if (nextSpace !== -1) end = nextSpace;
+        }
+        let snippet = cleaned.substring(start, end);
+        if (start > 0) snippet = '...' + snippet;
+        if (end < cleaned.length) snippet = snippet + '...';
+        return highlight(snippet, query);
+      };
+
+      // Debounce helper to optimize search filtering
+      const debounce = (fn, delay) => {
+        let timeout;
+        return (...args) => {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => fn(...args), delay);
+        };
+      };
+
+      // DOM elements
+      const searchInput = document.getElementById('searchInput');
+      const clearButton = document.getElementById('clearButton');
+      const songsList = document.getElementById('songsList');
+      const songItems = Array.from(document.querySelectorAll('.song-item'));
+
+      // Restore original order and clear highlights/snippets
+      const resetOriginalOrder = () => {
+        songItems.sort((a, b) =>
+          Number(a.getAttribute('data-index')) - Number(b.getAttribute('data-index'))
+        );
+        songsList.innerHTML = '';
+        songItems.forEach(item => {
+          const originalTitle = cleanText(item.getAttribute('data-title'));
+          item.querySelector('.title-hit').innerHTML = originalTitle;
+          item.querySelector('.text-hit').innerHTML = '';
+          item.style.display = '';
+          songsList.appendChild(item);
+        });
+      };
+
+      // Filter songs based on query
+      const filterSongs = query => {
+        query = query.trim();
+        if (query === '') {
+          resetOriginalOrder();
+          return;
+        }
+        const queryWords = query.split(/\s+/).filter(Boolean);
+        const isQueryNumeric = /^\d+$/.test(query);
+        let titleMatches = [];
+        let textMatches = [];
+        songItems.forEach(li => {
+          const originalTitle = li.getAttribute('data-title');
+          const originalText = li.getAttribute('data-text');
+          const cleanedTitle = cleanText(originalTitle);
+          const cleanedText = cleanText(originalText);
+          const lowerTitle = cleanedTitle.toLowerCase();
+          const lowerText = cleanedText.toLowerCase();
+          const matchInTitle = queryWords.every(word =>
+            lowerTitle.includes(word.toLowerCase())
+          );
+          const matchInText = isQueryNumeric
+            ? false
+            : queryWords.every(word =>
+                lowerText.includes(word.toLowerCase())
+              );
+          if (!matchInTitle && !matchInText) {
+            li.style.display = 'none';
+            return;
+          }
+          li.style.display = '';
+          if (matchInTitle) {
+            li.querySelector('.title-hit').innerHTML = highlight(cleanedTitle, query);
+            li.querySelector('.text-hit').innerHTML = '';
+            titleMatches.push(li);
+          } else if (matchInText) {
+            li.querySelector('.title-hit').innerHTML = cleanedTitle;
+            li.querySelector('.text-hit').innerHTML = getSnippet(originalText, query, 50);
+            textMatches.push(li);
+          }
+        });
+        // Show title matches first, then text matches
+        const sortedMatches = titleMatches.concat(textMatches);
+        songsList.innerHTML = '';
+        sortedMatches.forEach(li => songsList.appendChild(li));
+      };
+
+      // Debounced filtering on input
+      const debouncedFilter = debounce(() => {
+        const query = searchInput.value;
+        sessionStorage.setItem('searchQuery', query);
+        filterSongs(query);
+        clearButton.style.display = query.trim() !== '' ? 'block' : 'none';
+      }, 300);
+
+      // Restore saved query if any
+      const savedQuery = sessionStorage.getItem('searchQuery');
+      if (savedQuery) {
+        searchInput.value = savedQuery;
+        filterSongs(savedQuery);
+        if (savedQuery.trim() !== '') clearButton.style.display = 'block';
+      }
+
+      searchInput.addEventListener('input', debouncedFilter);
+      clearButton.addEventListener('click', () => {
+        searchInput.value = '';
+        sessionStorage.removeItem('searchQuery');
+        resetOriginalOrder();
+        clearButton.style.display = 'none';
+      });
+    </script>
+    <!-- At the end of your body -->
+
+</script>
+  </body>
+</html>
