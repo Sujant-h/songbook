@@ -7,8 +7,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://sujat-h.github.io',
-  base: 'astro-songbook',
+  site: 'https://sujat-h.github.io/astro-songbook/',
+  base: '/astro-songbook/',
   vite: {
     plugins: [tailwindcss()]
   }
