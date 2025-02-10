@@ -1,14 +1,11 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-
-
 import tailwindcss from '@tailwindcss/vite';
 
-
-// https://astro.build/config
 export default defineConfig({
-  site: 'https://sujat-h.github.io/astro-songbook/',
-  base: '/astro-songbook/',
+  site: 'https://sujant-h.github.io/astro-songbook/',  // Full URL with trailing slash
+  base: '/astro-songbook/',                            // Leading and trailing slashes
+  trailingSlash: 'always',                             // Ensure all URLs end with a trailing slash
   vite: {
     plugins: [tailwindcss()]
   }
