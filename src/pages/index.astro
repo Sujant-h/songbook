@@ -35,7 +35,7 @@ import '../styles/global.css';
   <body class="bg-gray-100">
     <div class="w-full px-4 py-8 sm:container sm:mx-auto">
       <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-8">
-        Songs Collection
+        Tamil Christian Songs
       </h1>
 
       <!-- Improved Search Bar -->
@@ -87,6 +87,17 @@ import '../styles/global.css';
 
     <!-- Optimized Client-Side Script -->
     <script>
+
+		
+	// H1 title a  href
+	// Clear search query and reload when clicking on a song title
+songItems.forEach(item => {
+  const titleLink = item.querySelector('a');
+  titleLink.addEventListener('click', (event) => {
+    sessionStorage.removeItem('searchQuery');  // Clear the search query
+  });
+});
+
       // Utility functions
       const escapeRegExp = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const cleanText = text => text.replace(/(\\n|\r\n|\n|\r)/g, ' ').replace(/\s+/g, ' ').trim();
