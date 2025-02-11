@@ -1,0 +1,14 @@
+      /* Search Bar enhancements */
+      .search-bar {
+        position: relative;
+      }
+      .search-bar input {
+        padding-left: 2.5rem; /* space for the icon */
+      }
+      .search-icon {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+      }
