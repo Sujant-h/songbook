@@ -53,7 +53,7 @@ export default defineConfig({
       },
       workbox: {
         // Update the navigateFallback so it points to your base path
-        navigateFallback: '/songbook/',
+        navigateFallback: '/songbook/index.html',
         globPatterns: ['**/*.{css,js,html,svg,png,ico,txt}'],
       },
       devOptions: {
