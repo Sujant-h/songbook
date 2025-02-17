@@ -3,6 +3,9 @@ module.exports = {
     content: [
       './src/**/*.{astro,html,js,jsx,ts,tsx,vue,svelte}',
     ],
+    safelist: [
+      'bg-yellow-200', // Ensure this class is not removed in production
+    ],
     theme: {
       extend: {
         fontFamily: {
