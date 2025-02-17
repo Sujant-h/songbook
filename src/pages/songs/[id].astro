@@ -31,15 +31,38 @@ try {
 } catch {}
 
 // Function to format song text into paragraphs
-function formatSongText(text: string) {
-  return text
+function formatSongText(text) {
+  // 1) Normalize line breaks
+  let output = text
     .replace(/\r\n/g, '\n')
-    .replace(/\r/g, '\n')
+    .replace(/\r/g, '\n');
+
+  // 2) Only transform parentheses if preceded by "\n\n"
+  //    - Captures (group1) = "\n\n"
+  //    - Captures (group2) = everything inside (...)
+  //    - Replaces with the same "\n\n", followed by a span that keeps parentheses
+  //      italicized and forced onto its own line (block) and left-aligned on mobile.
+  output = output.replace(
+    /(\n\n)\((.*?)\)/g,
+    '$1<span class="italic text-right lg:text-left block">($2)</span>'
+  );
+
+  // 3) Split text into paragraphs on blank lines
+  const paragraphs = output
     .trim()
-    .split(/\n\s*\n/)
-    .map(paragraph => `<p>${paragraph.replace(/\n/g, '<br>')}</p>`)
-    .join('');
+    .split(/\n\s*\n/) // blank line => new paragraph
+    .map(paragraph => {
+      // 4) Replace any single newlines within paragraphs with <br>
+      return `<p>${paragraph.replace(/\n/g, '<br>')}</p>`;
+    });
+
+  // 5) Join the paragraphs into one HTML string
+  return paragraphs.join('');
 }
+
+
+
+
 ---
 
 <html lang="ta">
@@ -113,7 +136,7 @@ function formatSongText(text: string) {
         </h1>
 
         <!-- Song Text -->
-        <div class="text-base sm:text-lg prose prose-lg text-gray-700 font-tamil leading-loose">
+        <div class="text-base sm:text-lg prose prose-lg text-gray-700 font-tamil leading-relaxed ">
           <div class="song-text" set:html={formatSongText(song.text)}></div>
         </div>
       </div>
