@@ -107,13 +107,13 @@ function formatSongText(text: string) {
         <!-- Song Title -->
         <h1
           class="text-lg sm:text-xl lg:text-4xl font-semibold text-gray-800 mb-6 
-                 border-b-2 border-gray-200 pb-2 text-center sm:text-left font-tamil"
+                 border-b-2 border-gray-200 pb-2 text-center sm:text-left font-tamil leading-snug"
         >
           {song.title}
         </h1>
 
         <!-- Song Text -->
-        <div class="text-base sm:text-lg prose prose-lg text-gray-700 font-tamil">
+        <div class="text-base sm:text-lg prose prose-lg text-gray-700 font-tamil leading-loose">
           <div class="song-text" set:html={formatSongText(song.text)}></div>
         </div>
       </div>
@@ -142,7 +142,7 @@ function formatSongText(text: string) {
         const words = query.split(/\s+/).filter(Boolean);
         if (!words.length) return;
         const regex = new RegExp('(' + words.map(escapeRegExp).join('|') + ')', 'giu');
-        el.innerHTML = el.innerHTML.replace(regex, '<span class="highlight">$1</span>');
+        el.innerHTML = el.innerHTML.replace(regex, '<span class="bg-yellow-200">$1</span>');
       };
 
       document.addEventListener('DOMContentLoaded', () => {

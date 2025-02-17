@@ -1,10 +1,5 @@
 @import "tailwindcss";
 
 .song-text p {
-    margin-bottom: 1.5rem;
-  }
-  
-
-  .highlight {
-    background-color: #fef08a; /* Yellow background */
-  }
+  @apply mb-5;
+}
