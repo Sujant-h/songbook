@@ -165,7 +165,7 @@ function formatSongText(text) {
         const words = query.split(/\s+/).filter(Boolean);
         if (!words.length) return;
         const regex = new RegExp('(' + words.map(escapeRegExp).join('|') + ')', 'giu');
-        el.innerHTML = el.innerHTML.replace(regex, '<span class="bg-yellow-200">$1</span>');
+        el.innerHTML = el.innerHTML.replace(regex, '<span class="highlighted">$1</span>');
       };
 
       document.addEventListener('DOMContentLoaded', () => {
