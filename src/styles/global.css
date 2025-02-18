@@ -11,3 +11,7 @@
 .song-text p {
   @apply mb-5;
 }
+
+.highlighted {
+  @apply bg-yellow-200;
+}
