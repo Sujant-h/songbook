@@ -29,8 +29,8 @@ export default defineConfig({
       includeAssets: ['/songbook/favicon.svg'],
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Astro PWA',
-        short_name: 'Astro PWA',
+        name: 'Tamil Songbook',
+        short_name: 'Songbook',
         theme_color: '#ffffff',
         icons: [
           {
