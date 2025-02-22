@@ -4,9 +4,9 @@ import tailwindcss from '@tailwindcss/vite';
 import AstroPWA from '@vite-pwa/astro';
 
 export default defineConfig({
-  site: 'https://sujant-h.github.io', // Full URL with trailing slash
-  base: 'songbook',                   // Your base folder
-  trailingSlash: 'always', // Add this
+  site: 'https://sujant-h.github.io',
+  base: 'songbook',
+  trailingSlash: 'ignore',
   vite: {
     logLevel: 'info',
     define: {
@@ -14,7 +14,6 @@ export default defineConfig({
     },
     server: {
       fs: {
-        // Allow serving files from hoisted root node_modules
         allow: ['../..']
       }
     },
@@ -22,30 +21,31 @@ export default defineConfig({
   },
   integrations: [
     AstroPWA({
-      mode: 'development',
-      // Update the base and scope to match your Astro base
+      mode: 'production',
       base: '/songbook/',
       scope: '/songbook/',
-      // Ensure assets are referenced with the base path
-      includeAssets: ['/songbook/favicon.svg'],
+      includeAssets: ['favicon.svg'],
       registerType: 'autoUpdate',
       manifest: {
         name: 'Tamil Songbook',
         short_name: 'Songbook',
+        start_url: '/songbook/',
         theme_color: '#ffffff',
+        background_color: '#ffffff',
+        display: 'standalone',
         icons: [
           {
-            src: '/songbook/pwa-192x192.png',
+            src: 'pwa-192x192.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: '/songbook/pwa-512x512.png',
+            src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
           },
           {
-            src: '/songbook/pwa-512x512.png',
+            src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable',
@@ -53,17 +53,28 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // Update the navigateFallback so it points to your base path
         navigateFallback: '/songbook/index.html',
-        globPatterns: ['**/*.{css,js,html,svg,png,ico,txt}'],
+        globPatterns: ['**/*.{css,js,html,svg,png,ico,txt,astro,md}'],
+        cleanupOutdatedCaches: true,
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.destination === 'document',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'pages-cache',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
+              }
+            }
+          }
+        ]
       },
       devOptions: {
         enabled: false,
-        navigateFallbackAllowlist: [/^\//],
-      },
-      experimental: {
-        directoryAndTrailingSlashHandler: true,
+        navigateFallbackAllowlist: [/^\/songbook\//],
+        type: 'module'
       }
-    }),
-  ],
+    })
+  ]
 });
