@@ -97,7 +97,7 @@ const { title } = Astro.props as Props;
             data-text-de={song.text_de}
             class="song-item w-full bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-4"
           >
-            <a href={`${import.meta.env.BASE_URL}/songs/${song.id}/`} class="block h-full">
+            <a href={`${import.meta.env.BASE_URL}/songs/${song.id}`} class="block h-full">
               <div class="title-container">
                 <div class="translation-title hidden text-sm text-gray-600"></div>
                 <div class="original-title text-base md:text-lg lg:text-xl font-medium text-gray-800 hover:text-deapseablue transition-colors">
