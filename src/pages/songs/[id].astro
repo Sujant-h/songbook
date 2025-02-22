@@ -11,8 +11,7 @@ export interface Props {
 const { title } = Astro.props as Props;
 
 export async function getStaticPaths() {
-  return songs.map(song => ({ params: { id: song.id } }));
-}
+  return songs.map(song => ({ params: { id: song.id }, props: { song } }));}
 
 const { id } = Astro.params;
 const song = songs.find(song => song.id === id);
@@ -21,17 +20,17 @@ if (!song) {
 }
 
 // For static rendering, check for a URL query parameter.
-const urlLang = Astro.url.searchParams.get('lang');
-const validLangs = ['ta', 'en', 'de'];
-// Use the query parameter if valid, otherwise default to 'ta'
-const staticLang = validLangs.includes(urlLang) ? urlLang : 'ta';
+// Replace the existing language selection code with:
+const urlLang = Astro.url.searchParams.get('lang') || 'ta';
+const validLangs = new Set(['ta', 'en', 'de']);
+const staticLang = validLangs.has(urlLang) ? urlLang : 'ta';
 
 // Select localized content for static fallback.
 const songTitle = song[`title_${staticLang}`] || song.title;
 const songText = song[`text_${staticLang}`] || song.text;
 
 let audioExists = false;
-const audioFilePath = `./public/audio/${song.id}.mp3`;
+const audioFilePath = `./public/songbook/audio/${song.id}.mp3`;
 try {
   await fs.access(audioFilePath);
   audioExists = true;
