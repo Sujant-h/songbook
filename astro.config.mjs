@@ -22,7 +22,7 @@ export default defineConfig({
   },
   integrations: [
     AstroPWA({
-      mode: 'development',
+      mode: 'production',
       // Update the base and scope to match your Astro base
       base: '/songbook/',
       scope: '/songbook/',
