@@ -116,7 +116,7 @@ try {
 
       // Loads song data from the JSON file.
       async function loadSongData() {
-        const response = await fetch("/src/data/data_cleaned.json");
+        const response = await fetch(songs);
         return response.json();
       }
 
