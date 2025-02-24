@@ -99,6 +99,8 @@ try {
   
 
     <script>
+      import songs from '../../data/data_cleaned.json';
+
       // --- Helper Function ---
       // Formats song text into paragraphs with line breaks and transforms parentheses if preceded by a double newline.
       function formatSongText(text) {
@@ -115,11 +117,9 @@ try {
         return parts[parts.length - 1] || parts[parts.length - 2];
       }
 
-      // Loads song data from the JSON file.
       async function loadSongData() {
-        const response = await fetch("/src/data/data_cleaned.json");
-        return response.json();
-      }
+  return songs; // Directly return the imported songs data
+}
 
       // --- Main Initialization ---
       async function init() {
