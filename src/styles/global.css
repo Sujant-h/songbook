@@ -8,7 +8,7 @@
   --color-wallpaintblue: #3071AB;
 }
 
-#song-text p {
+.song-text p {
   @apply mb-5;
 }
 
