@@ -1,3 +1,4 @@
+// @ts-check
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import AstroPWA from '@vite-pwa/astro';
@@ -5,7 +6,7 @@ import AstroPWA from '@vite-pwa/astro';
 export default defineConfig({
   site: 'https://sujant-h.github.io', // Full URL with trailing slash
   base: 'songbook',                   // Your base folder
-  trailingSlash: 'always', // Add this
+  //trailingSlash: 'always', // Add this
   vite: {
     logLevel: 'info',
     define: {
@@ -21,7 +22,7 @@ export default defineConfig({
   },
   integrations: [
     AstroPWA({
-      mode: 'production',
+      mode: 'development',
       // Update the base and scope to match your Astro base
       base: '/songbook/',
       scope: '/songbook/',
