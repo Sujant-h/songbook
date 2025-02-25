@@ -17,7 +17,7 @@ if (!song) {
 
 // Check if audio file exists
 let audioExists = false;
-const audioFilePath = `./public/audio/${song.id}.mp3`;
+const audioFilePath = `${import.meta.env.BASE_URL}/audio/${song.id}.mp3`;
 try {
   await fs.access(audioFilePath);
   audioExists = true;
