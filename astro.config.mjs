@@ -5,7 +5,7 @@ import AstroPWA from '@vite-pwa/astro';
 export default defineConfig({
   trailingSlash: 'always', // Add this
   site: 'https://sujant-h.github.io',
-  base: '/songbook',
+  base: '/songbook/',
   vite: {
     logLevel: 'info',
     define: {
@@ -32,79 +32,44 @@ export default defineConfig({
       registerType: 'autoUpdate',
       manifest: {
         id: '/songbook/',
-        name: 'Tamil Christian Songs',
-        short_name: 'TamilSongs',
-        description: 'Tamil Christian worship songs collection',
+        name: 'Tamil Songbook',
+        short_name: 'Songbook',
         start_url: '/songbook/',
+        scope: '/songbook/',
         theme_color: '#ffffff',
-        background_color: '#ffffff',
-        display: 'standalone',
-        orientation: 'portrait',
         icons: [
           {
             src: '/songbook/pwa-192x192.png',
             sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: '/songbook/pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
           },
           {
             src: '/songbook/pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable'
-          }
-        ]
+            purpose: 'any maskable',
+          },
+        ],
       },
       workbox: {
-        navigateFallback: '/songbook/index.html',
+        // Add the manifest to glob patterns
         globPatterns: [
-          '**/*.{js,css,html,svg,png,ico,txt,webmanifest,woff2}'
+          '**/*.{css,js,html,svg,png,ico,txt,webmanifest}'
         ],
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
-          },
-          {
-            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'gstatic-fonts-cache',
-              expiration: {
-                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
+        // Update navigateFallback
+        navigateFallback: '/songbook/',
+        // Add runtime caching for your base path
+        runtimeCaching: [{
+          urlPattern: ({request}) => request.destination === 'document',
+          handler: 'NetworkFirst',
+          options: {
+            cacheName: 'pages-cache',
+            expiration: {
+              maxEntries: 30,
+              maxAgeSeconds: 60 * 60 * 24 // 24 hours
             }
           }
-        ],
-        cleanupOutdatedCaches: true,
-        clientsClaim: true,
-        skipWaiting: true,
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024 // 5MB
-      },
-      devOptions: {
-        enabled: false,
-        type: 'module',
-        navigateFallback: 'index.html'
-      },
-      experimental: {
-        directoryAndTrailingSlashHandler: true
+        }]
       }
     })
   ]
