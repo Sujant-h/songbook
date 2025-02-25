@@ -58,7 +58,7 @@ export default defineConfig({
       },
       devOptions: {
         enabled: false,
-        navigateFallbackAllowlist: [/^\//],
+        navigateFallback: '/songbook/index.html',
       },
       experimental: {
         directoryAndTrailingSlashHandler: true,
