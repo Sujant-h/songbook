@@ -3,9 +3,9 @@ import tailwindcss from '@tailwindcss/vite';
 import AstroPWA from '@vite-pwa/astro';
 
 export default defineConfig({
-  site: 'https://sujant-h.github.io', // Full URL with trailing slash
-  base: 'songbook',                   // Your base folder
   trailingSlash: 'always', // Add this
+  site: 'https://sujant-h.github.io/songbook', // Full URL with trailing slash
+  base: '/songbook',                   // Your base folder
   vite: {
     logLevel: 'info',
     define: {
