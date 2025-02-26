@@ -97,7 +97,7 @@ const { title } = Astro.props as Props;
             data-text-de={song.text_de}
             class="song-item w-full bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-4"
           >
-            <a href={`${import.meta.env.BASE_URL}/songs/${song.id}`} class="block h-full">
+              <a href={`${import.meta.env.BASE_URL}/songs/ta/${song.id}`} class="block h-full">
               <div class="title-container">
                 <div class="translation-title hidden text-sm text-gray-600"></div>
                 <div class="original-title text-base md:text-lg lg:text-xl font-medium text-gray-800 hover:text-deapseablue transition-colors">
@@ -131,229 +131,233 @@ const { title } = Astro.props as Props;
     <script>
       // Utility functions
       const escapeRegExp = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const cleanText = text => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        .replace(/(\\n|\r\n|\n|\r)/g, ' ').replace(/\s+/g, ' ').trim();
-      const highlight = (text, query) => {
-        if (!query) return text;
-        text = cleanText(text);
-        const words = query.split(/\s+/).filter(Boolean);
-        const regex = new RegExp('(' + words.map(escapeRegExp).join('|') + ')', 'giu');
-        return text.replace(regex, '<span class="highlighted bg-yellow-200">$1</span>');
-      };
-      const getSnippet = (text, query, snippetLength = 50) => {
-        if (!query) return '';
-        const cleaned = cleanText(text);
-        const lowerText = cleaned.toLowerCase();
-        const queryWords = query.split(/\s+/).filter(Boolean);
-        let firstIndex = Infinity;
-        queryWords.forEach(word => {
-          const i = lowerText.indexOf(word.toLowerCase());
-          if (i !== -1 && i < firstIndex) firstIndex = i;
-        });
-        if (firstIndex === Infinity) return '';
-        let start = Math.max(0, firstIndex - snippetLength);
-        let end = Math.min(cleaned.length, firstIndex + snippetLength + queryWords[0].length);
-        if (start > 0) {
-          const prevSpace = cleaned.lastIndexOf(' ', start);
-          if (prevSpace !== -1) start = prevSpace + 1;
-        }
-        if (end < cleaned.length) {
-          const nextSpace = cleaned.indexOf(' ', end);
-          if (nextSpace !== -1) end = nextSpace;
-        }
-        let snippet = cleaned.substring(start, end);
-        if (start > 0) snippet = '...' + snippet;
-        if (end < cleaned.length) snippet = snippet + '...';
-        return highlight(snippet, query);
-      };
-  
-      // Get DOM elements
-      const searchLangSelect = document.getElementById('search-lang-select');
-      const searchInput = document.getElementById('searchInput');
-      const clearButton = document.getElementById('clearButton');
-      const songsList = document.getElementById('songsList');
-      const songItems = Array.from(document.querySelectorAll('.song-item'));
-  
-      // Use the search language dropdown value as the current language.
-      let currentLang = sessionStorage.getItem('selectedLanguage') || searchLangSelect.value;
-      searchLangSelect.value = currentLang;
-  
-      // Utility: update all song links with the proper language parameter
-      const updateSongLinks = () => {
-        songItems.forEach(item => {
-          const songId = item.getAttribute('data-id');
-          const link = item.querySelector('a');
-          const langForLink = (currentLang === 'none' ? 'ta' : currentLang);
-          link.href = `${import.meta.env.BASE_URL}/songs/${songId}?lang=${langForLink}`;
-        });
-      };
-  
-      // When the search language dropdown changes, update currentLang and reapply search if needed.
-      searchLangSelect.addEventListener('change', (e) => {
-        currentLang = e.target.value;
-        sessionStorage.setItem('selectedLanguage', currentLang);
-        const query = searchInput.value.trim();
-        if (query !== '') {
-          filterSongs(query, currentLang);
-        } else {
-          resetOriginalOrder();
-          updateTitles();
-        }
-        updateSongLinks();
-      });
-  
-      // Update resetOriginalOrder to update links using currentLang
-      const resetOriginalOrder = () => {
-        songItems.sort((a, b) =>
-          Number(a.getAttribute('data-index')) - Number(b.getAttribute('data-index'))
-        );
-        songsList.innerHTML = '';
-        songItems.forEach(item => {
-          item.querySelector('.original-title').innerHTML = item.getAttribute('data-title') || '';
-          if (currentLang === 'en') {
-            item.querySelector('.translation-title').innerHTML = item.getAttribute('data-title-en') || '';
-            item.querySelector('.translation-title').classList.remove('hidden');
-          } else if (currentLang === 'de') {
-            item.querySelector('.translation-title').innerHTML = item.getAttribute('data-title-de') || '';
-            item.querySelector('.translation-title').classList.remove('hidden');
-          } else {
-            item.querySelector('.translation-title').classList.add('hidden');
-          }
-          item.querySelector('.text-snippet').innerHTML = '';
-          item.style.display = '';
-          songsList.appendChild(item);
-          const songId = item.getAttribute('data-id');
-          const link = item.querySelector('a');
-          const langForLink = (currentLang === 'none' ? 'ta' : currentLang);
-          link.href = `${import.meta.env.BASE_URL}/songs/${songId}?lang=${langForLink}`;
-        });
-      };
-  
-      // Filter function now only searches in the fields for the provided language.
-      // The function now receives the language (currentLang) as the second argument.
-      const filterSongs = (query, searchLang) => {
-        query = query.trim().toLowerCase();
-        if (query === '') {
-          resetOriginalOrder();
-          updateTitles();
-          return;
-        }
-  
-        let fieldKeyTitle, fieldKeyText;
-        if (searchLang === 'none') {
-          fieldKeyTitle = 'data-title';
-          fieldKeyText = 'data-text';
-        } else if (searchLang === 'en') {
-          fieldKeyTitle = 'data-title-en';
-          fieldKeyText = 'data-text-en';
-        } else if (searchLang === 'de') {
-          fieldKeyTitle = 'data-title-de';
-          fieldKeyText = 'data-text-de';
-        }
-  
-        let resultsFound = false;
-        songItems.forEach(li => {
-          const titleField = li.getAttribute(fieldKeyTitle) || '';
-          const textField = li.getAttribute(fieldKeyText) || '';
-          const titleHit = titleField.toLowerCase().includes(query);
-          const textHit = textField.toLowerCase().includes(query);
-  
-          if (titleHit || textHit) {
-            li.style.display = '';
-            if (searchLang === 'none') {
-              li.querySelector('.original-title').innerHTML = titleHit
-                ? highlight(li.getAttribute('data-title') || '', query)
-                : li.getAttribute('data-title');
-              li.querySelector('.text-snippet').innerHTML = textHit
-                ? getSnippet(li.getAttribute('data-text') || '', query)
-                : '';
-              li.querySelector('.translation-title').classList.add('hidden');
-            } else {
-              let displayTitle = li.getAttribute(fieldKeyTitle) || '';
-              let displayText = li.getAttribute(fieldKeyText) || '';
-              // No language label is added in search results.
-              li.querySelector('.translation-title').innerHTML = titleHit
-                ? highlight(displayTitle, query)
-                : displayTitle;
-              li.querySelector('.translation-title').classList.remove('hidden');
-              li.querySelector('.original-title').innerHTML = li.getAttribute('data-title');
-              li.querySelector('.text-snippet').innerHTML = textHit
-                ? getSnippet(displayText, query)
-                : '';
-            }
-  
-            const songId = li.getAttribute('data-id');
-            const link = li.querySelector('a');
-            const langForLink = searchLang === 'none' ? 'ta' : searchLang;
-            link.href = `${import.meta.env.BASE_URL}/songs/${songId}?lang=${langForLink}`;
-            resultsFound = true;
-          } else {
-            li.style.display = 'none';
-          }
-        });
-  
-        if (!resultsFound) {
-          songItems.forEach(li => li.style.display = 'none');
-        }
-      };
-  
-      // Debounce helper.
-      const debounce = (fn, delay) => {
-        let timeout;
-        return (...args) => {
-          clearTimeout(timeout);
-          timeout = setTimeout(() => fn(...args), delay);
-        };
-      };
-  
-      const debouncedFilter = debounce(() => {
-        const query = searchInput.value;
-        sessionStorage.setItem('searchQuery', query);
-        filterSongs(query, searchLangSelect.value);
-        clearButton.style.display = query.trim() !== '' ? 'block' : 'none';
-        updateTitles();
-      }, 300);
-  
-      const savedQuery = sessionStorage.getItem('searchQuery');
-      if (savedQuery) {
-        searchInput.value = savedQuery;
-        filterSongs(savedQuery, searchLangSelect.value);
-        if (savedQuery.trim() !== '') clearButton.style.display = 'block';
+  const cleanText = text => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/(\\n|\r\n|\n|\r)/g, ' ').replace(/\s+/g, ' ').trim();
+  const highlight = (text, query) => {
+    if (!query) return text;
+    text = cleanText(text);
+    const words = query.split(/\s+/).filter(Boolean);
+    const regex = new RegExp('(' + words.map(escapeRegExp).join('|') + ')', 'giu');
+    return text.replace(regex, '<span class="highlighted bg-yellow-200">$1</span>');
+  };
+  const getSnippet = (text, query, snippetLength = 50) => {
+    if (!query) return '';
+    const cleaned = cleanText(text);
+    const lowerText = cleaned.toLowerCase();
+    const queryWords = query.split(/\s+/).filter(Boolean);
+    let firstIndex = Infinity;
+    queryWords.forEach(word => {
+      const i = lowerText.indexOf(word.toLowerCase());
+      if (i !== -1 && i < firstIndex) firstIndex = i;
+    });
+    if (firstIndex === Infinity) return '';
+    let start = Math.max(0, firstIndex - snippetLength);
+    let end = Math.min(cleaned.length, firstIndex + snippetLength + queryWords[0].length);
+    if (start > 0) {
+      const prevSpace = cleaned.lastIndexOf(' ', start);
+      if (prevSpace !== -1) start = prevSpace + 1;
+    }
+    if (end < cleaned.length) {
+      const nextSpace = cleaned.indexOf(' ', end);
+      if (nextSpace !== -1) end = nextSpace;
+    }
+    let snippet = cleaned.substring(start, end);
+    if (start > 0) snippet = '...' + snippet;
+    if (end < cleaned.length) snippet = snippet + '...';
+    return highlight(snippet, query);
+  };
+
+  // Get DOM elements
+  const searchLangSelect = document.getElementById('search-lang-select');
+  const searchInput = document.getElementById('searchInput');
+  const clearButton = document.getElementById('clearButton');
+  const songsList = document.getElementById('songsList');
+  const songItems = Array.from(document.querySelectorAll('.song-item'));
+
+  // Use the search language dropdown value as the current language.
+  let currentLang = sessionStorage.getItem('selectedLanguage') || searchLangSelect.value;
+  searchLangSelect.value = currentLang;
+
+  // Update song links using the desired URL pattern:
+  const updateSongLinks = () => {
+    songItems.forEach(item => {
+      const songId = item.getAttribute('data-id');
+      const link = item.querySelector('a');
+      const langForLink = (currentLang === 'none' ? 'ta' : currentLang);
+      // Updated URL structure:
+      link.href = `${import.meta.env.BASE_URL}/songs/${langForLink}/${songId}`;
+    });
+  };
+
+  // Reset function updates the song titles and links.
+  const resetOriginalOrder = () => {
+    songItems.sort((a, b) =>
+      Number(a.getAttribute('data-index')) - Number(b.getAttribute('data-index'))
+    );
+    songsList.innerHTML = '';
+    songItems.forEach(item => {
+      // When language is English or German, hide the original title and show the translation.
+      if (currentLang === 'en') {
+        item.querySelector('.original-title').classList.add('hidden');
+        item.querySelector('.translation-title').innerHTML = item.getAttribute('data-title-en') || '';
+        item.querySelector('.translation-title').classList.remove('hidden');
+      } else if (currentLang === 'de') {
+        item.querySelector('.original-title').classList.add('hidden');
+        item.querySelector('.translation-title').innerHTML = item.getAttribute('data-title-de') || '';
+        item.querySelector('.translation-title').classList.remove('hidden');
+      } else {
+        item.querySelector('.translation-title').classList.add('hidden');
+        item.querySelector('.original-title').innerHTML = item.getAttribute('data-title') || '';
+        item.querySelector('.original-title').classList.remove('hidden');
       }
-  
-      searchInput.addEventListener('input', debouncedFilter);
-      clearButton.addEventListener('click', () => {
-        searchInput.value = '';
-        sessionStorage.removeItem('searchQuery');
-        resetOriginalOrder();
-        clearButton.style.display = 'none';
-      });
-  
-      const goToTopButton = document.getElementById('goToTopButton');
-      window.addEventListener('scroll', () => {
-        goToTopButton.style.display = window.scrollY > 300 ? 'block' : 'none';
-      });
-      goToTopButton.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-  
-      window.addEventListener('pageshow', () => {
-        const savedQuery = sessionStorage.getItem('searchQuery') || '';
-        if (savedQuery.trim() !== '') {
-          searchInput.value = savedQuery;
-          setTimeout(() => {
-            filterSongs(savedQuery, searchLangSelect.value);
-            clearButton.style.display = 'block';
-          }, 0);
+      item.querySelector('.text-snippet').innerHTML = '';
+      item.style.display = '';
+      songsList.appendChild(item);
+      const songId = item.getAttribute('data-id');
+      const link = item.querySelector('a');
+      const langForLink = (currentLang === 'none' ? 'ta' : currentLang);
+      // Updated URL structure:
+      link.href = `${import.meta.env.BASE_URL}/songs/${langForLink}/${songId}`;
+    });
+  };
+
+  // Filter function now only searches in the fields for the provided language.
+  const filterSongs = (query, searchLang) => {
+    query = query.trim().toLowerCase();
+    if (query === '') {
+      resetOriginalOrder();
+      updateTitles();
+      return;
+    }
+
+    let fieldKeyTitle, fieldKeyText;
+    if (searchLang === 'none') {
+      fieldKeyTitle = 'data-title';
+      fieldKeyText = 'data-text';
+    } else if (searchLang === 'en') {
+      fieldKeyTitle = 'data-title-en';
+      fieldKeyText = 'data-text-en';
+    } else if (searchLang === 'de') {
+      fieldKeyTitle = 'data-title-de';
+      fieldKeyText = 'data-text-de';
+    }
+
+    let resultsFound = false;
+    songItems.forEach(li => {
+      const titleField = li.getAttribute(fieldKeyTitle) || '';
+      const textField = li.getAttribute(fieldKeyText) || '';
+      const titleHit = titleField.toLowerCase().includes(query);
+      const textHit = textField.toLowerCase().includes(query);
+
+      if (titleHit || textHit) {
+        li.style.display = '';
+        if (searchLang === 'none') {
+          li.querySelector('.original-title').innerHTML = titleHit
+            ? highlight(li.getAttribute('data-title') || '', query)
+            : li.getAttribute('data-title');
+          li.querySelector('.text-snippet').innerHTML = textHit
+            ? getSnippet(li.getAttribute('data-text') || '', query)
+            : '';
+          li.querySelector('.translation-title').classList.add('hidden');
+          li.querySelector('.original-title').classList.remove('hidden');
+        } else {
+          let displayTitle = li.getAttribute(fieldKeyTitle) || '';
+          let displayText = li.getAttribute(fieldKeyText) || '';
+          li.querySelector('.translation-title').innerHTML = titleHit
+            ? highlight(displayTitle, query)
+            : displayTitle;
+          li.querySelector('.translation-title').classList.remove('hidden');
+          li.querySelector('.original-title').classList.add('hidden');
+          li.querySelector('.text-snippet').innerHTML = textHit
+            ? getSnippet(displayText, query)
+            : '';
         }
-        const savedLang = sessionStorage.getItem('selectedLanguage') || 'none';
-        searchLangSelect.value = savedLang;
-        currentLang = savedLang;
-        resetOriginalOrder();
-        updateTitles();
-        updateSongLinks();
-      });
-  
+
+        const songId = li.getAttribute('data-id');
+        const link = li.querySelector('a');
+        const langForLink = searchLang === 'none' ? 'ta' : searchLang;
+        // Updated URL structure:
+        link.href = `${import.meta.env.BASE_URL}/songs/${langForLink}/${songId}`;
+        resultsFound = true;
+      } else {
+        li.style.display = 'none';
+      }
+    });
+
+    if (!resultsFound) {
+      songItems.forEach(li => li.style.display = 'none');
+    }
+  };
+
+  // Debounce helper.
+  const debounce = (fn, delay) => {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => fn(...args), delay);
+    };
+  };
+
+  const debouncedFilter = debounce(() => {
+    const query = searchInput.value;
+    sessionStorage.setItem('searchQuery', query);
+    filterSongs(query, searchLangSelect.value);
+    clearButton.style.display = query.trim() !== '' ? 'block' : 'none';
+    updateTitles();
+  }, 300);
+
+  const savedQuery = sessionStorage.getItem('searchQuery');
+  if (savedQuery) {
+    searchInput.value = savedQuery;
+    filterSongs(savedQuery, searchLangSelect.value);
+    if (savedQuery.trim() !== '') clearButton.style.display = 'block';
+  }
+
+  searchInput.addEventListener('input', debouncedFilter);
+  clearButton.addEventListener('click', () => {
+    searchInput.value = '';
+    sessionStorage.removeItem('searchQuery');
+    resetOriginalOrder();
+    clearButton.style.display = 'none';
+  });
+
+  const goToTopButton = document.getElementById('goToTopButton');
+  window.addEventListener('scroll', () => {
+    goToTopButton.style.display = window.scrollY > 300 ? 'block' : 'none';
+  });
+  goToTopButton.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  searchLangSelect.addEventListener('change', (e) => {
+    currentLang = e.target.value;
+    sessionStorage.setItem('selectedLanguage', currentLang);
+    const query = searchInput.value.trim();
+    if (query !== '') {
+      filterSongs(query, currentLang);
+    } else {
+      resetOriginalOrder();
+      updateTitles();
+    }
+    updateSongLinks();
+  });
+
+  window.addEventListener('pageshow', () => {
+    const savedQuery = sessionStorage.getItem('searchQuery') || '';
+    if (savedQuery.trim() !== '') {
+      searchInput.value = savedQuery;
+      setTimeout(() => {
+        filterSongs(savedQuery, searchLangSelect.value);
+        clearButton.style.display = 'block';
+      }, 0);
+    }
+    const savedLang = sessionStorage.getItem('selectedLanguage') || 'none';
+    searchLangSelect.value = savedLang;
+    currentLang = savedLang;
+    resetOriginalOrder();
+    updateTitles();
+    updateSongLinks();
+  });
       // Dummy updateTitles() – implement as needed.
       function updateTitles() {
         // Implementation placeholder

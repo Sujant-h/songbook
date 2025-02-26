@@ -1,0 +1,158 @@
+---
+import '../../../styles/global.css';
+import songsData from '../../../data/data_cleaned.json';
+
+import { pwaInfo } from 'virtual:pwa-info';
+
+export interface Props {
+  title: string;
+}
+
+const { title } = Astro.props as Props;
+
+export async function getStaticPaths() {
+  // Generate all combinations of languages and song IDs
+  const langs = ['ta', 'en', 'de'];
+  const paths = [];
+  
+  langs.forEach(lang => {
+    songsData.forEach(song => {
+      paths.push({
+        params: { lang, id: song.id },
+        props: { song, lang },
+      });
+    });
+  });
+  
+  return paths;
+}
+
+const { song, lang } = Astro.props;
+const audioUrl = `https://sujant-h.github.io/songbook/audio/${song.id}.mp3`;
+
+// Select content based on language
+let songTitle = song.title;
+let songText = song.text;
+let showOriginal = false;
+
+if (lang === 'en') {
+  songTitle = song.title_en || song.title;
+  songText = song.text_en || song.text;
+  showOriginal = true;
+} else if (lang === 'de') {
+  songTitle = song.title_de || song.title;
+  songText = song.text_de || song.text;
+  showOriginal = true;
+}
+---
+
+<html lang="ta">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/pwa-192x192.png">
+    <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF">
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+    <meta name="theme-color" content="#ffffff">
+    <title>{title}</title>
+    <meta name="description" content={title}>
+    <script src="/src/pwa.ts"></script>
+    { pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} /> }
+
+
+    <!-- Material Symbols “close” icon -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=close"
+    />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@100..900&display=swap"
+      rel="stylesheet"
+    >
+  </head>
+  <body class="bg-gray-50">
+  
+
+      <!-- Main Box: Song Content -->
+      <div class="max-w-3xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-lg relative">
+    <a href="/" id="back-button" class="mb-4 inline-block text-blue-600 hover:underline">&larr; Back</a>
+    
+        <!-- Language selection -->
+        <div class="mb-4 flex justify-end">
+            <select id="language-select" class="px-3 py-1 border border-gray-300 rounded-md text-sm">
+                <option value="ta" selected={lang === 'ta'}>Tamil</option>
+                <option value="en" selected={lang === 'en'}>English</option>
+                <option value="de" selected={lang === 'de'}>German</option>
+            </select>
+        </div>
+
+        <h1 class="text-2xl font-bold mb-4 text-gray-800">{songTitle}</h1>
+        
+        <pre class="whitespace-pre-line text-gray-800 font-sans p-4 bg-gray-50 rounded mb-6">
+            {songText}
+        </pre>
+        
+        {showOriginal && (
+            <div class="mt-6 pt-4 border-t border-gray-200">
+                <h3 class="text-lg font-semibold mb-2">Original (Tamil)</h3>
+                <h4 class="text-lg font-medium mb-2">{song.title}</h4>
+                <pre class="whitespace-pre-line text-gray-800 font-sans p-4 bg-gray-50 rounded">
+                    {song.text}
+                </pre>
+            </div>
+        )}
+        
+        <!-- Audio Player -->
+        <div class="mt-6 pt-4 border-t border-gray-200">
+            <h3 class="text-lg font-semibold mb-3">Listen to the Song</h3>
+            <audio controls class="w-full focus:outline-none">
+                <source src={audioUrl} type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+    <script>
+        // Handle language switching
+        document.getElementById('language-select').addEventListener('change', (e) => {
+            const selectedLang = e.target.value;
+            const currentPath = window.location.pathname;
+            const pathParts = currentPath.split('/');
+            const songId = pathParts[pathParts.length - 1];
+            
+            // Save language preference
+            sessionStorage.setItem('selectedLanguage', selectedLang);
+            
+            // Navigate to the new language URL
+            window.location.href = `${import.meta.env.BASE_URL}/songs/${selectedLang}/${songId}`;
+        });
+
+        // Back button functionality to save scroll position
+        document.getElementById('back-button').addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Get the current song ID to use as a key for the scroll position
+            const pathParts = window.location.pathname.split('/');
+            const songId = pathParts[pathParts.length - 1];
+            
+            // Store that we're navigating back from this specific song
+            sessionStorage.setItem('returnedFromSong', songId);
+            
+            // Navigate to songbook page
+            window.location.href = '/songbook';
+        });
+    </script>
+  </body>
+  </html>
