@@ -218,20 +218,34 @@ if (queryLang) {
         updateContent(pageLang);
 
         // When the user changes the language via the dropdown, update content and persistent language.
-        languageSelect.addEventListener('change', () => {
-          sessionStorage.setItem('selectedLanguage', languageSelect.value);
-          updateContent();
-        });
+// When the user changes the language via the dropdown, update content and persistent language.
+languageSelect.addEventListener('change', () => {
+  const selectedLang = languageSelect.value;
+  sessionStorage.setItem('selectedLanguage', selectedLang);
+  
+  // Update the URL with the new language parameter
+  const url = new URL(window.location.href);
+  // If language is 'none', set it to 'ta' in the URL
+  url.searchParams.set('lang', selectedLang === 'none' ? 'ta' : selectedLang);
+  
+  // Update the URL without reloading the page
+  window.history.pushState({}, '', url);
+  
+  updateContent();
+});
 
-        // --- Back Button Behavior ---
-        const backButton = document.getElementById('back-button');
-        backButton.addEventListener('click', () => {
-          if (document.referrer) {
-            window.history.back();
-          } else {
-            window.location.href = '/songbook';
-          }
-        });
+// --- Back Button Behavior ---
+const backButton = document.getElementById('back-button');
+backButton.addEventListener('click', () => {
+  // Get the current song ID to use as a key for the scroll position
+  const songId = getSongIdFromPath();
+  
+  // Store that we're navigating back from this specific song
+  sessionStorage.setItem('returnedFromSong', songId);
+  
+  // Navigate to songbook page
+  window.location.href = '/songbook';
+});
 
         // --- Audio Handling ---
         // Use the base URL for the audio file.
