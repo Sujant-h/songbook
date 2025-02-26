@@ -10,6 +10,7 @@ export interface Props {
 
 const { title } = Astro.props as Props;
 
+
 export async function getStaticPaths() {
   return songs.map(song => ({ params: { id: song.id }, props: { song } }));}
 
@@ -249,7 +250,7 @@ backButton.addEventListener('click', () => {
 
         // --- Audio Handling ---
         // Use the base URL for the audio file.
-        const audioUrl = `${import.meta.env.BASE_URL}audio/${song.id}.mp3`;
+        const audioUrl = `https://sujant-h.github.io/${import.meta.env.BASE_URL}/audio/${song.id}.mp3`;
         try {
           const audioResp = await fetch(audioUrl, { method: 'HEAD' });
           if (audioResp.ok) {
