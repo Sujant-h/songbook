@@ -30,35 +30,35 @@ const { title } = Astro.props as Props;
     <!-- Include Material Icons from Google Fonts -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   </head>
-  <body class="bg-gradient-to-b from-indigo-50 to-white min-h-screen font-tamil">
+  <body class="bg-gradient-to-b from-indigo-50 to-white dark:from-gray-900 dark:to-gray-800 min-h-screen font-tamil dark:text-gray-200 transition-colors duration-200">
     <!-- Outer container -->
     <div class="max-w-6xl mx-auto px-4 py-8">
       <!-- Header with title -->
       <div class="text-center mb-10">
-        <h1 class="mt-2 mb-4 lg:mt-8 text-3xl md:text-4xl font-extrabold text-indigo-800 leading-snug">
+        <h1 class="mt-2 mb-4 lg:mt-8 text-3xl md:text-4xl font-extrabold text-indigo-800 dark:text-indigo-400 leading-snug">
           Tamil Christian Songs
         </h1>
-        <p class="text-gray-600 max-w-2xl mx-auto">
+        <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
           A collection of beautiful Tamil Christian songs with translations in English and German
         </p>
       </div>
   
       <!-- Search bar and language dropdown -->
       <div class="search-bar relative mb-10 max-w-3xl mx-auto">
-        <div class="bg-white p-3 rounded-xl shadow-md flex items-center gap-4">
+        <div class="bg-white dark:bg-gray-800 p-3 rounded-xl shadow-md dark:shadow-gray-900/30 flex items-center gap-4">
           <!-- Language Selector -->
           <div class="relative">
-            <label for="search-lang-select" class="text-xs text-gray-500 block mb-1 ml-1">Language</label>
+            <label for="search-lang-select" class="text-xs text-gray-500 dark:text-gray-400 block mb-1 ml-1">Language</label>
             <div class="relative">
               <select 
                 id="search-lang-select" 
-                class="pl-3 pr-8 py-2 bg-indigo-50 border border-indigo-100 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 text-gray-700 appearance-none"
+                class="pl-3 pr-8 py-2 bg-indigo-50 dark:bg-gray-700 border border-indigo-100 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-600 text-gray-700 dark:text-gray-200 appearance-none"
               >
                 <option value="ta">Tamil</option>
                 <option value="en">English</option>
                 <option value="de">German</option>
               </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-gray-400">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
@@ -68,7 +68,7 @@ const { title } = Astro.props as Props;
           
           <!-- Search Input -->
           <div class="flex-grow relative">
-            <label for="searchInput" class="text-xs text-gray-500 block mb-1 ml-1">Search</label>
+            <label for="searchInput" class="text-xs text-gray-500 dark:text-gray-400 block mb-1 ml-1">Search</label>
             <div class="relative">
               <!-- Search Icon -->
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -83,14 +83,14 @@ const { title } = Astro.props as Props;
                 id="searchInput"
                 type="text"
                 placeholder="Search by title or lyrics..."
-                class="w-full pl-10 pr-10 py-2 border border-indigo-100 bg-indigo-50 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 text-gray-700"
+                class="w-full pl-10 pr-10 py-2 border border-indigo-100 dark:border-gray-600 bg-indigo-50 dark:bg-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-600 text-gray-700 dark:text-gray-200"
               />
               
               <!-- Clear button -->
               <button
                 id="clearButton"
                 type="button"
-                class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 rounded-md p-1 hidden focus:outline-none transition-colors"
+                class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-md p-1 hidden focus:outline-none transition-colors"
                 aria-label="Clear search"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -99,10 +99,10 @@ const { title } = Astro.props as Props;
               </button>
             </div>
           </div>
+
         </div>
       </div>
   
-<!-- Song list with fixed badge and proper centering -->
 <!-- Song list with fixed badge and proper centering -->
 <ul class="grid grid-cols-1 gap-2 sm:gap-6 md:grid-cols-2 lg:grid-cols-3" id="songsList">
   {songs.map((song, index) => (
@@ -116,11 +116,11 @@ const { title } = Astro.props as Props;
       data-text-en={song.text_en}
       data-title-de={song.title_de}
       data-text-de={song.text_de}
-      class="song-item w-full rounded-md sm:rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden bg-white group relative"
+      class="song-item w-full rounded-md sm:rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden bg-white dark:bg-gray-800 group relative"
     >
       <a href={`${import.meta.env.BASE_URL}/songs/ta/${song.id}`} class="block h-full">
         <!-- Card header with music icon - smaller on mobile -->
-        <div class="bg-indigo-600 h-1 sm:h-2 group-hover:h-3 sm:group-hover:h-4 transition-all duration-300"></div>
+        <div class="bg-indigo-600 dark:bg-indigo-700 h-1 sm:h-2 group-hover:h-3 sm:group-hover:h-4 transition-all duration-300"></div>
         
         <div class="p-2 sm:p-4 md:p-5">
           <!-- Match Badge positioned at the top-left of the box to avoid title overlap -->
@@ -129,33 +129,33 @@ const { title } = Astro.props as Props;
           <!-- Title section with larger font sizes for mobile -->
 <div class="title-container mt-3 sm:mt-0 mb-2 sm:mb-3">
   <div class="flex items-center gap-1 sm:gap-2">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-4 sm:w-4 md:h-5 md:w-5 text-indigo-600 opacity-75 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-4 sm:w-4 md:h-5 md:w-5 text-indigo-600 dark:text-indigo-400 opacity-75 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
     </svg>
     <div class="flex flex-col justify-center max-w-full">
-      <div class="original-title text-sm sm:text-sm md:text-base font-medium text-gray-800 group-hover:text-indigo-700 transition-colors break-words">
+      <div class="original-title text-sm sm:text-sm md:text-base font-medium text-gray-800 dark:text-gray-200 group-hover:text-indigo-700 dark:group-hover:text-indigo-400 transition-colors break-words">
         {song.title}
       </div>
-      <div class="translation-title hidden text-xs sm:text-xs md:text-sm text-gray-500 mt-0.5 break-words"></div>
+      <div class="translation-title hidden text-xs sm:text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-0.5 break-words"></div>
     </div>
   </div>
 </div>
           
 <!-- Text match context with larger text -->
-<div class="match-context hidden mt-2 sm:mt-3 mb-2 sm:mb-3 py-2 px-3 sm:py-2.5 sm:px-4 rounded-md border border-indigo-100 bg-indigo-50/70 shadow-sm">
-  <p class="text-xs sm:text-xs md:text-sm text-gray-700 leading-relaxed"></p>
+<div class="match-context hidden mt-2 sm:mt-3 mb-2 sm:mb-3 py-2 px-3 sm:py-2.5 sm:px-4 rounded-md border border-indigo-100 dark:border-gray-700 bg-indigo-50/70 dark:bg-gray-700/70 shadow-sm">
+  <p class="text-xs sm:text-xs md:text-sm text-gray-700 dark:text-gray-300 leading-relaxed"></p>
 </div>
           
           <!-- Text snippet - hidden -->
           <div class="relative hidden">
             <div class="text-snippet"></div>
-            <div class="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white dark:from-gray-800 to-transparent"></div>
           </div>
           
           <!-- Card footer - visible only on tablet and larger screens -->
-          <div class="hidden sm:flex mt-2 sm:mt-3 pt-1 sm:pt-2 border-t border-gray-100 justify-between items-center">
-            <span class="text-xs text-gray-400">#{index + 1}</span>
-            <span class="text-indigo-500 text-xs sm:text-sm font-medium flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+          <div class="hidden sm:flex mt-2 sm:mt-3 pt-1 sm:pt-2 border-t border-gray-100 dark:border-gray-700 justify-between items-center">
+            <span class="text-xs text-gray-400 dark:text-gray-500">#{index + 1}</span>
+            <span class="text-indigo-500 dark:text-indigo-400 text-xs sm:text-sm font-medium flex items-center gap-1 group-hover:translate-x-1 transition-transform">
               View
               <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -170,11 +170,11 @@ const { title } = Astro.props as Props;
       
       <!-- Empty state for no search results -->
       <div id="noResultsMessage" class="hidden text-center py-10">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <h3 class="text-lg font-medium text-gray-700 mb-1">No songs found</h3>
-        <p class="text-gray-500">Try adjusting your search or language selection</p>
+        <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300 mb-1">No songs found</h3>
+        <p class="text-gray-500 dark:text-gray-400">Try adjusting your search or language selection</p>
       </div>
     </div>
   
@@ -186,12 +186,12 @@ const { title } = Astro.props as Props;
     </div>
   
     <!-- Footer -->
-    <footer class="py-6 text-center text-gray-500 text-sm">
+    <footer class="py-6 text-center text-gray-500 dark:text-gray-400 text-sm">
       <p>© 2025 Tamil Christian Songbook</p>
     </footer>
   
     <!-- Go to Top Button with improved styling -->
-    <button id="goToTopButton" class="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-lg p-3 focus:outline-none flex items-center justify-center hidden transition-all transform hover:scale-105">
+    <button id="goToTopButton" class="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-800 text-white rounded-full shadow-lg dark:shadow-black/30 p-3 focus:outline-none flex items-center justify-center hidden transition-all transform hover:scale-105">
       <span class="hidden sm:flex items-center justify-center gap-2">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
              viewBox="0 0 24 24" stroke="currentColor">
@@ -206,7 +206,6 @@ const { title } = Astro.props as Props;
         </svg>
       </span>
     </button>
-  
     <script>
 // Get DOM elements
 const searchInput = document.getElementById('searchInput');
