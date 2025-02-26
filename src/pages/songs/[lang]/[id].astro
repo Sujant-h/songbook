@@ -1,6 +1,7 @@
 ---
 import '../../../styles/global.css';
 import songsData from '../../../data/data_cleaned.json';
+
 import { pwaInfo } from 'virtual:pwa-info';
 
 export interface Props {
@@ -10,15 +11,21 @@ export interface Props {
 const { title } = Astro.props as Props;
 
 export async function getStaticPaths() {
+  // Generate all combinations of languages and song IDs
   const langs = ['ta', 'en', 'de'];
-  return langs.flatMap(lang =>
-    songsData.map(song => ({
-      params: { lang, id: song.id.toString() },
-      props: { song, lang },
-    }))
-  );
+  const paths = [];
+  
+  langs.forEach(lang => {
+    songsData.forEach(song => {
+      paths.push({
+        params: { lang, id: song.id },
+        props: { song, lang },
+      });
+    });
+  });
+  
+  return paths;
 }
-
 
 const { song, lang } = Astro.props;
 const audioUrl = `https://sujant-h.github.io/songbook/audio/${song.id}.mp3`;
@@ -43,15 +50,16 @@ if (lang === 'en') {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/pwa-192x192.png" />
-    <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF" />
-    <meta name="msapplication-TileColor" content="#FFFFFF" />
-    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/pwa-192x192.png">
+    <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF">
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+    <meta name="theme-color" content="#ffffff">
     <title>{title}</title>
-    <meta name="description" content={title} />
+    <meta name="description" content={title}>
     <script src="/src/pwa.ts"></script>
     { pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} /> }
+
 
     <!-- Material Symbols “close” icon -->
     <link
@@ -68,98 +76,83 @@ if (lang === 'en') {
       }
     </style>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@100..900&display=swap"
       rel="stylesheet"
-    />
+    >
   </head>
   <body class="bg-gray-50">
-    <!-- Main Container -->
-    <div class="max-w-3xl mx-auto bg-white p-8 sm:p-10 rounded-xl shadow-2xl my-10">
-      <a href="/" id="back-button" class="inline-block mb-6 text-blue-600 hover:underline transition-colors">
-        &larr; Back
-      </a>
+  
 
-      <!-- Language Selection -->
-      <div class="flex justify-end mb-6">
-        <select id="language-select" class="px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
-          <option value="ta" selected={lang === 'ta'}>Tamil</option>
-          <option value="en" selected={lang === 'en'}>English</option>
-          <option value="de" selected={lang === 'de'}>German</option>
-        </select>
-      </div>
-
-      <!-- Song Title -->
-      <h1 class="text-3xl font-extrabold text-gray-800 mb-4">{songTitle}</h1>
-
-      <!-- Song Text -->
-      <pre class="song-text whitespace-pre-line text-gray-700 font-sans p-6 bg-gray-50 rounded-lg  mb-8">
-{songText}
-      </pre>
-
-      <!-- Original Tamil Content (shown when language is English or German) -->
-      {showOriginal && (
-        <div class="mt-8 pt-6 border-t border-gray-200">
-          <h3 class="text-xl font-bold text-gray-800 mb-2">Tamil</h3>
-          <h4 class="text-lg font-medium text-gray-700 mb-3">{song.title}</h4>
-          <pre class="whitespace-pre-line text-gray-700 font-sans p-6 bg-gray-50 rounded-lg">
-{song.text}
-          </pre>
+      <!-- Main Box: Song Content -->
+      <div class="max-w-3xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-lg relative">
+    <a href="/" id="back-button" class="mb-4 inline-block text-blue-600 hover:underline">&larr; Back</a>
+    
+        <!-- Language selection -->
+        <div class="mb-4 flex justify-end">
+            <select id="language-select" class="px-3 py-1 border border-gray-300 rounded-md text-sm">
+                <option value="ta" selected={lang === 'ta'}>Tamil</option>
+                <option value="en" selected={lang === 'en'}>English</option>
+                <option value="de" selected={lang === 'de'}>German</option>
+            </select>
         </div>
-      )}
 
-      <!-- Audio Player -->
-      <div class="mt-8 pt-6 border-t border-gray-200">
-        <h3 class="text-xl font-bold text-gray-800 mb-3">Listen to the Song</h3>
-        <audio controls class="w-full focus:outline-none">
-          <source src={audioUrl} type="audio/mpeg" />
-          Your browser does not support the audio element.
-        </audio>
-      </div>
-    </div>
+        <h1 class="text-2xl font-bold mb-4 text-gray-800">{songTitle}</h1>
+        
+        <pre class="whitespace-pre-line text-gray-800 font-sans p-4 bg-gray-50 rounded mb-6">
+            {songText}
+        </pre>
+        
+        {showOriginal && (
+            <div class="mt-6 pt-4 border-t border-gray-200">
+                <h3 class="text-lg font-semibold mb-2">Original (Tamil)</h3>
+                <h4 class="text-lg font-medium mb-2">{song.title}</h4>
+                <pre class="whitespace-pre-line text-gray-800 font-sans p-4 bg-gray-50 rounded">
+                    {song.text}
+                </pre>
+            </div>
+        )}
+        
+        <!-- Audio Player -->
+        <div class="mt-6 pt-4 border-t border-gray-200">
+            <h3 class="text-lg font-semibold mb-3">Listen to the Song</h3>
+            <audio controls class="w-full focus:outline-none">
+                <source src={audioUrl} type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
 
     <script>
-      // Utility to escape regex special characters
-      const escapeRegExp = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const highlightElement = (el, query) => {
-        const words = query.split(/\s+/).filter(Boolean);
-        if (!words.length) return;
-        const regex = new RegExp('(' + words.map(escapeRegExp).join('|') + ')', 'giu');
-        el.innerHTML = el.innerHTML.replace(regex, '<span class="highlighted bg-yellow-200">$1</span>');
-      };
+        // Handle language switching
+        document.getElementById('language-select').addEventListener('change', (e) => {
+            const selectedLang = e.target.value;
+            const currentPath = window.location.pathname;
+            const pathParts = currentPath.split('/');
+            const songId = pathParts[pathParts.length - 1];
+            
+            // Save language preference
+            sessionStorage.setItem('selectedLanguage', selectedLang);
+            
+            // Navigate to the new language URL
+            window.location.href = `${import.meta.env.BASE_URL}/songs/${selectedLang}/${songId}`;
+        });
 
-      document.addEventListener('DOMContentLoaded', () => {
-        const searchQuery = sessionStorage.getItem('searchQuery');
-        if (searchQuery && searchQuery.trim() !== '') {
-          const titleEl = document.querySelector('h1');
-          const songTextEl = document.querySelector('.song-text');
-          if (titleEl) highlightElement(titleEl, searchQuery);
-          if (songTextEl) highlightElement(songTextEl, searchQuery);
-        }
-      });
-
-      // Handle language switching
-      document.getElementById('language-select').addEventListener('change', (e) => {
-        const selectedLang = e.target.value;
-        const currentPath = window.location.pathname;
-        const pathParts = currentPath.split('/');
-        const songId = pathParts[pathParts.length - 1];
-        // Save language preference
-        sessionStorage.setItem('selectedLanguage', selectedLang);
-        // Navigate to the new language URL
-        window.location.href = `${import.meta.env.BASE_URL}/songs/${selectedLang}/${songId}`;
-      });
-
-      // Back button functionality to save scroll position
-      document.getElementById('back-button').addEventListener('click', (e) => {
-        e.preventDefault();
-        const pathParts = window.location.pathname.split('/');
-        const songId = pathParts[pathParts.length - 1];
-        sessionStorage.setItem('returnedFromSong', songId);
-        window.location.href = '/songbook';
-      });
+        // Back button functionality to save scroll position
+        document.getElementById('back-button').addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Get the current song ID to use as a key for the scroll position
+            const pathParts = window.location.pathname.split('/');
+            const songId = pathParts[pathParts.length - 1];
+            
+            // Store that we're navigating back from this specific song
+            sessionStorage.setItem('returnedFromSong', songId);
+            
+            // Navigate to songbook page
+            window.location.href = '/songbook';
+        });
     </script>
   </body>
-</html>
+  </html>
