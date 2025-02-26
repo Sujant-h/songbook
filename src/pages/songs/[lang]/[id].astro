@@ -160,6 +160,7 @@ if (lang === 'en') {
 
     <script>
 // Handle language switching
+// Handle language switching
 document.getElementById('language-select').addEventListener('change', (e) => {
   const selectedLang = e.target.value;
   const currentPath = window.location.pathname;
@@ -196,7 +197,6 @@ document.getElementById('language-select').addEventListener('change', (e) => {
   // Ensure the song ID is included in the new URL
   window.location.href = `${basePathNormalized}/songs/${selectedLang}/${songId}`;
 });
-
 // Back button functionality to save scroll position
 document.getElementById('back-button').addEventListener('click', (e) => {
   e.preventDefault();
