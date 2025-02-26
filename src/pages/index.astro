@@ -124,27 +124,27 @@ const { title } = Astro.props as Props;
         
         <div class="p-2 sm:p-4 md:p-5">
           <!-- Match Badge positioned at the top-left of the box to avoid title overlap -->
-          <div class="match-badge hidden absolute top-1 left-1 z-20 text-[0.65rem] sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-opacity-90 shadow-sm"></div>
+          <!-- Match Badge with larger text -->
+          <div class="match-badge hidden absolute top-1 left-1 z-20 text-xs sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-opacity-90 shadow-sm"></div>          
+          <!-- Title section with larger font sizes for mobile -->
+<div class="title-container mt-3 sm:mt-0 mb-2 sm:mb-3">
+  <div class="flex items-center gap-1 sm:gap-2">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-4 sm:w-4 md:h-5 md:w-5 text-indigo-600 opacity-75 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+    </svg>
+    <div class="flex flex-col justify-center max-w-full">
+      <div class="original-title text-sm sm:text-sm md:text-base font-medium text-gray-800 group-hover:text-indigo-700 transition-colors break-words">
+        {song.title}
+      </div>
+      <div class="translation-title hidden text-xs sm:text-xs md:text-sm text-gray-500 mt-0.5 break-words"></div>
+    </div>
+  </div>
+</div>
           
-          <!-- Title section with improved spacing for mobile -->
-          <div class="title-container mt-3 sm:mt-0 mb-2 sm:mb-3">
-            <div class="flex items-center gap-1 sm:gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 text-indigo-600 opacity-75 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-              </svg>
-              <div class="flex flex-col justify-center max-w-full">
-                <div class="original-title text-xs sm:text-sm md:text-base font-medium text-gray-800 group-hover:text-indigo-700 transition-colors break-words">
-                  {song.title}
-                </div>
-                <div class="translation-title hidden text-[0.65rem] sm:text-xs md:text-sm text-gray-500 mt-0.5 break-words"></div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Text match context - with enhanced styling -->
-          <div class="match-context hidden mt-2 sm:mt-3 mb-2 sm:mb-3 py-2 px-3 sm:py-2.5 sm:px-4 rounded-md border border-indigo-100 bg-indigo-50/70 shadow-sm">
-            <p class="text-[0.65rem] sm:text-xs md:text-sm text-gray-700 leading-relaxed"></p>
-          </div>
+<!-- Text match context with larger text -->
+<div class="match-context hidden mt-2 sm:mt-3 mb-2 sm:mb-3 py-2 px-3 sm:py-2.5 sm:px-4 rounded-md border border-indigo-100 bg-indigo-50/70 shadow-sm">
+  <p class="text-xs sm:text-xs md:text-sm text-gray-700 leading-relaxed"></p>
+</div>
           
           <!-- Text snippet - hidden -->
           <div class="relative hidden">
@@ -417,10 +417,7 @@ function filterSongs() {
         // Show match badge with appropriate styling
         matchBadge.classList.remove('hidden');
         
-        if (titleHit && textHit) {
-          matchBadge.textContent = 'Found in title & text';
-          matchBadge.className = 'match-badge absolute top-1 left-1 z-20 text-[0.65rem] sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-indigo-100 text-indigo-800 bg-opacity-90 shadow-sm';
-        } else if (titleHit) {
+      if (titleHit) {
           matchBadge.textContent = 'Found in title';
           matchBadge.className = 'match-badge absolute top-1 left-1 z-20 text-[0.65rem] sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-blue-100 text-blue-800 bg-opacity-90 shadow-sm';
         } else {
