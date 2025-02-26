@@ -30,85 +30,174 @@ const { title } = Astro.props as Props;
     <!-- Include Material Icons from Google Fonts -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   </head>
-  <body class="bg-gray-100 font-tamil">
+  <body class="bg-gradient-to-b from-indigo-50 to-white min-h-screen font-tamil">
     <!-- Outer container -->
-    <div class="w-full px-4 py-8 sm:container sm:mx-auto">
-      <!-- Increase the top margin for the title -->
-      <h1 class="mt-2 mb-6 lg:mt-8 text-3xl md:text-4xl font-extrabold text-center text-darkblue lg:mb-12 leading-snug">
-        Tamil Christian Songs
-      </h1>
+    <div class="max-w-6xl mx-auto px-4 py-8">
+      <!-- Header with title -->
+      <div class="text-center mb-10">
+        <h1 class="mt-2 mb-4 lg:mt-8 text-3xl md:text-4xl font-extrabold text-indigo-800 leading-snug">
+          Tamil Christian Songs
+        </h1>
+        <p class="text-gray-600 max-w-2xl mx-auto">
+          A collection of beautiful Tamil Christian songs with translations in English and German
+        </p>
+      </div>
   
       <!-- Search bar and language dropdown -->
-      <div class="search-bar relative mb-8 flex items-center">
-        <select id="search-lang-select" class="mr-4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-babyblue">
-          <option value="ta">Tamil</option>
-          <option value="en">English</option>
-          <option value="de">German</option>
-        </select>
-        
-        <div class="flex-grow relative">
-          <!-- Search Icon using Material Icons -->
-          <span class="search-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </span>
-          <input
-            id="searchInput"
-            type="text"
-            placeholder="Search songs..."
-            class="w-full pl-12 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-babyblue"
-          />
-          <button
-            id="clearButton"
-            type="button"
-            class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 rounded-md p-1 hidden focus:outline-none"
-            aria-label="Clear search"
-          >
-            <span class="material-icons">cancel</span>
-          </button>
+      <div class="search-bar relative mb-10 max-w-3xl mx-auto">
+        <div class="bg-white p-3 rounded-xl shadow-md flex items-center gap-4">
+          <!-- Language Selector -->
+          <div class="relative">
+            <label for="search-lang-select" class="text-xs text-gray-500 block mb-1 ml-1">Language</label>
+            <div class="relative">
+              <select 
+                id="search-lang-select" 
+                class="pl-3 pr-8 py-2 bg-indigo-50 border border-indigo-100 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 text-gray-700 appearance-none"
+              >
+                <option value="ta">Tamil</option>
+                <option value="en">English</option>
+                <option value="de">German</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Search Input -->
+          <div class="flex-grow relative">
+            <label for="searchInput" class="text-xs text-gray-500 block mb-1 ml-1">Search</label>
+            <div class="relative">
+              <!-- Search Icon -->
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-400" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              
+              <input
+                id="searchInput"
+                type="text"
+                placeholder="Search by title or lyrics..."
+                class="w-full pl-10 pr-10 py-2 border border-indigo-100 bg-indigo-50 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 text-gray-700"
+              />
+              
+              <!-- Clear button -->
+              <button
+                id="clearButton"
+                type="button"
+                class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 rounded-md p-1 hidden focus:outline-none transition-colors"
+                aria-label="Clear search"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
   
-      <!-- Songs List -->
-      <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" id="songsList">
-        {songs.map((song, index) => (
-          <li
-            key={song.id}
-            data-id={song.id}  {/* Added data-id */}
-            data-index={index}
-            data-title={song.title}
-            data-text={song.text}
-            data-title-en={song.title_en}
-            data-text-en={song.text_en}
-            data-title-de={song.title_de}
-            data-text-de={song.text_de}
-            class="song-item w-full bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-4"
-          >
-            <a href={`${import.meta.env.BASE_URL}/songs/ta/${song.id}`} class="block h-full">
-              <div class="title-container">
-                <div class="translation-title hidden text-sm text-gray-600"></div>
-                <div class="original-title text-base md:text-lg lg:text-xl font-medium text-gray-800 hover:text-deapseablue transition-colors">
+<!-- Song list with fixed badge and proper centering -->
+<!-- Song list with fixed badge and proper centering -->
+<ul class="grid grid-cols-1 gap-2 sm:gap-6 md:grid-cols-2 lg:grid-cols-3" id="songsList">
+  {songs.map((song, index) => (
+    <li
+      key={song.id}
+      data-id={song.id}
+      data-index={index}
+      data-title={song.title}
+      data-text={song.text}
+      data-title-en={song.title_en}
+      data-text-en={song.text_en}
+      data-title-de={song.title_de}
+      data-text-de={song.text_de}
+      class="song-item w-full rounded-md sm:rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden bg-white group relative"
+    >
+      <a href={`${import.meta.env.BASE_URL}/songs/ta/${song.id}`} class="block h-full">
+        <!-- Card header with music icon - smaller on mobile -->
+        <div class="bg-indigo-600 h-1 sm:h-2 group-hover:h-3 sm:group-hover:h-4 transition-all duration-300"></div>
+        
+        <div class="p-2 sm:p-4 md:p-5">
+          <!-- Match Badge positioned at the top-left of the box to avoid title overlap -->
+          <div class="match-badge hidden absolute top-1 left-1 z-20 text-[0.65rem] sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-opacity-90 shadow-sm"></div>
+          
+          <!-- Title section with improved spacing for mobile -->
+          <div class="title-container mt-3 sm:mt-0 mb-2 sm:mb-3">
+            <div class="flex items-center gap-1 sm:gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 text-indigo-600 opacity-75 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+              </svg>
+              <div class="flex flex-col justify-center max-w-full">
+                <div class="original-title text-xs sm:text-sm md:text-base font-medium text-gray-800 group-hover:text-indigo-700 transition-colors break-words">
                   {song.title}
                 </div>
+                <div class="translation-title hidden text-[0.65rem] sm:text-xs md:text-sm text-gray-500 mt-0.5 break-words"></div>
               </div>
-              <div class="text-snippet text-sm text-gray-500 mt-1"></div>
-            </a>
-          </li>
-        ))}    
-      </ul>
+            </div>
+          </div>
+          
+          <!-- Text match context - with enhanced styling -->
+          <div class="match-context hidden mt-2 sm:mt-3 mb-2 sm:mb-3 py-2 px-3 sm:py-2.5 sm:px-4 rounded-md border border-indigo-100 bg-indigo-50/70 shadow-sm">
+            <p class="text-[0.65rem] sm:text-xs md:text-sm text-gray-700 leading-relaxed"></p>
+          </div>
+          
+          <!-- Text snippet - hidden -->
+          <div class="relative hidden">
+            <div class="text-snippet"></div>
+            <div class="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent"></div>
+          </div>
+          
+          <!-- Card footer - visible only on tablet and larger screens -->
+          <div class="hidden sm:flex mt-2 sm:mt-3 pt-1 sm:pt-2 border-t border-gray-100 justify-between items-center">
+            <span class="text-xs text-gray-400">#{index + 1}</span>
+            <span class="text-indigo-500 text-xs sm:text-sm font-medium flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+              View
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </a>
+    </li>
+  ))}    
+</ul>
+      
+      <!-- Empty state for no search results -->
+      <div id="noResultsMessage" class="hidden text-center py-10">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h3 class="text-lg font-medium text-gray-700 mb-1">No songs found</h3>
+        <p class="text-gray-500">Try adjusting your search or language selection</p>
+      </div>
     </div>
   
-    <!-- Go to Top Button -->
-    <button id="goToTopButton" class="fixed bottom-4 right-4 bg-babyblue text-white rounded-full shadow-lg p-3 hover:bg-wallpaintblue focus:outline-none flex items-center justify-center hidden">
-      <span class="hidden sm:flex items-center justify-center">
+    <!-- Pagination (if needed) -->
+    <div class="max-w-6xl mx-auto px-4 py-6 flex justify-center">
+      <div class="flex gap-2">
+        <!-- Pagination can be added here -->
+      </div>
+    </div>
+  
+    <!-- Footer -->
+    <footer class="py-6 text-center text-gray-500 text-sm">
+      <p>© 2025 Tamil Christian Songbook</p>
+    </footer>
+  
+    <!-- Go to Top Button with improved styling -->
+    <button id="goToTopButton" class="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-lg p-3 focus:outline-none flex items-center justify-center hidden transition-all transform hover:scale-105">
+      <span class="hidden sm:flex items-center justify-center gap-2">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
              viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
         </svg>
-        <span class="ml-2">Go to Top</span>
+        <span>Go to Top</span>
       </span>
       <span class="sm:hidden flex items-center justify-center">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
@@ -119,265 +208,471 @@ const { title } = Astro.props as Props;
     </button>
   
     <script>
-      // Utility functions
-      const escapeRegExp = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const cleanText = text => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        .replace(/(\\n|\r\n|\n|\r)/g, ' ').replace(/\s+/g, ' ').trim();
-      const highlight = (text, query) => {
-        if (!query) return text;
-        text = cleanText(text);
-        const words = query.split(/\s+/).filter(Boolean);
-        const regex = new RegExp('(' + words.map(escapeRegExp).join('|') + ')', 'giu');
-        return text.replace(regex, '<span class="highlighted bg-yellow-200">$1</span>');
-      };
-      const getSnippet = (text, query, snippetLength = 50) => {
-        if (!query) return '';
-        const cleaned = cleanText(text);
-        const lowerText = cleaned.toLowerCase();
-        const queryWords = query.split(/\s+/).filter(Boolean);
-        let firstIndex = Infinity;
-        queryWords.forEach(word => {
-          const i = lowerText.indexOf(word.toLowerCase());
-          if (i !== -1 && i < firstIndex) firstIndex = i;
-        });
-        if (firstIndex === Infinity) return '';
-        let start = Math.max(0, firstIndex - snippetLength);
-        let end = Math.min(cleaned.length, firstIndex + snippetLength + queryWords[0].length);
-        if (start > 0) {
-          const prevSpace = cleaned.lastIndexOf(' ', start);
-          if (prevSpace !== -1) start = prevSpace + 1;
-        }
-        if (end < cleaned.length) {
-          const nextSpace = cleaned.indexOf(' ', end);
-          if (nextSpace !== -1) end = nextSpace;
-        }
-        let snippet = cleaned.substring(start, end);
-        if (start > 0) snippet = '...' + snippet;
-        if (end < cleaned.length) snippet = snippet + '...';
-        return highlight(snippet, query);
-      };
+// Get DOM elements
+const searchInput = document.getElementById('searchInput');
+const clearButton = document.getElementById('clearButton');
+const langSelect = document.getElementById('search-lang-select');
+const songsList = document.getElementById('songsList');
+const songItems = document.querySelectorAll('.song-item');
+const noResultsMessage = document.getElementById('noResultsMessage');
+const goToTopButton = document.getElementById('goToTopButton');
 
-      // Get DOM elements
-      const searchLangSelect = document.getElementById('search-lang-select');
-      const searchInput = document.getElementById('searchInput');
-      const clearButton = document.getElementById('clearButton');
-      const songsList = document.getElementById('songsList');
-      const songItems = Array.from(document.querySelectorAll('.song-item'));
+// State management
+const state = {
+  // Update clear button visibility based on search input
+  updateClearButtonVisibility() {
+    if (searchInput.value.length > 0) {
+      clearButton.classList.remove('hidden');
+    } else {
+      clearButton.classList.add('hidden');
+    }
+  },
 
-      // Set default language to Tamil ("ta") if not already selected
-      let currentLang = sessionStorage.getItem('selectedLanguage') || 'ta';
-      searchLangSelect.value = currentLang;
+  // Save current state to session storage
+  saveState() {
+    sessionStorage.setItem('scrollPosition', window.pageYOffset);
+    sessionStorage.setItem('searchQuery', searchInput.value);
+    sessionStorage.setItem('selectedLang', langSelect.value);
+    sessionStorage.setItem('returnedFromSong', 'true');
+  },
 
-      // Update song links using the current language value
-      const updateSongLinks = () => {
-        songItems.forEach(item => {
-          const songId = item.getAttribute('data-id');
-          const link = item.querySelector('a');
-          link.href = `${import.meta.env.BASE_URL}/songs/${currentLang}/${songId}`;
-        });
-      };
-
-      // Reset function to update song titles and links
-      const resetOriginalOrder = () => {
-        songItems.sort((a, b) =>
-          Number(a.getAttribute('data-index')) - Number(b.getAttribute('data-index'))
-        );
-        songsList.innerHTML = '';
-        songItems.forEach(item => {
-          if (currentLang === 'en') {
-            const transTitleEl = item.querySelector('.translation-title');
-            transTitleEl.innerHTML = item.getAttribute('data-title-en') || '';
-            transTitleEl.classList.remove('hidden');
-            transTitleEl.classList.add('font-semibold', 'text-2xl');
-            const tamilTitleEl = item.querySelector('.original-title');
-            tamilTitleEl.innerHTML = item.getAttribute('data-title') || '';
-            tamilTitleEl.classList.remove('hidden');
-          } else if (currentLang === 'de') {
-            const transTitleEl = item.querySelector('.translation-title');
-            transTitleEl.innerHTML = item.getAttribute('data-title-de') || '';
-            transTitleEl.classList.remove('hidden');
-            transTitleEl.classList.add('font-semibold', 'text-2xl');
-            const tamilTitleEl = item.querySelector('.original-title');
-            tamilTitleEl.innerHTML = item.getAttribute('data-title') || '';
-            tamilTitleEl.classList.remove('hidden');
-          } else {
-            // For Tamil, show only the Tamil title.
-            item.querySelector('.translation-title').classList.add('hidden');
-            const tamilTitleEl = item.querySelector('.original-title');
-            tamilTitleEl.innerHTML = item.getAttribute('data-title') || '';
-            tamilTitleEl.classList.remove('hidden');
-          }
-          item.querySelector('.text-snippet').innerHTML = '';
-          item.style.display = '';
-          songsList.appendChild(item);
-          const songId = item.getAttribute('data-id');
-          const link = item.querySelector('a');
-          link.href = `${import.meta.env.BASE_URL}/songs/${currentLang}/${songId}`;
-        });
-      };
-
-      // Filtering function that uses "ta" for Tamil
-      const filterSongs = (query, searchLang) => {
-        query = query.trim().toLowerCase();
-        if (query === '') {
-          resetOriginalOrder();
-          updateTitles();
-          return;
-        }
-
-        let fieldKeyTitle, fieldKeyText;
-        if (searchLang === 'ta') {
-          fieldKeyTitle = 'data-title';
-          fieldKeyText = 'data-text';
-        } else if (searchLang === 'en') {
-          fieldKeyTitle = 'data-title-en';
-          fieldKeyText = 'data-text-en';
-        } else if (searchLang === 'de') {
-          fieldKeyTitle = 'data-title-de';
-          fieldKeyText = 'data-text-de';
-        }
-
-        let resultsFound = false;
-        songItems.forEach(li => {
-          const titleField = li.getAttribute(fieldKeyTitle) || '';
-          const textField = li.getAttribute(fieldKeyText) || '';
-          const titleHit = titleField.toLowerCase().includes(query);
-          const textHit = textField.toLowerCase().includes(query);
-
-          if (titleHit || textHit) {
-            li.style.display = '';
-            if (searchLang === 'ta') {
-              const tamilTitleEl = li.querySelector('.original-title');
-              tamilTitleEl.innerHTML = titleHit
-                ? highlight(li.getAttribute('data-title') || '', query)
-                : li.getAttribute('data-title');
-              tamilTitleEl.classList.remove('hidden');
-              li.querySelector('.translation-title').classList.add('hidden');
-              li.querySelector('.text-snippet').innerHTML = textHit
-                ? getSnippet(li.getAttribute('data-text') || '', query)
-                : '';
-            } else {
-              const transTitleEl = li.querySelector('.translation-title');
-              let displayTitle = li.getAttribute(fieldKeyTitle) || '';
-              transTitleEl.innerHTML = titleHit
-                ? highlight(displayTitle, query)
-                : displayTitle;
-              transTitleEl.classList.remove('hidden');
-              transTitleEl.classList.add('font-bold', 'text-2xl');
-              const tamilTitleEl = li.querySelector('.original-title');
-              tamilTitleEl.innerHTML = li.getAttribute('data-title') || '';
-              tamilTitleEl.classList.remove('hidden');
-              li.querySelector('.text-snippet').innerHTML = textHit
-                ? getSnippet(li.getAttribute(fieldKeyText) || '', query)
-                : '';
-            }
-            const songId = li.getAttribute('data-id');
-            const link = li.querySelector('a');
-            link.href = `${import.meta.env.BASE_URL}/songs/${searchLang}/${songId}`;
-            resultsFound = true;
-          } else {
-            li.style.display = 'none';
-          }
-        });
-
-        if (!resultsFound) {
-          songItems.forEach(li => li.style.display = 'none');
-        }
-      };
-
-      // Debounce helper.
-      const debounce = (fn, delay) => {
-        let timeout;
-        return (...args) => {
-          clearTimeout(timeout);
-          timeout = setTimeout(() => fn(...args), delay);
-        };
-      };
-
-      const debouncedFilter = debounce(() => {
-        const query = searchInput.value;
-        sessionStorage.setItem('searchQuery', query);
-        filterSongs(query, searchLangSelect.value);
-        clearButton.style.display = query.trim() !== '' ? 'block' : 'none';
-        updateTitles();
-      }, 300);
-
+  // Restore state from session storage
+  restoreState() {
+    const returnedFromSong = sessionStorage.getItem('returnedFromSong');
+    if (returnedFromSong) {
+      // Restore search query
       const savedQuery = sessionStorage.getItem('searchQuery');
       if (savedQuery) {
         searchInput.value = savedQuery;
-        filterSongs(savedQuery, searchLangSelect.value);
-        if (savedQuery.trim() !== '') clearButton.style.display = 'block';
+        this.updateClearButtonVisibility();
       }
+      
+      // Restore language selection
+      const savedLang = sessionStorage.getItem('selectedLang');
+      if (savedLang && savedLang !== langSelect.value) {
+        langSelect.value = savedLang;
+        updateSongDisplay();
+      }
+      
+      // Apply the filter to show only matching results
+      // This must be called after restoring search query and language
+      if (savedQuery && savedQuery.trim() !== '') {
+        filterSongs();
+        
+        // Make sure text matches are shown
+        setTimeout(() => {
+          songItems.forEach(item => {
+            const searchTerm = savedQuery.toLowerCase().trim();
+            let textField;
+            
+            // Get the appropriate field based on language
+            if (langSelect.value === 'ta') {
+              textField = 'text';
+            } else if (langSelect.value === 'en') {
+              textField = 'textEn';
+            } else if (langSelect.value === 'de') {
+              textField = 'textDe';
+            }
+            
+            // Check if this item has a text match
+            const text = item.dataset[textField] ? 
+              item.dataset[textField].toLowerCase() : 
+              item.dataset.text.toLowerCase();
+            
+            // If there's a text match, show the context
+            if (text.includes(searchTerm)) {
+              const matchContext = item.querySelector('.match-context');
+              if (matchContext) {
+                const rawText = item.dataset[textField] || item.dataset.text || '';
+                const context = findMatchContext(rawText, searchTerm);
+                matchContext.innerHTML = highlightMatches(context, searchTerm);
+                matchContext.classList.remove('hidden');
+              }
+            }
+          });
+        }, 50);
+      }
+      
+      // Restore scroll position
+      const savedPosition = sessionStorage.getItem('scrollPosition');
+      if (savedPosition) {
+        // Use setTimeout to ensure the scroll happens after the DOM is fully updated
+        setTimeout(() => {
+          window.scrollTo(0, parseInt(savedPosition));
+        }, 100);
+      }
+      
+      // Clear session storage
+      this.clearState();
+    }
+  },
 
-      searchInput.addEventListener('input', debouncedFilter);
-      clearButton.addEventListener('click', () => {
-        searchInput.value = '';
-        sessionStorage.removeItem('searchQuery');
-        resetOriginalOrder();
-        clearButton.style.display = 'none';
-      });
+  // Clear state from session storage
+  clearState() {
+    sessionStorage.removeItem('returnedFromSong');
+    sessionStorage.removeItem('scrollPosition');
+    sessionStorage.removeItem('searchQuery');
+    sessionStorage.removeItem('selectedLang');
+  }
+};
 
-      const goToTopButton = document.getElementById('goToTopButton');
-      window.addEventListener('scroll', () => {
-        goToTopButton.style.display = window.scrollY > 300 ? 'block' : 'none';
-      });
-      goToTopButton.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
+// Function to highlight text matches in a string
+function highlightMatches(text, searchTerm) {
+  if (!searchTerm || searchTerm.trim() === '' || !text) return text;
+  
+  const regex = new RegExp(`(${searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
+  return text.replace(regex, '<mark class="bg-yellow-200 text-gray-800">$1</mark>');
+}
 
-      searchLangSelect.addEventListener('change', (e) => {
-        currentLang = e.target.value;
-        sessionStorage.setItem('selectedLanguage', currentLang);
-        const query = searchInput.value.trim();
-        if (query !== '') {
-          filterSongs(query, currentLang);
+// Function to find the context around a match
+function findMatchContext(text, searchTerm, contextLength = 50) {
+  if (!searchTerm || searchTerm.trim() === '' || !text) return '';
+  
+  searchTerm = searchTerm.toLowerCase();
+  const index = text.toLowerCase().indexOf(searchTerm);
+  
+  if (index === -1) return '';
+  
+  const start = Math.max(0, index - contextLength);
+  const end = Math.min(text.length, index + searchTerm.length + contextLength);
+  
+  // Add ellipsis if we're not showing from the beginning or to the end
+  const prefix = start > 0 ? '...' : '';
+  const suffix = end < text.length ? '...' : '';
+  
+  return prefix + text.substring(start, end) + suffix;
+}
+
+// Reorder songs to show title matches first, then text matches
+function reorderSongsByMatchPriority() {
+  const songItemsArray = Array.from(songItems);
+  const searchTerm = searchInput.value.toLowerCase().trim();
+  
+  if (searchTerm === '') return;
+  
+  // Sort visible songs by match type (title matches first, then text matches)
+  songItemsArray
+    .filter(item => !item.classList.contains('hidden'))
+    .sort((a, b) => {
+      const aTitle = a.querySelector('.match-badge').textContent.includes('Title') ? 1 : 0;
+      const bTitle = b.querySelector('.match-badge').textContent.includes('Title') ? 1 : 0;
+      
+      return bTitle - aTitle; // Title matches first
+    })
+    .forEach(item => {
+      songsList.appendChild(item);
+    });
+}
+
+// Update the filterSongs function to handle the new badge positioning and fix text formatting
+function filterSongs() {
+  const searchTerm = searchInput.value.toLowerCase().trim();
+  const selectedLang = langSelect.value;
+  let visibleCount = 0;
+  
+  // First, hide all text snippets completely
+  document.querySelectorAll('.song-item .relative').forEach(snippet => {
+    snippet.classList.add('hidden');
+  });
+  
+  songItems.forEach(item => {
+    let titleField, textField;
+    
+    // Select the appropriate fields based on language
+    if (selectedLang === 'ta') {
+      titleField = 'title';
+      textField = 'text';
+    } else if (selectedLang === 'en') {
+      titleField = 'titleEn';
+      textField = 'textEn';
+    } else if (selectedLang === 'de') {
+      titleField = 'titleDe';
+      textField = 'textDe';
+    }
+    
+    // Get the appropriate data for the selected language
+    // Fall back to Tamil if translation is missing
+    const title = item.dataset[titleField] ? 
+      item.dataset[titleField].toLowerCase() : 
+      item.dataset.title.toLowerCase();
+      
+    const text = item.dataset[textField] ? 
+      item.dataset[textField].toLowerCase() : 
+      item.dataset.text.toLowerCase();
+    
+    const originalTitle = item.querySelector('.original-title');
+    const matchBadge = item.querySelector('.match-badge');
+    const matchContext = item.querySelector('.match-context');
+    const matchTextEl = matchContext ? matchContext.querySelector('p') : null;
+    
+    const titleHit = searchTerm !== '' && title.includes(searchTerm);
+    const textHit = searchTerm !== '' && text.includes(searchTerm);
+
+    if (titleHit || textHit || searchTerm === '') {
+      item.classList.remove('hidden');
+      visibleCount++;
+      
+      // Handle search results
+      if (searchTerm !== '') {
+        // Show match badge with appropriate styling
+        matchBadge.classList.remove('hidden');
+        
+        if (titleHit && textHit) {
+          matchBadge.textContent = 'Found in title & text';
+          matchBadge.className = 'match-badge absolute top-1 left-1 z-20 text-[0.65rem] sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-indigo-100 text-indigo-800 bg-opacity-90 shadow-sm';
+        } else if (titleHit) {
+          matchBadge.textContent = 'Found in title';
+          matchBadge.className = 'match-badge absolute top-1 left-1 z-20 text-[0.65rem] sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-blue-100 text-blue-800 bg-opacity-90 shadow-sm';
         } else {
-          resetOriginalOrder();
-          updateTitles();
+          matchBadge.textContent = 'Found in text';
+          matchBadge.className = 'match-badge absolute top-1 left-1 z-20 text-[0.65rem] sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-green-100 text-green-800 bg-opacity-90 shadow-sm';
         }
-        updateSongLinks();
-      });
-
-      window.addEventListener('pageshow', () => {
-        const savedQuery = sessionStorage.getItem('searchQuery') || '';
-        if (savedQuery.trim() !== '') {
-          searchInput.value = savedQuery;
-          setTimeout(() => {
-            filterSongs(savedQuery, searchLangSelect.value);
-            clearButton.style.display = 'block';
-          }, 0);
+        
+        // Show match context for text hits
+        if (textHit && matchTextEl) {
+          const rawText = item.dataset[textField] || item.dataset.text || '';
+          const context = findMatchContext(rawText, searchTerm);
+          matchTextEl.innerHTML = highlightMatches(context, searchTerm);
+          matchContext.classList.remove('hidden');
+        } else if (matchContext) {
+          matchContext.classList.add('hidden');
         }
-        const savedLang = sessionStorage.getItem('selectedLanguage') || 'ta';
-        searchLangSelect.value = savedLang;
-        currentLang = savedLang;
-        resetOriginalOrder();
-        updateTitles();
-        updateSongLinks();
-      });
-
-      // Dummy updateTitles() – implement as needed.
-      function updateTitles() {
-        // Implementation placeholder
+        
+        // Highlight title if there's a match
+        if (titleHit) {
+          const rawTitle = item.dataset[titleField] || item.dataset.title || '';
+          originalTitle.innerHTML = highlightMatches(rawTitle, searchTerm);
+        } else {
+          // Use plain text for title when no title match
+          originalTitle.textContent = item.dataset[titleField] || item.dataset.title || '';
+        }
+      } else {
+        // Reset everything when no search term
+        matchBadge.classList.add('hidden');
+        if (matchContext) matchContext.classList.add('hidden');
+        
+        // Restore original title as plain text
+        originalTitle.textContent = item.dataset[titleField] || item.dataset.title || '';
       }
+    } else {
+      item.classList.add('hidden');
+    }
+  });
+  
+  // Show/hide no results message
+  noResultsMessage.classList.toggle('hidden', visibleCount > 0);
+  
+  // Reorder songs to prioritize title matches
+  if (searchTerm !== '') {
+    reorderSongsByMatchPriority();
+  }
+}
 
-      // Scroll position handling
-      document.addEventListener('DOMContentLoaded', () => {
-        const returnedFromSong = sessionStorage.getItem('returnedFromSong');
-        if (returnedFromSong) {
-          const savedScrollPosition = sessionStorage.getItem('songbookScrollPosition');
-          if (savedScrollPosition) {
-            window.scrollTo(0, parseInt(savedScrollPosition, 10));
-          }
-          sessionStorage.removeItem('returnedFromSong');
-        }
-      });
-
-      function saveScrollPosition() {
-        sessionStorage.setItem('songbookScrollPosition', window.scrollY.toString());
+// Update song display based on selected language
+function updateSongDisplay() {
+  const selectedLang = langSelect.value;
+  const baseUrl = import.meta.env.BASE_URL;
+  const searchTerm = searchInput.value.trim();
+  
+  // Always hide text snippets
+  document.querySelectorAll('.song-item .relative').forEach(snippet => {
+    snippet.classList.add('hidden');
+  });
+  
+  songItems.forEach(item => {
+    const originalTitle = item.querySelector('.original-title');
+    const translationTitle = item.querySelector('.translation-title');
+    const matchContext = item.querySelector('.match-context');
+    const link = item.querySelector('a');
+    
+    const songId = item.dataset.id;
+    const originalTitleText = item.dataset.title;
+    
+    let displayTitle;
+    
+    // Set the appropriate titles based on language
+    if (selectedLang === 'ta') {
+      displayTitle = originalTitleText;
+      translationTitle.classList.add('hidden');
+      link.href = `${baseUrl}/songs/ta/${songId}`;
+    } else if (selectedLang === 'en') {
+      displayTitle = item.dataset.titleEn || originalTitleText;
+      
+      if (item.dataset.title && displayTitle !== originalTitleText) {
+        translationTitle.textContent = `Original: ${originalTitleText}`;
+        translationTitle.classList.remove('hidden');
+      } else {
+        translationTitle.classList.add('hidden');
       }
-      window.addEventListener('scroll', () => {
-        sessionStorage.setItem('songbookScrollPosition', window.scrollY.toString());
+      
+      link.href = `${baseUrl}/songs/en/${songId}`;
+    } else if (selectedLang === 'de') {
+      displayTitle = item.dataset.titleDe || originalTitleText;
+      
+      if (item.dataset.title && displayTitle !== originalTitleText) {
+        translationTitle.textContent = `Original: ${originalTitleText}`;
+        translationTitle.classList.remove('hidden');
+      } else {
+        translationTitle.classList.add('hidden');
+      }
+      
+      link.href = `${baseUrl}/songs/de/${songId}`;
+    }
+    
+    // Update text content (no highlights if not searching)
+    if (searchTerm === '') {
+      originalTitle.textContent = displayTitle;
+      
+      // Ensure match context is hidden
+      if (matchContext) {
+        matchContext.classList.add('hidden');
+      }
+    }
+  });
+  
+  // When changing language, re-apply any active search filters
+  if (searchInput.value.trim() !== '') {
+    filterSongs();
+  }
+}
+
+// Event Listeners
+function setupEventListeners() {
+  // Search input event
+  searchInput.addEventListener('input', function() {
+    state.updateClearButtonVisibility();
+    filterSongs();
+  });
+  
+  // Clear button event
+  clearButton.addEventListener('click', function() {
+    searchInput.value = '';
+    clearButton.classList.add('hidden');
+    
+    // Explicitly hide all match contexts
+    document.querySelectorAll('.match-context').forEach(context => {
+      context.classList.add('hidden');
+    });
+    
+    // Explicitly hide all match badges
+    document.querySelectorAll('.match-badge').forEach(badge => {
+      badge.classList.add('hidden');
+    });
+    
+    // Hide all text snippets
+    document.querySelectorAll('.song-item .relative').forEach(snippet => {
+      snippet.classList.add('hidden');
+    });
+    
+    // Restore original titles (without highlights)
+    restoreOriginalTitles();
+    
+    // Reapply normal filtering
+    filterSongs();
+    searchInput.focus();
+  });
+  
+  // Helper function to restore original titles
+  function restoreOriginalTitles() {
+    const selectedLang = langSelect.value;
+    
+    songItems.forEach(item => {
+      let titleField;
+      
+      // Select the appropriate field based on language
+      if (selectedLang === 'ta') {
+        titleField = 'title';
+      } else if (selectedLang === 'en') {
+        titleField = 'titleEn';
+      } else if (selectedLang === 'de') {
+        titleField = 'titleDe';
+      }
+      
+      const originalTitle = item.querySelector('.original-title');
+      if (originalTitle) {
+        // Use the plain text content without any HTML/highlights
+        originalTitle.textContent = item.dataset[titleField] || item.dataset.title || '';
+      }
+    });
+  }
+  
+  // Language change event
+  langSelect.addEventListener('change', function() {
+    updateSongDisplay();
+    
+    // Hide all text-related elements when changing language (if not searching)
+    if (searchInput.value.trim() === '') {
+      document.querySelectorAll('.match-context').forEach(context => {
+        context.classList.add('hidden');
       });
+      
+      document.querySelectorAll('.match-badge').forEach(badge => {
+        badge.classList.add('hidden');
+      });
+      
+      document.querySelectorAll('.song-item .relative').forEach(snippet => {
+        snippet.classList.add('hidden');
+      });
+    } else {
+      // Reapply search if there's an active search term
+      filterSongs();
+    }
+  });
+  
+  // Scroll event for "Go to Top" button
+  window.addEventListener('scroll', function() {
+    goToTopButton.classList.toggle('hidden', window.pageYOffset <= 300);
+  });
+  
+  // Go to Top button click
+  goToTopButton.addEventListener('click', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+  
+  // Save state when navigating to a song
+  document.querySelectorAll('.song-item a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      state.saveState();
+    });
+  });
+  
+  // Back/forward navigation handling
+  window.addEventListener('popstate', function() {
+    state.updateClearButtonVisibility();
+    filterSongs();
+  });
+}
+
+// Initialize
+function init() {
+  // Set up all event listeners
+  setupEventListeners();
+  
+  // Initialize song display
+  updateSongDisplay();
+  
+  // Restore state if returning from a song
+  state.restoreState();
+  
+  // Update clear button visibility (handles page reload cases)
+  state.updateClearButtonVisibility();
+  
+  // Make sure no song text is shown on initial load
+  document.querySelectorAll('.match-context').forEach(context => {
+    context.classList.add('hidden');
+  });
+  
+  // Hide all text snippets at startup
+  document.querySelectorAll('.song-item .relative').forEach(snippet => {
+    snippet.classList.add('hidden');
+  });
+}
+
+// Run initialization when DOM is loaded
+document.addEventListener('DOMContentLoaded', init);
     </script>
   </body>
 </html>
