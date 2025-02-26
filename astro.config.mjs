@@ -7,6 +7,10 @@ export default defineConfig({
   site: 'https://sujant-h.github.io',
   base: 'songbook',
   trailingSlash: 'ignore',
+  output: 'static',
+  build: {
+    format: 'directory', // Default behavior, ensures clean URLs
+  },
   vite: {
     logLevel: 'info',
     define: {

@@ -10,19 +10,15 @@ export interface Props {
 const { title } = Astro.props as Props;
 
 export async function getStaticPaths() {
-  // Generate all combinations of languages and song IDs
   const langs = ['ta', 'en', 'de'];
-  const paths = [];
-  langs.forEach(lang => {
-    songsData.forEach(song => {
-      paths.push({
-        params: { lang, id: song.id },
-        props: { song, lang },
-      });
-    });
-  });
-  return paths;
+  return langs.flatMap(lang =>
+    songsData.map(song => ({
+      params: { lang, id: song.id.toString() },
+      props: { song, lang },
+    }))
+  );
 }
+
 
 const { song, lang } = Astro.props;
 const audioUrl = `https://sujant-h.github.io/songbook/audio/${song.id}.mp3`;
