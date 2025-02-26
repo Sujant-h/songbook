@@ -68,11 +68,11 @@ if (lang === 'en') {
       rel="stylesheet"
     >
   </head>
-  <body class="bg-gradient-to-b from-indigo-50 to-white min-h-screen">
+  <body class="bg-gradient-to-b from-indigo-50 to-white min-h-screen dark:from-gray-900 dark:to-gray-800 dark:text-gray-200">
     <div class="max-w-3xl mx-auto px-4 py-8">
       <!-- Header with back button and language selector -->
       <div class="flex justify-between items-center mb-6">
-        <a href="/" id="back-button" class="flex items-center text-indigo-600 hover:text-indigo-800 transition-colors group">
+        <a href="/" id="back-button" class="flex items-center text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors group">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
           </svg>
@@ -80,20 +80,23 @@ if (lang === 'en') {
         </a>
         
         <div class="relative">
-          <div class="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-sm border border-indigo-100">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div class="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-full px-4 py-2 shadow-sm border border-indigo-100 dark:border-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
             </svg>
-            <select id="language-select" class="bg-transparent border-none text-gray-700 font-medium focus:outline-none cursor-pointer pr-6">
+            <select 
+              id="language-select" 
+              class="bg-transparent border-none text-gray-700 dark:text-gray-200 font-medium focus:outline-none cursor-pointer appearance-none w-20"
+            >
               <option value="ta" selected={lang === 'ta'}>Tamil</option>
               <option value="en" selected={lang === 'en'}>English</option>
               <option value="de" selected={lang === 'de'}>German</option>
             </select>
-            <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2">
-              <svg class="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2">
+              <svg class="h-4 w-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
               </svg>
-            </span>
+            </div>
           </div>
         </div>
       </div>
@@ -168,9 +171,26 @@ document.getElementById('language-select').addEventListener('change', (e) => {
   // Save language preference
   sessionStorage.setItem('selectedLanguage', selectedLang);
   
-  // Correctly construct the new URL with base path, language, and song ID
-  const basePath = import.meta.env.BASE_URL || '';
-  // Remove any trailing slash from basePath to avoid double slashes
+  // Get base path from environment or construct from current URL
+  let basePath = '/songbook';
+  
+  // Check if we're already at a URL with the format /songs/{lang}/{id}
+  // If so, we just need to replace the language part
+  if (pathParts.includes('songs')) {
+    // Find where 'songs' is in the path
+    const songsIndex = pathParts.indexOf('songs');
+    if (songsIndex >= 0 && songsIndex + 2 < pathParts.length) {
+      // Construct the new URL with the same base path but different language
+      let newPath = pathParts.slice(0, songsIndex + 1); // Get path up to /songs
+      newPath.push(selectedLang); // Add new language
+      newPath.push(songId); // Add song ID
+      window.location.href = newPath.join('/');
+      return;
+    }
+  }
+  
+  // Fallback: construct the full path manually
+  // Remove any trailing slash from basePath
   const basePathNormalized = basePath.endsWith('/') ? basePath.slice(0, -1) : basePath;
   
   // Ensure the song ID is included in the new URL
