@@ -104,17 +104,36 @@ document.addEventListener('DOMContentLoaded', () => {
     <!-- Outer container -->
     <div class="max-w-6xl mx-auto px-4 py-8">
       <!-- Header with title -->
-      <div class="text-center mb-10">
-        <h1 class="mt-2 mb-4 lg:mt-8 text-3xl md:text-4xl font-extrabold text-indigo-800 dark:text-indigo-400 leading-snug">
-          Tamil Christian Songs
-        </h1>
-        <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          A collection of beautiful Tamil Christian songs with translations in English and German
-        </p>
-      </div>
-  
-      <!-- Search bar, language dropdown, and theme toggle -->
-      <!-- Update the existing search bar container with transition classes -->
+    <!-- Header with title and theme toggle -->
+<!-- Header with title and theme toggle -->
+<div class="text-center mb-10 relative">
+  <!-- Theme Toggle Button - Using Tailwind for responsive positioning -->
+  <div class="fixed md:absolute top-3 right-3 md:top-0 md:right-4 z-50">
+    <button 
+      id="theme-toggle" 
+      class="p-2 bg-indigo-50/90 dark:bg-gray-700/90 md:bg-indigo-50 md:dark:bg-gray-700 border border-indigo-100 dark:border-gray-600 rounded-lg shadow-md md:shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-600 text-gray-700 dark:text-gray-200 transition-all duration-200"
+      aria-label="Toggle dark mode"
+    >
+      <!-- Sun icon (shown in dark mode) -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 sun-icon hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+      </svg>
+      <!-- Moon icon (shown in light mode) -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 moon-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+      </svg>
+    </button>
+  </div>
+
+  <h1 class="mt-2 mb-4 lg:mt-8 text-3xl md:text-4xl font-extrabold text-indigo-800 dark:text-indigo-400 leading-snug">
+    Tamil Christian Songs
+  </h1>
+  <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+    A collection of beautiful Tamil Christian songs with translations in English and German
+  </p>
+</div>
+
+<!-- Search bar and language dropdown - Theme toggle removed -->
 <div class="search-bar relative mb-10 max-w-3xl mx-auto">
   <div class="bg-white dark:bg-gray-800 p-3 rounded-xl shadow-md dark:shadow-gray-900/30 flex items-center gap-4 transition-all duration-300 ease-in-out">
     <!-- Language Selector -->
@@ -169,25 +188,6 @@ document.addEventListener('DOMContentLoaded', () => {
           </svg>
         </button>
       </div>
-    </div>
-
-    <!-- Theme Toggle Button -->
-    <div class="relative transition-all duration-300 ease-in-out transform-gpu" id="themeToggleContainer">
-      <label class="text-xs text-gray-500 dark:text-gray-400 block mb-1 ml-1">Theme</label>
-      <button 
-        id="theme-toggle" 
-        class="p-2 bg-indigo-50 dark:bg-gray-700 border border-indigo-100 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-600 text-gray-700 dark:text-gray-200 transition-all duration-200"
-        aria-label="Toggle dark mode"
-      >
-        <!-- Sun icon (shown in dark mode) -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 sun-icon hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-        <!-- Moon icon (shown in light mode) -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 moon-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-        </svg>
-      </button>
     </div>
   </div>
 </div>
@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
     <!-- Footer -->
     <footer class="py-6 text-center text-gray-500 dark:text-gray-400 text-sm">
-      <p>© 2025 Tamil Christian Songbook</p>
+      <p>© 2025 Tamil Christian <br> Songbook</br></p>
     </footer>
   
     <!-- Go to Top Button with improved styling -->
@@ -300,121 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     <script>
-      // Add this to your existing script.js file or in a new script tag
-
-// Get the necessary DOM elements
-const searchContainer = document.getElementById('searchContainer');
-const themeToggleContainer = document.getElementById('themeToggleContainer');
-const searchBarContainer = document.querySelector('.search-bar .bg-white');
-
-// Function to handle search field focus and blur
-function setupSearchExpansion() {
-  // Store the original width/flex classes
-  let originalSearchClasses = [];
-  let originalContainerWidth = null;
-  
-  // Save the original classes when the page loads
-  document.addEventListener('DOMContentLoaded', function() {
-    // Store the original classes that affect sizing
-    Array.from(searchContainer.classList).forEach(className => {
-      if (className.includes('flex-') || className.includes('w-')) {
-        originalSearchClasses.push(className);
-      }
-    });
-    
-    // Add transition classes if they don't already exist
-    if (!searchContainer.classList.contains('transition-all')) {
-      searchContainer.classList.add('transition-all', 'duration-300', 'ease-in-out');
-    }
-    if (!themeToggleContainer.classList.contains('transition-all')) {
-      themeToggleContainer.classList.add('transition-all', 'duration-300', 'ease-in-out');
-    }
-    
-    // Get initial width for animation reference
-    originalContainerWidth = searchContainer.offsetWidth;
-  });
-  
-  // When search input is focused
-  searchInput.addEventListener('focus', function() {
-    // First, make sure we've preserved original classes if we haven't yet
-    if (originalSearchClasses.length === 0) {
-      Array.from(searchContainer.classList).forEach(className => {
-        if (className.includes('flex-') || className.includes('w-')) {
-          originalSearchClasses.push(className);
-        }
-      });
-    }
-    
-    // Add a scale effect while expanding
-    searchContainer.classList.add('flex-grow', 'transform', 'scale-x-105');
-    
-    // After small delay, normalize scale for smooth animation
-    setTimeout(() => {
-      searchContainer.classList.remove('scale-x-105');
-    }, 150);
-    
-    // Hide theme toggle with Tailwind classes
-    themeToggleContainer.classList.add('opacity-0', 'scale-90');
-    themeToggleContainer.classList.add('w-0');
-    themeToggleContainer.classList.add('overflow-hidden');
-    themeToggleContainer.classList.add('pointer-events-none');
-  });
-  
-  // When search input loses focus
-  searchInput.addEventListener('blur', function() {
-    // Only restore the original layout if there's no active search
-    if (searchInput.value.trim() === '') {
-      restoreOriginalLayout();
-    }
-  });
-  
-  // When search is cleared, restore the original layout
-  clearButton.addEventListener('click', function() {
-    // Additional handling for search clearing - restore original layout
-    setTimeout(function() {
-      restoreOriginalLayout();
-    }, 300); // Short delay to allow animation to complete
-  });
-  
-  // Helper function to restore the original layout
-  function restoreOriginalLayout() {
-    // Add slight scale effect while contracting
-    searchContainer.classList.add('transform', 'scale-x-95');
-    
-    // Remove expansion classes
-    searchContainer.classList.remove('flex-grow');
-    
-    // Re-apply original classes if they were removed
-    originalSearchClasses.forEach(className => {
-      if (!searchContainer.classList.contains(className)) {
-        searchContainer.classList.add(className);
-      }
-    });
-    
-    // Show theme toggle with animation
-    themeToggleContainer.classList.remove('w-0');
-    themeToggleContainer.classList.remove('overflow-hidden');
-    themeToggleContainer.classList.remove('pointer-events-none');
-    
-    // After small delay, restore opacity and normalize scale for smooth animation
-    setTimeout(() => {
-      themeToggleContainer.classList.remove('opacity-0', 'scale-90');
-      searchContainer.classList.remove('scale-x-95');
-    }, 50);
-  }
-}
-
-// Add this function call to your init function
-function enhancedInit() {
-  // Call your existing init function
-  init();
-  
-  // Setup search expansion functionality
-  setupSearchExpansion();
-}
-
-// Replace the DOMContentLoaded listener with this
-document.addEventListener('DOMContentLoaded', enhancedInit);
 
 
 // Get DOM elements
