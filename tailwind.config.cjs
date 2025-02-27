@@ -11,5 +11,15 @@ module.exports = {
       },
     },
     plugins: [],
+    safelist: [
+      'bg-green-100',
+      'text-green-800',
+      'dark:bg-green-900',
+      'dark:text-green-200',
+      'bg-blue-100',
+      'text-blue-800',
+      'dark:bg-blue-900',
+      'dark:text-blue-200'
+    ]
   };
   
