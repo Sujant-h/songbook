@@ -131,7 +131,10 @@ document.addEventListener('DOMContentLoaded', () => {
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@100..900&display=swap"
       rel="stylesheet"
     >
+  
   </head>
+
+
   <body class="bg-gradient-to-b from-indigo-50 to-white min-h-screen dark:from-gray-900 dark:to-gray-800 dark:text-gray-200 transition-colors duration-200">
     <div class="max-w-3xl mx-auto px-4 py-8">
       <!-- Header with back button, language selector, and dark mode toggle -->
@@ -240,14 +243,343 @@ document.addEventListener('DOMContentLoaded', () => {
       </audio>
     </div>
   </div>
+  
+  <!-- Social Media Share Buttons -->
+<div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+  <div class="flex items-center mb-4">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+    </svg>
+    <h3 class="text-lg font-semibold text-indigo-800 dark:text-indigo-400">Share this Song</h3>
+  </div>
+  
+  <div class="flex flex-wrap gap-3">
+    <!-- WhatsApp share button -->
+    <a 
+      id="whatsapp-share" 
+      href="#" 
+      class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors"
+      aria-label="Share on WhatsApp"
+    >
+      <!-- WhatsApp icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      WhatsApp
+    </a>
+
+    <!-- Facebook share button -->
+    <a 
+      id="facebook-share" 
+      href="#" 
+      class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+      aria-label="Share on Facebook"
+    >
+      <!-- Facebook icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+      </svg>
+      Facebook
+    </a>
+
+    <!-- Twitter/X share button -->
+    <a 
+      id="twitter-share" 
+      href="#" 
+      class="flex items-center gap-2 bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-lg transition-colors"
+      aria-label="Share on X"
+    >
+      <!-- X icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/>
+      </svg>
+      
+    </a>
+
+    <!-- Telegram share button -->
+    <a 
+      id="telegram-share" 
+      href="#" 
+      class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
+      aria-label="Share on Telegram"
+    >
+      <!-- Telegram icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.96 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+      </svg>
+      Telegram
+    </a>
+
+    <!-- Copy Link button -->
+    <button 
+      id="copy-link" 
+      class="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 px-4 py-2 rounded-lg transition-colors"
+      aria-label="Copy link"
+    >
+      <!-- Link icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+      </svg>
+      Copy Link
+    </button>
+  </div>
+</div>
+</div>
+
+  
+  <button 
+    id="print-song" 
+    class="flex items-center gap-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-800 dark:bg-indigo-900 dark:hover:bg-indigo-800 dark:text-indigo-200 px-4 py-2 rounded-lg transition-colors mt-2"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+    </svg>
+    Print Song Lyrics
+  </button>
+</div>
+
 </div>
       <!-- Footer -->
       <footer class="text-center text-gray-500 dark:text-gray-400 text-sm mt-8">
         <p>© 2025 Tamil Christian Songbook</p>
       </footer>
-    </div>
+
 
     <script>
+
+  // New approach: Open a new window for printing
+  document.addEventListener('DOMContentLoaded', function() {
+    const printButton = document.getElementById('print-song');
+    if (printButton) {
+      printButton.addEventListener('click', function() {
+        try {
+          console.log("Print button clicked");
+          
+          // Get song data
+          const titleElement = document.querySelector('h1');
+          const songTitle = titleElement ? titleElement.textContent.trim() : "Song Title";
+          console.log("Song title:", songTitle);
+          
+          // Get song text
+          const firstPre = document.querySelector('pre');
+          const songText = firstPre ? firstPre.textContent.trim() : "Song lyrics not found";
+          
+          // Get original Tamil if available
+          let originalTitle = "";
+          let originalText = "";
+          
+          // Check for original section
+          const originalSection = document.querySelector('.mt-8.pt-6');
+          if (originalSection) {
+            const titleEl = originalSection.querySelector('h4');
+            if (titleEl) {
+              originalTitle = titleEl.textContent.trim();
+            }
+            
+            const originalPre = originalSection.querySelector('pre');
+            if (originalPre) {
+              originalText = originalPre.textContent.trim();
+            }
+          }
+          
+          // Create HTML for the new window
+          const printHTML = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <title>Print: ${songTitle}</title>
+              <meta charset="UTF-8">
+              <style>
+                body {
+                  font-family: Arial, sans-serif;
+                  max-width: 800px;
+                  margin: 0 auto;
+                  padding: 20px;
+                }
+                .print-header {
+                  text-align: center;
+                  margin-bottom: 20px;
+                  border-bottom: 1px solid #ccc;
+                  padding-bottom: 10px;
+                }
+                .print-title {
+                  font-size: 24px;
+                  font-weight: bold;
+                  margin-bottom: 5px;
+                }
+                .print-subtitle {
+                  font-size: 14px;
+                  color: #555;
+                  margin-bottom: 20px;
+                }
+                .print-lyrics {
+                  white-space: pre-line;
+                  font-size: 16px;
+                  line-height: 1.6;
+                  margin-bottom: 30px;
+                }
+                .print-original {
+                  margin-top: 30px;
+                  padding-top: 20px;
+                  border-top: 1px dashed #ccc;
+                }
+                .print-original-title {
+                  font-weight: bold;
+                  margin-bottom: 10px;
+                  font-size: 18px;
+                }
+                .print-footer {
+                  margin-top: 30px;
+                  text-align: center;
+                  font-size: 12px;
+                  color: #777;
+                  border-top: 1px solid #ccc;
+                  padding-top: 10px;
+                }
+                @media print {
+                  body {
+                    padding: 0;
+                  }
+                  .no-print {
+                    display: none;
+                  }
+                }
+              </style>
+            </head>
+            <body>
+              <div class="print-header">
+                <div class="print-title">${songTitle}</div>
+              </div>
+              
+              <div class="print-lyrics">${songText}</div>
+              
+              ${originalTitle && originalText ? `
+                <div class="print-original">
+                  <div class="print-original-title">Original (Tamil): ${originalTitle}</div>
+                  <div class="print-lyrics">${originalText}</div>
+                </div>
+              ` : ''}
+              
+              <div class="print-footer">
+                Printed from Tamil Christian Songbook on ${new Date().toLocaleDateString()}
+                <br>
+                ${window.location.href}
+              </div>
+              
+              <div class="no-print" style="text-align: center; margin-top: 30px;">
+                <button onclick="window.print();" style="padding: 10px 20px; background: #4f46e5; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
+                  Print Now
+                </button>
+                <button onclick="window.close();" style="padding: 10px 20px; background: #9ca3af; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-left: 10px;">
+                  Close
+                </button>
+              </div>
+            </body>
+            </html>
+          `;
+          
+          // Open a new window and write the content
+          const printWindow = window.open('', 'PrintSong', 'width=800,height=600');
+          printWindow.document.write(printHTML);
+          printWindow.document.close();
+          
+          // Focus the new window
+          printWindow.focus();
+          
+          // You can automatically print, or let the user click the Print button in the new window
+          // printWindow.print();
+          
+        } catch (error) {
+          console.error("Error in print function:", error);
+          alert("Sorry, there was a problem preparing the song for printing. Please try again.");
+        }
+      });
+    }
+  });
+        // Social media share functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get the song title
+    const songTitle = document.querySelector('h1').textContent;
+    // Current URL
+    const url = window.location.href;
+    // Create share text
+    const shareText = `${songTitle} - Listen to this beautiful song on Tamil Christian Songbook`;
+    
+    // WhatsApp share
+    const whatsappBtn = document.getElementById('whatsapp-share');
+    if (whatsappBtn) {
+      whatsappBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText + ': ' + url)}`;
+        window.open(whatsappUrl, '_blank');
+      });
+    }
+    
+    // Facebook share
+    const facebookBtn = document.getElementById('facebook-share');
+    if (facebookBtn) {
+      facebookBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        window.open(facebookUrl, '_blank');
+      });
+    }
+    
+    // Twitter/X share
+    const twitterBtn = document.getElementById('twitter-share');
+    if (twitterBtn) {
+      twitterBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
+        window.open(twitterUrl, '_blank');
+      });
+    }
+    
+    // Telegram share
+    const telegramBtn = document.getElementById('telegram-share');
+    if (telegramBtn) {
+      telegramBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(shareText)}`;
+        window.open(telegramUrl, '_blank');
+      });
+    }
+    
+    // Copy link functionality
+    const copyLinkBtn = document.getElementById('copy-link');
+    if (copyLinkBtn) {
+      copyLinkBtn.addEventListener('click', function() {
+        // Create a temporary input element
+        const tempInput = document.createElement('input');
+        tempInput.value = url;
+        document.body.appendChild(tempInput);
+        
+        // Select and copy the link
+        tempInput.select();
+        document.execCommand('copy');
+        
+        // Remove the temporary element
+        document.body.removeChild(tempInput);
+        
+        // Visual feedback for user
+        const originalText = this.innerHTML;
+        this.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          Copied!
+        `;
+        
+        // Reset button after 2 seconds
+        setTimeout(() => {
+          this.innerHTML = originalText;
+        }, 2000);
+      });
+    }
+  });
+
+
+
       // Centralized language switching function
 function switchLanguage(selectedLang) {
   // Get the current URL path
@@ -470,5 +802,8 @@ document.getElementById('language-select').addEventListener('change', (e) => {
         
         
             </script>
+<!-- Completely revised print container and function -->
+<div id="print-container" style="display:none;"></div>
+
   </body>
 </html>
