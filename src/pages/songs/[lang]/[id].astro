@@ -353,12 +353,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (printButton) {
       printButton.addEventListener('click', function() {
         try {
-          console.log("Print button clicked");
           
           // Get song data
           const titleElement = document.querySelector('h1');
           const songTitle = titleElement ? titleElement.textContent.trim() : "Song Title";
-          console.log("Song title:", songTitle);
           
           // Get song text
           const firstPre = document.querySelector('pre');
@@ -387,7 +385,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <!DOCTYPE html>
             <html>
             <head>
-              <title>Print: ${songTitle}</title>
               <meta charset="UTF-8">
               <style>
                 body {
@@ -414,7 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 .print-lyrics {
                   white-space: pre-line;
-                  font-size: 16px;
+                  font-size: 14px;
                   line-height: 1.6;
                   margin-bottom: 30px;
                 }
