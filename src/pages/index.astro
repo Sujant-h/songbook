@@ -512,13 +512,25 @@ function filterSongs() {
         // Show match badge with appropriate styling
         matchBadge.classList.remove('hidden');
         
-      if (titleHit) {
-          matchBadge.textContent = 'Found in title';
-          matchBadge.className = 'match-badge absolute top-1 left-1 z-20 text-[0.65rem] sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-blue-100 text-blue-800 bg-opacity-90 shadow-sm';
-        } else {
-          matchBadge.textContent = 'Found in text';
-          matchBadge.className = 'match-badge absolute top-1 left-1 z-20 text-[0.65rem] sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-green-100 text-green-800 bg-opacity-90 shadow-sm';
-        }
+        if (titleHit) {
+  matchBadge.textContent = 'Title';
+  matchBadge.className = 'match-badge absolute top-2 right-2 z-20 text-xs font-medium px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 bg-opacity-90 dark:bg-opacity-90 shadow-sm border border-blue-200 dark:border-blue-800 flex items-center justify-center';
+  
+  // Add a small icon before text (optional)
+  matchBadge.innerHTML = `
+  
+    <span>Title</span>
+  `;
+} else {
+  matchBadge.textContent = 'Text';
+  matchBadge.className = 'match-badge absolute top-2 right-2 z-20 text-xs font-medium px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100 bg-opacity-90 dark:bg-opacity-90 shadow-sm border border-green-200 dark:border-green-800 flex items-center justify-center';
+  
+  // Add a small icon before text (optional)
+  matchBadge.innerHTML = `
+
+    <span>Text</span>
+  `;
+}
         
         // Show match context for text hits
         if (textHit && matchTextEl) {
