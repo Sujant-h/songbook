@@ -7,10 +7,6 @@ export default defineConfig({
   site: 'https://sujant-h.github.io',
   base: 'songbook',
   trailingSlash: 'ignore',
-  build: {
-    // Makes assets available at the correct path
-    assets: '_assets',
-  },
   vite: {
     logLevel: 'info',
     define: {
