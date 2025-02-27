@@ -204,45 +204,43 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
         
-        <!-- Song Content -->
-        <div class="p-6 sm:p-8">
-          <!-- Song Text -->
-          <pre class="whitespace-pre-line text-gray-700 dark:text-gray-200 font-sans p-6 bg-indigo-50 dark:bg-gray-700 rounded-lg border border-indigo-100 dark:border-gray-600 leading-relaxed">
-            {songText}
-          </pre>
-          
-          <!-- Original Tamil -->
-          {showOriginal && (
-            <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-              <div class="flex items-center mb-3">
-                <h3 class="text-lg font-semibold text-indigo-800 dark:text-indigo-400">Original (Tamil)</h3>
-              </div>
-              <h4 class="text-lg font-medium mb-3 text-gray-700 dark:text-gray-300">{song.title}</h4>
-              <pre class="whitespace-pre-line text-gray-700 dark:text-gray-200 font-sans p-6 bg-indigo-50 dark:bg-gray-700 rounded-lg border border-indigo-100 dark:border-gray-600 leading-relaxed">
-                {song.text}
-              </pre>
-            </div>
-          )}
-          
-          <!-- Audio Player -->
-          <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-            <div class="flex items-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <h3 class="text-lg font-semibold text-indigo-800 dark:text-indigo-400">Listen to the Song</h3>
-            </div>
-            <div class="bg-indigo-50 dark:bg-gray-700 p-4 rounded-lg border border-indigo-100 dark:border-gray-600">
-              <audio controls class="w-full focus:outline-none">
-                <source src={audioUrl} type="audio/mpeg">
-                Your browser does not support the audio element.
-              </audio>
-            </div>
-          </div>
-        </div>
+<!-- Song Content -->
+<div class="p-6 sm:p-8">
+  <!-- Song Text - Box removed on mobile, kept on larger screens -->
+  <pre class="whitespace-pre-line text-gray-700 dark:text-gray-200 font-sans leading-relaxed sm:p-6 sm:bg-indigo-50 sm:dark:bg-gray-700 sm:rounded-lg sm:border sm:border-indigo-100 sm:dark:border-gray-600">
+    {songText}
+  </pre>
+  
+  <!-- Original Tamil -->
+  {showOriginal && (
+    <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div class="flex items-center mb-3">
+        <h3 class="text-lg font-semibold text-indigo-800 dark:text-indigo-400">Original (Tamil)</h3>
       </div>
-      
+      <h4 class="text-lg font-medium mb-3 text-gray-700 dark:text-gray-300">{song.title}</h4>
+      <pre class="whitespace-pre-line text-gray-700 dark:text-gray-200 font-sans leading-relaxed sm:p-6 sm:bg-indigo-50 sm:dark:bg-gray-700 sm:rounded-lg sm:border sm:border-indigo-100 sm:dark:border-gray-600">
+        {song.text}
+      </pre>
+    </div>
+  )}
+  
+  <!-- Audio Player -->
+  <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+    <div class="flex items-center mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <h3 class="text-lg font-semibold text-indigo-800 dark:text-indigo-400">Listen to the Song</h3>
+    </div>
+    <div class="bg-indigo-50 dark:bg-gray-700 p-4 rounded-lg border border-indigo-100 dark:border-gray-600">
+      <audio controls class="w-full focus:outline-none">
+        <source src={audioUrl} type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+  </div>
+</div>
       <!-- Footer -->
       <footer class="text-center text-gray-500 dark:text-gray-400 text-sm mt-8">
         <p>© 2025 Tamil Christian Songbook</p>
