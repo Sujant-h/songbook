@@ -522,6 +522,7 @@ function reorderSongsByMatchPriority() {
 }
 
 // Update the filterSongs function to handle badge classes properly
+// Updated filterSongs function to include search in song ID
 function filterSongs() {
   const searchTerm = searchInput.value.toLowerCase().trim();
   const selectedLang = langSelect.value;
@@ -563,33 +564,40 @@ function filterSongs() {
       item.dataset[textField].toLowerCase() : 
       item.dataset.text.toLowerCase();
     
+    // Get song ID and compare as a string
+    const songId = item.dataset.id;
+    
     const originalTitle = item.querySelector('.original-title');
     const matchBadge = item.querySelector('.match-badge');
     const matchContext = item.querySelector('.match-context');
     const matchTextEl = matchContext ? matchContext.querySelector('p') : null;
     
+    // Check for ID match - consider this a title match as requested
+    const idHit = searchTerm !== '' && songId.toLowerCase().includes(searchTerm);
     const titleHit = searchTerm !== '' && title.includes(searchTerm);
     const textHit = searchTerm !== '' && text.includes(searchTerm);
 
-    if (titleHit || textHit || searchTerm === '') {
+    // Mark as visible if any hit is found or if no search term
+    if (idHit || titleHit || textHit || searchTerm === '') {
       item.classList.remove('hidden');
       visibleCount++;
       
       // Handle search results
       if (searchTerm !== '') {
-        if (titleHit || textHit) {
+        if (idHit || titleHit || textHit) {
           // Show and style the match badge appropriately
           matchBadge.classList.remove('hidden');
           
-         if (titleHit) {
-  matchBadge.style.backgroundColor = '#dcfce7'; // green-100
-  matchBadge.style.color = '#166534';          // green-800
-  matchBadge.textContent = 'Title';
-} else {
-  matchBadge.style.backgroundColor = '#dbeafe'; // blue-100
-  matchBadge.style.color = '#1e40af';          // blue-800
-  matchBadge.textContent = 'Text';
-}
+          // If ID hit or title hit, show as a title match (green badge)
+          if (idHit || titleHit) {
+            matchBadge.style.backgroundColor = '#dcfce7'; // green-100
+            matchBadge.style.color = '#166534';          // green-800
+            matchBadge.textContent = 'Title';
+          } else {
+            matchBadge.style.backgroundColor = '#dbeafe'; // blue-100
+            matchBadge.style.color = '#1e40af';          // blue-800
+            matchBadge.textContent = 'Text';
+          }
         } else {
           // No matches - ensure badge is hidden
           matchBadge.classList.add('hidden');
@@ -605,12 +613,16 @@ function filterSongs() {
           matchContext.classList.add('hidden');
         }
         
-        // Highlight title if there's a match
+        // Highlight title if there's a title match
         if (titleHit) {
           const rawTitle = item.dataset[titleField] || item.dataset.title || '';
           originalTitle.innerHTML = highlightMatches(rawTitle, searchTerm);
+        } 
+        // For ID matches, don't modify the title display - just use the original title
+        else if (idHit) {
+          originalTitle.textContent = item.dataset[titleField] || item.dataset.title || '';
         } else {
-          // Use plain text for title when no title match
+          // Use plain text for title when no match
           originalTitle.textContent = item.dataset[titleField] || item.dataset.title || '';
         }
       } else {
@@ -629,7 +641,7 @@ function filterSongs() {
   // Show/hide no results message
   noResultsMessage.classList.toggle('hidden', visibleCount > 0);
   
-  // Reorder songs to prioritize title matches
+  // Reorder songs to prioritize title and ID matches
   if (searchTerm !== '') {
     reorderSongsByMatchPriority();
   }
