@@ -108,28 +108,36 @@ if (lang === 'en') {
             </svg>
           </button>
     
-          <div class="relative">
-            <div class="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-full px-4 py-2 shadow-sm border border-indigo-100 dark:border-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-              </svg>
-              <select 
-                id="language-select" 
-                class="bg-transparent border-none text-gray-700 dark:bg-gray-800 dark:text-gray-200 font-medium focus:outline-none cursor-pointer appearance-none w-20 text-center"
-              >
-                <option value="ta" selected={lang === 'ta'}>Tamil</option>
-                <option value="en" selected={lang === 'en'}>English</option>
-                <option value="de" selected={lang === 'de'}>German</option>
-              </select>
-              <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2">
-                <svg class="h-4 w-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-              </div>
-            </div>
-          </div>
+<!-- After (fixed version with proper arrow placement) -->
+<!-- Fixed and centered language selector -->
+<div class="relative">
+    <div class="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-full px-4 py-2 shadow-sm border border-indigo-100 dark:border-gray-700">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+      </svg>
+      
+      <!-- Wrapping select and arrow in a relative container with fixed width -->
+      <div class="relative w-24">
+        <select 
+          id="language-select" 
+          class="bg-transparent border-none text-gray-700 dark:text-gray-200 dark:bg-gray-800 font-medium focus:outline-none cursor-pointer appearance-none w-full pr-6 text-center"
+        >
+          <option value="ta" selected={lang === 'ta'} class="text-center bg-white dark:bg-gray-700">Tamil</option>
+          <option value="en" selected={lang === 'en'} class="text-center bg-white dark:bg-gray-700">English</option>
+          <option value="de" selected={lang === 'de'} class="text-center bg-white dark:bg-gray-700">German</option>
+        </select>
+        
+        <!-- Arrow positioned correctly within its own parent container -->
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center">
+          <svg class="h-4 w-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
         </div>
       </div>
+    </div>
+  </div>
+      </div>
+    </div>
 
       <!-- Main Content Card -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-8 transition-all hover:shadow-xl dark:shadow-gray-900/30">
