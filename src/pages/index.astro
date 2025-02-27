@@ -482,7 +482,7 @@ function reorderSongsByMatchPriority() {
     });
 }
 
-// Update the filterSongs function to handle the new badge positioning and fix text formatting
+// Update the filterSongs function to handle badge classes properly
 function filterSongs() {
   const searchTerm = searchInput.value.toLowerCase().trim();
   const selectedLang = langSelect.value;
@@ -491,6 +491,12 @@ function filterSongs() {
   // First, hide all text snippets completely
   document.querySelectorAll('.song-item .relative').forEach(snippet => {
     snippet.classList.add('hidden');
+  });
+  
+  // Reset match badges - hide all of them first and reset classes
+  document.querySelectorAll('.match-badge').forEach(badge => {
+    badge.classList.add('hidden');
+    badge.className = 'match-badge absolute top-1 left-1 z-20 text-xs sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-opacity-90 shadow-sm hidden';
   });
   
   songItems.forEach(item => {
@@ -532,27 +538,23 @@ function filterSongs() {
       
       // Handle search results
       if (searchTerm !== '') {
-        // Show match badge with appropriate styling
-        matchBadge.classList.remove('hidden');
-        
-        if (titleHit) {
-  matchBadge.textContent = 'Title';
-  matchBadge.className = 'match-badge-green';
-
-  // Add a small icon before text (optional)
-  matchBadge.innerHTML = `
-  
-    <span>Title</span>
-  `;
-} else {
-  matchBadge.textContent = 'Text';
-  matchBadge.className = 'match-badge-blue';
-  // Add a small icon before text (optional)
-  matchBadge.innerHTML = `
-
-    <span>Text</span>
-  `;
-}
+        if (titleHit || textHit) {
+          // Show and style the match badge appropriately
+          matchBadge.classList.remove('hidden');
+          
+          if (titleHit) {
+            // Add classes for title match (green)
+            matchBadge.classList.add('bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-200');
+            matchBadge.innerHTML = '<span>Title</span>';
+          } else {
+            // Add classes for text match (blue)
+            matchBadge.classList.add('bg-blue-100', 'text-blue-800', 'dark:bg-blue-900', 'dark:text-blue-200');
+            matchBadge.innerHTML = '<span>Text</span>';
+          }
+        } else {
+          // No matches - ensure badge is hidden
+          matchBadge.classList.add('hidden');
+        }
         
         // Show match context for text hits
         if (textHit && matchTextEl) {
@@ -573,7 +575,7 @@ function filterSongs() {
           originalTitle.textContent = item.dataset[titleField] || item.dataset.title || '';
         }
       } else {
-        // Reset everything when no search term
+        // When no search term, make sure badges and contexts are hidden
         matchBadge.classList.add('hidden');
         if (matchContext) matchContext.classList.add('hidden');
         
@@ -670,33 +672,43 @@ function setupEventListeners() {
     filterSongs();
   });
   
-  // Clear button event
-  clearButton.addEventListener('click', function() {
-    searchInput.value = '';
-    clearButton.classList.add('hidden');
-    
-    // Explicitly hide all match contexts
-    document.querySelectorAll('.match-context').forEach(context => {
-      context.classList.add('hidden');
-    });
-    
-    // Explicitly hide all match badges
-    document.querySelectorAll('.match-badge').forEach(badge => {
-      badge.classList.add('hidden');
-    });
-    
-    // Hide all text snippets
-    document.querySelectorAll('.song-item .relative').forEach(snippet => {
-      snippet.classList.add('hidden');
-    });
-    
-    // Restore original titles (without highlights)
-    restoreOriginalTitles();
-    
-    // Reapply normal filtering
-    filterSongs();
-    searchInput.focus();
+// Replace the existing clearButton click event handler with this updated version
+clearButton.addEventListener('click', function() {
+  searchInput.value = '';
+  clearButton.classList.add('hidden');
+  
+  // Explicitly hide all match contexts
+  document.querySelectorAll('.match-context').forEach(context => {
+    context.classList.add('hidden');
   });
+  
+  // Explicitly hide all match badges and restore their base classes
+  document.querySelectorAll('.match-badge').forEach(badge => {
+    badge.classList.add('hidden');
+    
+    // Reset the badge's class list to include ONLY the base classes + hidden
+    badge.className = 'match-badge absolute top-1 left-1 z-20 text-xs sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-opacity-90 shadow-sm hidden';
+  });
+  
+  // Hide all text snippets
+  document.querySelectorAll('.song-item .relative').forEach(snippet => {
+    snippet.classList.add('hidden');
+  });
+  
+  // Restore original titles (without highlights)
+  restoreOriginalTitles();
+  
+  // IMPORTANT: Show all songs by removing hidden class
+  songItems.forEach(item => {
+    item.classList.remove('hidden');
+  });
+  
+  // Hide the no results message if it's showing
+  noResultsMessage.classList.add('hidden');
+  
+  // DO NOT call filterSongs() which can reapply the badges
+  searchInput.focus();
+});
   
   // Helper function to restore original titles
   function restoreOriginalTitles() {
