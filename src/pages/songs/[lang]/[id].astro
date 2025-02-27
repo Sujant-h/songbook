@@ -141,15 +141,14 @@ document.addEventListener('DOMContentLoaded', () => {
   <meta property="og:type" content="music.song">
   <meta property="og:url" content={`https://sujant-h.github.io/songbook/songs/${lang}/${song.id}`}>
   <meta property="og:title" content={`${songTitle} | Tamil Christian Song`}>
-  <meta property="og:description" content={`Listen to and read the lyrics of ${songTitle} in ${lang === 'en' ? 'English' : lang === 'de' ? 'German' : 'Tamil'}`}>
+  <meta property="og:description" content={`Listen to the original Tamil song ${songTitle} ${lang === 'en' ? 'with English translation' : lang === 'de' ? 'with German translation' : ''}`}>
   <meta property="og:image" content="https://sujant-h.github.io/songbook/og-song-image.jpg">
   <meta property="og:audio" content={audioUrl}>
   
   <!-- Twitter Card Tags -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content={`${songTitle} | Tamil Christian Song`}>
-  <meta name="twitter:description" content={`Listen to and read the lyrics of ${songTitle} in ${lang === 'en' ? 'English' : lang === 'de' ? 'German' : 'Tamil'}`}>
-  <meta name="twitter:image" content="https://sujant-h.github.io/songbook/og-song-image.jpg">
+  <meta name="twitter:description" content={`Listen to the original Tamil song ${songTitle} ${lang === 'en' ? 'with English translation' : lang === 'de' ? 'with German translation' : ''}`}>  <meta name="twitter:image" content="https://sujant-h.github.io/songbook/og-song-image.jpg">
   
   <!-- PWA Related -->
   <script src="/src/pwa.ts"></script>
