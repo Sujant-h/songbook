@@ -109,30 +109,82 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   </script>
-    <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/pwa-192x192.png">
-    <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF">
-    <meta name="msapplication-TileColor" content="#FFFFFF">
-    <meta name="theme-color" content="#ffffff">
-    <title>{title}</title>
-    <meta name="description" content={title}>
-    <script src="/src/pwa.ts"></script>
-    { pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} /> }
-
-    <!-- Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@100..900&display=swap"
-      rel="stylesheet"
-    >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  </head>
+  <!-- Favicon and App Icons -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/pwa-192x192.png">
+  <link rel="mask-icon" href="/favicon.svg" color="#6366F1">
+  
+  <!-- Theme Colors -->
+  <meta name="msapplication-TileColor" content="#6366F1">
+  <meta name="theme-color" content="#6366F1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1F2937" media="(prefers-color-scheme: dark)">
+  
+  <!-- SEO Meta Tags -->
+  <title>{songTitle} | Tamil Christian Song {lang === 'en' ? 'English Translation' : lang === 'de' ? 'German Translation' : ''}</title>
+  <meta name="description" content={`${songTitle} - ${songText.substring(0, 150)}...`}>
+  <meta name="keywords" content="Tamil Christian song, {songTitle}, Christian worship, {lang === 'en' ? 'English translation' : lang === 'de' ? 'German translation' : 'Tamil lyrics'}, Christian music, Tamil hymn">
+  <meta name="author" content="Tamil Christian Songbook">
+  
+  <!-- Language Alternate Links -->
+  <link rel="alternate" hreflang="ta" href={`${import.meta.env.BASE_URL}/songs/ta/${song.id}`}>
+  <link rel="alternate" hreflang="en" href={`${import.meta.env.BASE_URL}/songs/en/${song.id}`}>
+  <link rel="alternate" hreflang="de" href={`${import.meta.env.BASE_URL}/songs/de/${song.id}`}>
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href={`https://sujant-h.github.io/songbook/songs/${lang}/${song.id}`}>
+  
+  <!-- Open Graph / Social Media Tags -->
+  <meta property="og:type" content="music.song">
+  <meta property="og:url" content={`https://sujant-h.github.io/songbook/songs/${lang}/${song.id}`}>
+  <meta property="og:title" content={`${songTitle} | Tamil Christian Song`}>
+  <meta property="og:description" content={`Listen to and read the lyrics of ${songTitle} in ${lang === 'en' ? 'English' : lang === 'de' ? 'German' : 'Tamil'}`}>
+  <meta property="og:image" content="https://sujant-h.github.io/songbook/og-song-image.jpg">
+  <meta property="og:audio" content={audioUrl}>
+  
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={`${songTitle} | Tamil Christian Song`}>
+  <meta name="twitter:description" content={`Listen to and read the lyrics of ${songTitle} in ${lang === 'en' ? 'English' : lang === 'de' ? 'German' : 'Tamil'}`}>
+  <meta name="twitter:image" content="https://sujant-h.github.io/songbook/og-song-image.jpg">
+  
+  <!-- PWA Related -->
+  <script src="/src/pwa.ts"></script>
+  { pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} /> }
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@100..900&display=swap" rel="stylesheet">
+  
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <!-- Structured Data / JSON-LD for a Music Recording -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MusicComposition",
+      "name": "${songTitle}",
+      "inLanguage": "${lang}",
+      "alternateName": "${song.title}",
+      "description": "${songText.substring(0, 200).replace(/\n/g, ' ')}...",
+      "musicCompositionForm": "Hymn",
+      "lyrics": {
+        "@type": "CreativeWork",
+        "text": "${songText.replace(/\n/g, '\\n')}"
+      },
+      "contentUrl": "${audioUrl}",
+      "potentialAction": {
+        "@type": "ListenAction",
+        "target": "${audioUrl}"
+      }
+    }
+  </script>
+</head>
 
 
   <body class="bg-gradient-to-b from-indigo-50 to-white min-h-screen dark:from-gray-900 dark:to-gray-800 dark:text-gray-200 transition-colors duration-200">
@@ -341,7 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
       <!-- Footer -->
       <footer class="text-center text-gray-500 dark:text-gray-400 text-sm mt-8">
-        <p>© 2025 Tamil Christian Songbook</p>
+        <p>© 2025 Tamil Christian Songbook | All Rights Reserved</p>
       </footer>
 
 

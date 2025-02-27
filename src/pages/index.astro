@@ -77,27 +77,72 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   </script>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/pwa-192x192.png" />
-    <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF" />
-    <meta name="msapplication-TileColor" content="#FFFFFF" />
-    <meta name="theme-color" content="#ffffff" />
-    <title>{title}</title>
-    <meta name="description" content={title} />
+ <!-- Changes to the <head> section for improved SEO -->
 
-    <script src="/src/pwa.ts"></script>
-    { pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} /> }
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@100..900&display=swap" rel="stylesheet" />
-    <!-- Include Material Icons from Google Fonts -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-    
-    <!-- Regular theme toggle script for interactive functionality -->
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Favicon and App Icons -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/pwa-192x192.png" />
+  <link rel="mask-icon" href="/favicon.svg" color="#6366F1" />
+  
+  <!-- Theme Colors -->
+  <meta name="msapplication-TileColor" content="#6366F1" />
+  <meta name="theme-color" content="#6366F1" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#1F2937" media="(prefers-color-scheme: dark)" />
+  
+  <!-- SEO Meta Tags -->
+  <title>Tamil Christian Songs</title>
+  <meta name="description" content="Browse a comprehensive collection of Tamil Christian songs with translations in English and German. Search by title, lyrics, or content." />
+  <meta name="keywords" content="Tamil Christian songs, Tamil worship songs, Christian music, Tamil devotional songs, Tamil hymns, Christian worship" />
+  <meta name="author" content="Tamil Christian Songbook" />
+  
+  <!-- Open Graph / Social Media Tags -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://sujant-h.github.io/songbook/" />
+  <meta property="og:title" content="{title} | Tamil Christian Songs Collection" />
+  <meta property="og:description" content="A collection of beautiful Tamil Christian songs with translations in English and German" />
+  <meta property="og:image" content="https://sujant-h.github.io/songbook/og-image.jpg" />
+  
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{title} | Tamil Christian Songs Collection" />
+  <meta name="twitter:description" content="A collection of beautiful Tamil Christian songs with translations in English and German" />
+  <meta name="twitter:image" content="https://sujant-h.github.io/songbook/og-image.jpg" />
+  
+  <!-- Canonical URL -->
+  <meta name="canonical" href="https://sujant-h.github.io/songbook/" />
+  
+  <!-- PWA Related -->
+  <script src="/src/pwa.ts"></script>
+  { pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} /> }
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@100..900&display=swap" rel="stylesheet" />
+  
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  
+  <!-- Structured Data / JSON-LD -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Tamil Christian Songbook",
+      "url": "https://sujant-h.github.io/songbook/",
+      "description": "A collection of beautiful Tamil Christian songs with translations in English and German",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://sujant-h.github.io/songbook/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  </script>
+</head>
 
   
 <body class="bg-gradient-to-b from-indigo-50 to-white dark:from-gray-900 dark:to-gray-800 min-h-screen font-tamil dark:text-gray-200 transition-colors duration-200">
