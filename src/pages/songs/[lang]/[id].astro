@@ -193,8 +193,8 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
 
       <!-- Main Content Card -->
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-8 transition-all hover:shadow-xl dark:shadow-gray-900/30">
-        <!-- Song Title -->
+<!-- Add this data attribute to your main song container div -->
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-8 transition-all hover:shadow-xl dark:shadow-gray-900/30" data-song-id="{song.id}">        <!-- Song Title -->
         <div class="bg-indigo-600 dark:bg-indigo-800 py-6 px-6 sm:px-8">
           <div class="flex items-center gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -250,58 +250,63 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
 
     <script>
-        // Handle language switching
-        // Handle language switching
-        document.getElementById('language-select').addEventListener('change', (e) => {
-          const selectedLang = e.target.value;
-          const currentPath = window.location.pathname;
-          const pathParts = currentPath.split('/');
-          
-          // Extract the song ID - it should be the last part of the URL
-          const songId = pathParts[pathParts.length - 1];
-          
-          // Save language preference
-          sessionStorage.setItem('selectedLanguage', selectedLang);
-          
-          // Get base path from environment or construct from current URL
-          let basePath = '/songbook';
-          
-          // Check if we're already at a URL with the format /songs/{lang}/{id}
-          // If so, we just need to replace the language part
-          if (pathParts.includes('songs')) {
-            // Find where 'songs' is in the path
-            const songsIndex = pathParts.indexOf('songs');
-            if (songsIndex >= 0 && songsIndex + 2 < pathParts.length) {
-              // Construct the new URL with the same base path but different language
-              let newPath = pathParts.slice(0, songsIndex + 1); // Get path up to /songs
-              newPath.push(selectedLang); // Add new language
-              newPath.push(songId); // Add song ID
-              window.location.href = newPath.join('/');
-              return;
-            }
-          }
-          
-          // Fallback: construct the full path manually
-          // Remove any trailing slash from basePath
-          const basePathNormalized = basePath.endsWith('/') ? basePath.slice(0, -1) : basePath;
-          
-          // Ensure the song ID is included in the new URL
-          window.location.href = `${basePathNormalized}/songs/${selectedLang}/${songId}`;
-        });
-        // Back button functionality to save scroll position
-        document.getElementById('back-button').addEventListener('click', (e) => {
-          e.preventDefault();
-          
-          // Get the current song ID to use as a key for the scroll position
-          const pathParts = window.location.pathname.split('/');
-          const songId = pathParts[pathParts.length - 1];
-          
-          // Store that we're navigating back from this specific song
-          sessionStorage.setItem('returnedFromSong', songId);
-          
-          // Navigate to songbook page
+      // Centralized language switching function
+function switchLanguage(selectedLang) {
+  // Get the current URL path
+  const currentPath = window.location.pathname;
+  const pathParts = currentPath.split('/');
+  
+  // Try to extract the song ID from the path
+  let songId = '';
+  
+  // Look for the song ID in different possible locations
+  if (pathParts.length > 0) {
+    // First try: assume it's the last part of the path
+    songId = pathParts[pathParts.length - 1];
+    
+    // Validation: Check if songId is actually a numeric ID
+    if (!/^\d+$/.test(songId)) {
+      // If not numeric, try another approach: look for patterns in the path
+      const songsIndex = pathParts.indexOf('songs');
+      if (songsIndex >= 0 && songsIndex + 2 < pathParts.length) {
+        // Format should be /songs/{lang}/{id}
+        songId = pathParts[songsIndex + 2];
+      } else {
+        // If we still can't find it, check if the song ID is available in the page content
+        const songIdElement = document.querySelector('[data-song-id]');
+        if (songIdElement) {
+          songId = songIdElement.dataset.songId;
+        } else {
+          console.error('Could not determine song ID. Redirecting to home page.');
           window.location.href = '/songbook';
-        });
+          return;
+        }
+      }
+    }
+  }
+  
+  // Ensure we have a base path
+  let basePath = '/songbook';
+  // Check if we're in a development environment without the /songbook prefix
+  if (!currentPath.includes('/songbook') && currentPath.includes('/songs/')) {
+    basePath = '';
+  }
+  
+  // Construct the new URL
+  const newUrl = `${basePath}/songs/${selectedLang}/${songId}`;
+  
+  // Save language preference
+  sessionStorage.setItem('selectedLanguage', selectedLang);
+  
+  // Navigate to the new URL
+  window.location.href = newUrl;
+}
+
+// Add event listener to the language selector
+document.getElementById('language-select').addEventListener('change', (e) => {
+  const selectedLang = e.target.value;
+  switchLanguage(selectedLang);
+});
         
         // Search term highlighting functionality
         function highlightSearchTerm() {
