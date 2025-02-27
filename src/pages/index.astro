@@ -217,8 +217,8 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
  
   
-<!-- Song list with fixed badge and proper centering -->
-<ul class="grid grid-cols-1 gap-2 sm:gap-6 md:grid-cols-2 lg:grid-cols-3" id="songsList">
+<!-- Song list with improved mobile layout and song ID badge using Tailwind only -->
+<ul class="grid grid-cols-1 gap-2 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 sm:block md:grid" id="songsList">
   {songs.map((song, index) => (
     <li
       key={song.id}
@@ -230,35 +230,38 @@ document.addEventListener('DOMContentLoaded', () => {
       data-text-en={song.text_en}
       data-title-de={song.title_de}
       data-text-de={song.text_de}
-      class="song-item w-full rounded-md sm:rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden bg-white dark:bg-gray-800 group relative"
+      class="song-item w-full rounded-md sm:rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden bg-white dark:bg-gray-800 group relative mb-3 sm:mb-4 border-l-4 border-indigo-500 dark:border-indigo-600 sm:border-l-0"
     >
       <a href={`${import.meta.env.BASE_URL}/songs/ta/${song.id}`} class="block h-full">
-        <!-- Card header with music icon - smaller on mobile -->
-        <div class="bg-indigo-600 dark:bg-indigo-700 h-1 sm:h-2 group-hover:h-3 sm:group-hover:h-4 transition-all duration-300"></div>
+        <!-- Card header with colored strip (visible on tablet and larger) -->
+        <div class="bg-indigo-600 dark:bg-indigo-700 h-1 sm:h-2 group-hover:h-3 sm:group-hover:h-4 transition-all duration-300 hidden sm:block"></div>
         
-        <div class="p-2 sm:p-4 md:p-5">
+        <div class="p-3 sm:p-4 md:p-5">
           <!-- Match Badge positioned at the top-left of the box to avoid title overlap -->
-          <!-- Match Badge with larger text -->
-          <div class="match-badge hidden absolute top-1 left-1 z-20 text-xs sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-opacity-90 shadow-sm"></div>          
-          <!-- Title section with larger font sizes for mobile -->
-<div class="title-container mt-3 sm:mt-0 mb-2 sm:mb-3">
-  <div class="flex items-center gap-1 sm:gap-2">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-4 sm:w-4 md:h-5 md:w-5 text-indigo-600 dark:text-indigo-400 opacity-75 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-    </svg>
-    <div class="flex flex-col justify-center max-w-full">
-      <div class="original-title text-sm sm:text-sm md:text-base font-medium text-gray-800 dark:text-gray-200 group-hover:text-indigo-700 dark:group-hover:text-indigo-400 transition-colors break-words">
-        {song.title}
-      </div>
-      <div class="translation-title hidden text-xs sm:text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-0.5 break-words"></div>
-    </div>
-  </div>
-</div>
+          <div class="match-badge hidden absolute top-1 left-1 z-20 text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-opacity-90 shadow-sm"></div>          
           
-<!-- Text match context with larger text -->
-<div class="match-context hidden mt-2 sm:mt-3 mb-2 sm:mb-3 py-2 px-3 sm:py-2.5 sm:px-4 rounded-md border border-indigo-100 dark:border-gray-700 bg-indigo-50/70 dark:bg-gray-700/70 shadow-sm">
-  <p class="text-xs sm:text-xs md:text-sm text-gray-700 dark:text-gray-300 leading-relaxed"></p>
-</div>
+          <!-- Title section with Song ID badge -->
+          <div class="title-container mt-2 sm:mt-0 mb-2 sm:mb-3">
+            <div class="flex items-center gap-2">
+              <!-- Song ID Badge -->
+              <span class="song-id-badge min-w-[32px] text-center px-1.5 py-0.5 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300 text-xs font-medium rounded flex-shrink-0">
+                #{song.id}
+              </span>
+              
+              <!-- Title without music icon -->
+              <div class="flex-1 max-w-full">
+                <div class="original-title text-sm sm:text-sm md:text-base font-medium text-gray-800 dark:text-gray-200 group-hover:text-indigo-700 dark:group-hover:text-indigo-400 transition-colors break-words">
+                  {song.title.replace(/^\d+:\s*/, '')}
+                </div>
+                <div class="translation-title hidden text-xs sm:text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-0.5 break-words"></div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Text match context with larger text -->
+          <div class="match-context hidden mt-2 sm:mt-3 mb-2 sm:mb-3 py-2 px-3 sm:py-2.5 sm:px-4 rounded-md border border-indigo-100 dark:border-gray-700 bg-indigo-50/70 dark:bg-gray-700/70 shadow-sm">
+            <p class="text-xs sm:text-xs md:text-sm text-gray-700 dark:text-gray-300 leading-relaxed"></p>
+          </div>
           
           <!-- Text snippet - hidden -->
           <div class="relative hidden">
@@ -266,9 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white dark:from-gray-800 to-transparent"></div>
           </div>
           
-          <!-- Card footer - visible only on tablet and larger screens -->
-          <div class="hidden sm:flex mt-2 sm:mt-3 pt-1 sm:pt-2 border-t border-gray-100 dark:border-gray-700 justify-between items-center">
-            <span class="text-xs text-gray-400 dark:text-gray-500">#{index + 1}</span>
+          <!-- Footer with view text - hidden on mobile, visible on desktop -->
+          <div class="hidden sm:flex mt-2 sm:mt-3 pt-1 sm:pt-2 border-t border-gray-100 dark:border-gray-700 justify-end items-center">
             <span class="text-indigo-500 dark:text-indigo-400 text-xs sm:text-sm font-medium flex items-center gap-1 group-hover:translate-x-1 transition-transform">
               View
               <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
