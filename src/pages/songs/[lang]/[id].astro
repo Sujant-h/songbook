@@ -29,6 +29,7 @@ const { song, lang } = Astro.props;
 const audioUrl = `https://sujant-h.github.io/songbook/audio/${song.id}.mp3`;
 
 // Select content based on language
+let songId = song.id;
 let songTitle = song.title;
 let songText = song.text;
 let showOriginal = false;
@@ -124,8 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
   <meta name="theme-color" content="#1F2937" media="(prefers-color-scheme: dark)">
   
   <!-- SEO Meta Tags -->
-  <title>{songTitle} | Tamil Christian Song {lang === 'en' ? 'English Translation' : lang === 'de' ? 'German Translation' : ''}</title>
-  <meta name="description" content={`${songTitle} - ${songText.substring(0, 150)}...`}>
+  <title>{songId}{': '} {songTitle} | Tamil Christian Song {lang === 'en' ? 'English Translation' : lang === 'de' ? 'German Translation' : ''}</title>
+  <meta name="description" content={`${songId}: ${songTitle} - ${songText.substring(0, 150)}...`}>
   <meta name="keywords" content="Tamil Christian song, {songTitle}, Christian worship, {lang === 'en' ? 'English translation' : lang === 'de' ? 'German translation' : 'Tamil lyrics'}, Christian music, Tamil hymn">
   <meta name="author" content="Tamil Christian Songbook">
   
@@ -140,15 +141,15 @@ document.addEventListener('DOMContentLoaded', () => {
   <!-- Open Graph / Social Media Tags -->
   <meta property="og:type" content="music.song">
   <meta property="og:url" content={`https://sujant-h.github.io/songbook/songs/${lang}/${song.id}`}>
-  <meta property="og:title" content={`${songTitle} | Tamil Christian Song`}>
-  <meta property="og:description" content={`Listen to the original Tamil song ${songTitle} ${lang === 'en' ? 'with English translation' : lang === 'de' ? 'with German translation' : ''}`}>
+  <meta property="og:title" content={`${songId}: ${songTitle} | Tamil Christian Song`}>
+  <meta property="og:description" content={`Listen to the original Tamil song ${songId}: ${songTitle} ${lang === 'en' ? 'with English translation' : lang === 'de' ? 'with German translation' : ''}`}>
   <meta property="og:image" content="https://sujant-h.github.io/songbook/og-song-image.jpg">
   <meta property="og:audio" content={audioUrl}>
   
   <!-- Twitter Card Tags -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content={`${songTitle} | Tamil Christian Song`}>
-  <meta name="twitter:description" content={`Listen to the original Tamil song ${songTitle} ${lang === 'en' ? 'with English translation' : lang === 'de' ? 'with German translation' : ''}`}>  <meta name="twitter:image" content="https://sujant-h.github.io/songbook/og-song-image.jpg">
+  <meta name="twitter:title" content={`${songId}: ${songTitle} | Tamil Christian Song`}>
+  <meta name="twitter:description" content={`Listen to the original Tamil song ${songId}: ${songTitle} ${lang === 'en' ? 'with English translation' : lang === 'de' ? 'with German translation' : ''}`}>  <meta name="twitter:image" content="https://sujant-h.github.io/songbook/og-song-image.jpg">
   
   <!-- PWA Related -->
   <script src="/src/pwa.ts"></script>
@@ -167,9 +168,9 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       "@context": "https://schema.org",
       "@type": "MusicComposition",
-      "name": "${songTitle}",
+      "name": "${songId}: ${songTitle}",
       "inLanguage": "${lang}",
-      "alternateName": "${song.title}",
+      "alternateName": "${songId}: ${song.title}",
       "description": "${songText.substring(0, 200).replace(/\n/g, ' ')}...",
       "musicCompositionForm": "Hymn",
       "lyrics": {
@@ -251,10 +252,8 @@ document.addEventListener('DOMContentLoaded', () => {
 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-8 transition-all hover:shadow-xl dark:shadow-gray-900/30" data-song-id="{song.id}">        <!-- Song Title -->
         <div class="bg-indigo-600 dark:bg-indigo-800 py-6 px-6 sm:px-8">
           <div class="flex items-center gap-3">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-            </svg>
-            <h1 class="text-2xl sm:text-3xl font-bold text-white">{songTitle}</h1>
+
+            <h1 class="text-2xl sm:text-3xl font-bold text-white">{songId}: {songTitle}</h1>
           </div>
         </div>
         
@@ -271,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="flex items-center mb-3">
         <h3 class="text-lg font-semibold text-indigo-800 dark:text-indigo-400">Original (Tamil)</h3>
       </div>
-      <h4 class="text-lg font-medium mb-3 text-gray-700 dark:text-gray-300">{song.title}</h4>
+      <h4 class="text-lg font-medium mb-3 text-gray-700 dark:text-gray-300">{song.id}: {song.title}</h4>
       <pre class="whitespace-pre-line text-gray-700 dark:text-gray-200 font-sans leading-relaxed sm:p-6 sm:bg-indigo-50 sm:dark:bg-gray-700 sm:rounded-lg sm:border sm:border-indigo-100 sm:dark:border-gray-600">
         {song.text}
       </pre>
@@ -406,6 +405,22 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get song data
         const titleElement = document.querySelector('h1');
         const songTitle = titleElement ? titleElement.textContent.trim() : "Song Title";
+        
+        // Extract the song ID from the title text or data attribute
+        let songId = "";
+        
+        // Try to get song ID from the title (format: "ID: Title")
+        if (songTitle.includes(':')) {
+          songId = songTitle.split(':')[0].trim();
+        }
+        
+        // If that fails, try to get it from the data-song-id attribute
+        if (!songId) {
+          const songContainer = document.querySelector('[data-song-id]');
+          if (songContainer) {
+            songId = songContainer.dataset.songId;
+          }
+        }
         
         // Get song text
         const firstPre = document.querySelector('pre');
@@ -546,9 +561,9 @@ document.addEventListener('DOMContentLoaded', function() {
             </style>
           </head>
           <body>
-            <div class="content-wrapper" style="flex: 1;">
+            <div class="content-wrapper">
               <div class="print-header">
-                <div class="print-title">${songTitle}</div>
+                <div class="print-title">${songId ? songId + ': ' : ''}${songTitle.replace(/^[^:]+:\s*/, '')}</div>
               </div>
               
               <div class="print-lyrics">${songText}</div>
@@ -560,17 +575,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
               ` : ''}
             
-            <div class="print-footer">
-              Printed from Tamil Christian Songbook on ${new Date().toLocaleDateString()}
-              <br>
-              ${window.location.href}
+              <div class="print-footer">
+                Printed from Tamil Christian Songbook on ${new Date().toLocaleDateString()}
+                <br>
+                ${window.location.href}
+              </div>
             </div>
             
-                          <div class="no-print" style="text-align: center; margin-top: 40px;">
-                <button onclick="window.close();" style="padding: 12px 24px; background: #64748b; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">
-                  Close Window
-                </button>
-              </div>
+            <div class="no-print" style="text-align: center; margin-top: 40px;">
+              <button onclick="window.close();" style="padding: 12px 24px; background: #64748b; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">
+                Close Window
+              </button>
             </div>
           </body>
           </html>
@@ -603,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Current URL
     const url = window.location.href;
     // Create share text
-    const shareText = `${songTitle} - Listen to this beautiful song on Tamil Christian Songbook`;
+    const shareText = `${songId}: ${songTitle} - Listen to this beautiful song on Tamil Christian Songbook`;
     
     // WhatsApp share
     const whatsappBtn = document.getElementById('whatsapp-share');
