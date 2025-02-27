@@ -106,12 +106,13 @@ document.addEventListener('DOMContentLoaded', () => {
       <!-- Header with title -->
     <!-- Header with title and theme toggle -->
 <!-- Header with title and theme toggle -->
-<div class="text-center mb-10 relative">
-  <!-- Theme Toggle Button - Using Tailwind for responsive positioning -->
-  <div class="fixed md:absolute top-3 right-3 md:top-0 md:right-4 z-50">
+<!-- Header with title and theme toggle -->
+<div class="text-center mb-10 relative pt-10">
+  <!-- Theme Toggle Button - Positioned above the h1 -->
+  <div class="absolute top-0 right-0 md:right-4">
     <button 
       id="theme-toggle" 
-      class="p-2 bg-indigo-50/90 dark:bg-gray-700/90 md:bg-indigo-50 md:dark:bg-gray-700 border border-indigo-100 dark:border-gray-600 rounded-lg shadow-md md:shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-600 text-gray-700 dark:text-gray-200 transition-all duration-200"
+      class="p-2 bg-indigo-50 dark:bg-gray-700 border border-indigo-100 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-600 text-gray-700 dark:text-gray-200 transition-all duration-200"
       aria-label="Toggle dark mode"
     >
       <!-- Sun icon (shown in dark mode) -->
@@ -125,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </button>
   </div>
 
-  <h1 class="mt-2 mb-4 lg:mt-8 text-3xl md:text-4xl font-extrabold text-indigo-800 dark:text-indigo-400 leading-snug">
+  <h1 class="mb-4 lg:mt-0 text-3xl md:text-4xl font-extrabold text-indigo-800 dark:text-indigo-400 leading-snug">
     Tamil Christian Songs
   </h1>
   <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
