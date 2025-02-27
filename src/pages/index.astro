@@ -300,89 +300,113 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     <script>
-      // Add this to your existing script.js file or in a new script tag
+// Enhanced script.js with fixed search bar expansion/shrinking
 
 // Get the necessary DOM elements
-const searchContainer = document.getElementById('searchContainer');
-const themeToggleContainer = document.getElementById('themeToggleContainer');
-const searchBarContainer = document.querySelector('.search-bar .bg-white');
+const searchInput = document.getElementById('searchInput');
+const clearButton = document.getElementById('clearButton');
+const langSelect = document.getElementById('search-lang-select');
+const songsList = document.getElementById('songsList');
+const songItems = document.querySelectorAll('.song-item');
+const noResultsMessage = document.getElementById('noResultsMessage');
+const goToTopButton = document.getElementById('goToTopButton');
+
+// Search expansion elements - with null checks
+let searchContainer = null;
+let themeToggleContainer = null;
+let searchBarContainer = null;
 
 // Function to handle search field focus and blur
 function setupSearchExpansion() {
+  // Find the search elements
+  searchContainer = document.getElementById('searchContainer');
+  themeToggleContainer = document.getElementById('themeToggleContainer');
+  searchBarContainer = document.querySelector('.search-bar .bg-white');
+
+  // Check if all necessary elements exist
+  if (!searchContainer || !themeToggleContainer || !searchInput) {
+    console.warn('Search expansion elements not found. Skipping setup.');
+    return;
+  }
+
   // Store the original width/flex classes
   let originalSearchClasses = [];
-  let originalContainerWidth = null;
+  let originalToggleClasses = [];
   
-  // Save the original classes when the page loads
-  document.addEventListener('DOMContentLoaded', function() {
-    // Store the original classes that affect sizing
-    Array.from(searchContainer.classList).forEach(className => {
-      if (className.includes('flex-') || className.includes('w-')) {
-        originalSearchClasses.push(className);
-      }
-    });
-    
-    // Add transition classes if they don't already exist
-    if (!searchContainer.classList.contains('transition-all')) {
-      searchContainer.classList.add('transition-all', 'duration-300', 'ease-in-out');
+  // Save the original classes immediately
+  Array.from(searchContainer.classList).forEach(className => {
+    if (className.includes('flex-') || className.includes('w-')) {
+      originalSearchClasses.push(className);
     }
-    if (!themeToggleContainer.classList.contains('transition-all')) {
-      themeToggleContainer.classList.add('transition-all', 'duration-300', 'ease-in-out');
-    }
-    
-    // Get initial width for animation reference
-    originalContainerWidth = searchContainer.offsetWidth;
   });
+  
+  Array.from(themeToggleContainer.classList).forEach(className => {
+    originalToggleClasses.push(className);
+  });
+  
+  // Add transition classes if they don't already exist
+  if (!searchContainer.classList.contains('transition-all')) {
+    searchContainer.classList.add('transition-all', 'duration-300', 'ease-in-out');
+  }
+  if (!themeToggleContainer.classList.contains('transition-all')) {
+    themeToggleContainer.classList.add('transition-all', 'duration-300', 'ease-in-out');
+  }
   
   // When search input is focused
   searchInput.addEventListener('focus', function() {
-    // First, make sure we've preserved original classes if we haven't yet
-    if (originalSearchClasses.length === 0) {
-      Array.from(searchContainer.classList).forEach(className => {
-        if (className.includes('flex-') || className.includes('w-')) {
-          originalSearchClasses.push(className);
-        }
-      });
-    }
-    
-    // Add a scale effect while expanding
-    searchContainer.classList.add('flex-grow', 'transform', 'scale-x-105');
-    
-    // After small delay, normalize scale for smooth animation
-    setTimeout(() => {
-      searchContainer.classList.remove('scale-x-105');
-    }, 150);
-    
-    // Hide theme toggle with Tailwind classes
-    themeToggleContainer.classList.add('opacity-0', 'scale-90');
-    themeToggleContainer.classList.add('w-0');
-    themeToggleContainer.classList.add('overflow-hidden');
-    themeToggleContainer.classList.add('pointer-events-none');
+    expandSearchBar();
   });
   
   // When search input loses focus
   searchInput.addEventListener('blur', function() {
     // Only restore the original layout if there's no active search
     if (searchInput.value.trim() === '') {
-      restoreOriginalLayout();
+      setTimeout(() => {
+        shrinkSearchBar();
+      }, 150);
     }
   });
   
   // When search is cleared, restore the original layout
-  clearButton.addEventListener('click', function() {
-    // Additional handling for search clearing - restore original layout
-    setTimeout(function() {
-      restoreOriginalLayout();
-    }, 300); // Short delay to allow animation to complete
-  });
+  if (clearButton) {
+    clearButton.addEventListener('click', function() {
+      // Additional handling for search clearing - restore original layout
+      setTimeout(function() {
+        shrinkSearchBar();
+      }, 300); // Short delay to allow animation to complete
+    });
+  }
   
-  // Helper function to restore the original layout
-  function restoreOriginalLayout() {
-    // Add slight scale effect while contracting
-    searchContainer.classList.add('transform', 'scale-x-95');
+  // Helper function to expand the search bar
+  function expandSearchBar() {
+    // Make sure elements exist
+    if (!searchContainer || !themeToggleContainer) return;
+    
+    // Add a scale effect while expanding
+    searchContainer.classList.add('flex-grow', 'z-10');
+    
+    // Hide theme toggle with Tailwind classes
+    themeToggleContainer.classList.add('opacity-0');
+    themeToggleContainer.classList.add('w-0');
+    themeToggleContainer.classList.add('overflow-hidden');
+    themeToggleContainer.classList.add('pointer-events-none');
+    
+    // Add a style for larger screens
+    if (window.innerWidth >= 640) { // sm breakpoint
+      searchContainer.classList.add('max-w-xl');
+    }
+  }
+  
+  // Helper function to shrink the search bar
+  function shrinkSearchBar() {
+    // Make sure elements exist
+    if (!searchContainer || !themeToggleContainer) return;
+    
+    // Don't shrink if there's text in the search field
+    if (searchInput.value.trim() !== '') return;
     
     // Remove expansion classes
-    searchContainer.classList.remove('flex-grow');
+    searchContainer.classList.remove('flex-grow', 'z-10', 'max-w-xl');
     
     // Re-apply original classes if they were removed
     originalSearchClasses.forEach(className => {
@@ -396,41 +420,20 @@ function setupSearchExpansion() {
     themeToggleContainer.classList.remove('overflow-hidden');
     themeToggleContainer.classList.remove('pointer-events-none');
     
-    // After small delay, restore opacity and normalize scale for smooth animation
+    // After small delay, restore opacity
     setTimeout(() => {
-      themeToggleContainer.classList.remove('opacity-0', 'scale-90');
-      searchContainer.classList.remove('scale-x-95');
+      themeToggleContainer.classList.remove('opacity-0');
     }, 50);
   }
 }
-
-// Add this function call to your init function
-function enhancedInit() {
-  // Call your existing init function
-  init();
-  
-  // Setup search expansion functionality
-  setupSearchExpansion();
-}
-
-// Replace the DOMContentLoaded listener with this
-document.addEventListener('DOMContentLoaded', enhancedInit);
-
-
-// Get DOM elements
-const searchInput = document.getElementById('searchInput');
-const clearButton = document.getElementById('clearButton');
-const langSelect = document.getElementById('search-lang-select');
-const songsList = document.getElementById('songsList');
-const songItems = document.querySelectorAll('.song-item');
-const noResultsMessage = document.getElementById('noResultsMessage');
-const goToTopButton = document.getElementById('goToTopButton');
 
 // State management
 const state = {
   // Update clear button visibility based on search input
   updateClearButtonVisibility() {
-    if (searchInput.value.length > 0) {
+    if (!clearButton) return;
+    
+    if (searchInput && searchInput.value.length > 0) {
       clearButton.classList.remove('hidden');
     } else {
       clearButton.classList.add('hidden');
@@ -440,8 +443,8 @@ const state = {
   // Save current state to session storage
   saveState() {
     sessionStorage.setItem('scrollPosition', window.pageYOffset);
-    sessionStorage.setItem('searchQuery', searchInput.value);
-    sessionStorage.setItem('selectedLang', langSelect.value);
+    if (searchInput) sessionStorage.setItem('searchQuery', searchInput.value);
+    if (langSelect) sessionStorage.setItem('selectedLang', langSelect.value);
     sessionStorage.setItem('returnedFromSong', 'true');
   },
 
@@ -451,14 +454,14 @@ const state = {
     if (returnedFromSong) {
       // Restore search query
       const savedQuery = sessionStorage.getItem('searchQuery');
-      if (savedQuery) {
+      if (savedQuery && searchInput) {
         searchInput.value = savedQuery;
         this.updateClearButtonVisibility();
       }
       
       // Restore language selection
       const savedLang = sessionStorage.getItem('selectedLang');
-      if (savedLang && savedLang !== langSelect.value) {
+      if (savedLang && langSelect && savedLang !== langSelect.value) {
         langSelect.value = savedLang;
         updateSongDisplay();
       }
@@ -554,6 +557,8 @@ function findMatchContext(text, searchTerm, contextLength = 50) {
 
 // Reorder songs to show title matches first, then text matches
 function reorderSongsByMatchPriority() {
+  if (!songsList || !searchInput) return;
+  
   const songItemsArray = Array.from(songItems);
   const searchTerm = searchInput.value.toLowerCase().trim();
   
@@ -563,8 +568,11 @@ function reorderSongsByMatchPriority() {
   songItemsArray
     .filter(item => !item.classList.contains('hidden'))
     .sort((a, b) => {
-      const aTitle = a.querySelector('.match-badge').textContent.includes('Title') ? 1 : 0;
-      const bTitle = b.querySelector('.match-badge').textContent.includes('Title') ? 1 : 0;
+      const aBadge = a.querySelector('.match-badge');
+      const bBadge = b.querySelector('.match-badge');
+      
+      const aTitle = aBadge && aBadge.textContent.includes('Title') ? 1 : 0;
+      const bTitle = bBadge && bBadge.textContent.includes('Title') ? 1 : 0;
       
       return bTitle - aTitle; // Title matches first
     })
@@ -575,6 +583,8 @@ function reorderSongsByMatchPriority() {
 
 // Update the filterSongs function to handle the new badge positioning and fix text formatting
 function filterSongs() {
+  if (!searchInput || !langSelect || !noResultsMessage) return;
+  
   const searchTerm = searchInput.value.toLowerCase().trim();
   const selectedLang = langSelect.value;
   let visibleCount = 0;
@@ -624,14 +634,16 @@ function filterSongs() {
       // Handle search results
       if (searchTerm !== '') {
         // Show match badge with appropriate styling
-        matchBadge.classList.remove('hidden');
+        if (matchBadge) {
+          matchBadge.classList.remove('hidden');
         
-      if (titleHit) {
-          matchBadge.textContent = 'Found in title';
-          matchBadge.className = 'match-badge absolute top-1 left-1 z-20 text-[0.65rem] sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-blue-100 text-blue-800 bg-opacity-90 shadow-sm';
-        } else {
-          matchBadge.textContent = 'Found in text';
-          matchBadge.className = 'match-badge absolute top-1 left-1 z-20 text-[0.65rem] sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-green-100 text-green-800 bg-opacity-90 shadow-sm';
+          if (titleHit) {
+            matchBadge.textContent = 'Found in title';
+            matchBadge.className = 'match-badge absolute top-1 left-1 z-20 text-[0.65rem] sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-blue-100 text-blue-800 bg-opacity-90 shadow-sm';
+          } else {
+            matchBadge.textContent = 'Found in text';
+            matchBadge.className = 'match-badge absolute top-1 left-1 z-20 text-[0.65rem] sm:text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-green-100 text-green-800 bg-opacity-90 shadow-sm';
+          }
         }
         
         // Show match context for text hits
@@ -645,20 +657,22 @@ function filterSongs() {
         }
         
         // Highlight title if there's a match
-        if (titleHit) {
+        if (titleHit && originalTitle) {
           const rawTitle = item.dataset[titleField] || item.dataset.title || '';
           originalTitle.innerHTML = highlightMatches(rawTitle, searchTerm);
-        } else {
+        } else if (originalTitle) {
           // Use plain text for title when no title match
           originalTitle.textContent = item.dataset[titleField] || item.dataset.title || '';
         }
       } else {
         // Reset everything when no search term
-        matchBadge.classList.add('hidden');
+        if (matchBadge) matchBadge.classList.add('hidden');
         if (matchContext) matchContext.classList.add('hidden');
         
         // Restore original title as plain text
-        originalTitle.textContent = item.dataset[titleField] || item.dataset.title || '';
+        if (originalTitle) {
+          originalTitle.textContent = item.dataset[titleField] || item.dataset.title || '';
+        }
       }
     } else {
       item.classList.add('hidden');
@@ -676,9 +690,13 @@ function filterSongs() {
 
 // Update song display based on selected language
 function updateSongDisplay() {
+  if (!langSelect) return;
+  
   const selectedLang = langSelect.value;
-  const baseUrl = import.meta.env.BASE_URL;
-  const searchTerm = searchInput.value.trim();
+  // Safe way to get base URL
+  const baseUrl = window.location.pathname.includes('/songbook') ? 
+                 '/songbook' : '';
+  const searchTerm = searchInput ? searchInput.value.trim() : '';
   
   // Always hide text snippets
   document.querySelectorAll('.song-item .relative').forEach(snippet => {
@@ -691,6 +709,8 @@ function updateSongDisplay() {
     const matchContext = item.querySelector('.match-context');
     const link = item.querySelector('a');
     
+    if (!originalTitle || !link) return;
+    
     const songId = item.dataset.id;
     const originalTitleText = item.dataset.title;
     
@@ -699,15 +719,15 @@ function updateSongDisplay() {
     // Set the appropriate titles based on language
     if (selectedLang === 'ta') {
       displayTitle = originalTitleText;
-      translationTitle.classList.add('hidden');
+      if (translationTitle) translationTitle.classList.add('hidden');
       link.href = `${baseUrl}/songs/ta/${songId}`;
     } else if (selectedLang === 'en') {
       displayTitle = item.dataset.titleEn || originalTitleText;
       
-      if (item.dataset.title && displayTitle !== originalTitleText) {
+      if (translationTitle && item.dataset.title && displayTitle !== originalTitleText) {
         translationTitle.textContent = `Original: ${originalTitleText}`;
         translationTitle.classList.remove('hidden');
-      } else {
+      } else if (translationTitle) {
         translationTitle.classList.add('hidden');
       }
       
@@ -715,10 +735,10 @@ function updateSongDisplay() {
     } else if (selectedLang === 'de') {
       displayTitle = item.dataset.titleDe || originalTitleText;
       
-      if (item.dataset.title && displayTitle !== originalTitleText) {
+      if (translationTitle && item.dataset.title && displayTitle !== originalTitleText) {
         translationTitle.textContent = `Original: ${originalTitleText}`;
         translationTitle.classList.remove('hidden');
-      } else {
+      } else if (translationTitle) {
         translationTitle.classList.add('hidden');
       }
       
@@ -734,109 +754,130 @@ function updateSongDisplay() {
         matchContext.classList.add('hidden');
       }
     }
+    
+    // Preserve search query in links if there's an active search
+    if (searchTerm) {
+      const currentUrl = new URL(link.href, window.location.origin);
+      currentUrl.searchParams.set('q', searchTerm);
+      link.href = currentUrl.pathname + currentUrl.search;
+    }
   });
   
   // When changing language, re-apply any active search filters
-  if (searchInput.value.trim() !== '') {
+  if (searchInput && searchInput.value.trim() !== '') {
     filterSongs();
   }
+}
+
+// Helper function to restore original titles
+function restoreOriginalTitles() {
+  if (!langSelect) return;
+  
+  const selectedLang = langSelect.value;
+  
+  songItems.forEach(item => {
+    let titleField;
+    
+    // Select the appropriate field based on language
+    if (selectedLang === 'ta') {
+      titleField = 'title';
+    } else if (selectedLang === 'en') {
+      titleField = 'titleEn';
+    } else if (selectedLang === 'de') {
+      titleField = 'titleDe';
+    }
+    
+    const originalTitle = item.querySelector('.original-title');
+    if (originalTitle) {
+      // Use the plain text content without any HTML/highlights
+      originalTitle.textContent = item.dataset[titleField] || item.dataset.title || '';
+    }
+  });
 }
 
 // Event Listeners
 function setupEventListeners() {
   // Search input event
-  searchInput.addEventListener('input', function() {
-    state.updateClearButtonVisibility();
-    filterSongs();
-  });
-  
-  // Clear button event
-  clearButton.addEventListener('click', function() {
-    searchInput.value = '';
-    clearButton.classList.add('hidden');
-    
-    // Explicitly hide all match contexts
-    document.querySelectorAll('.match-context').forEach(context => {
-      context.classList.add('hidden');
-    });
-    
-    // Explicitly hide all match badges
-    document.querySelectorAll('.match-badge').forEach(badge => {
-      badge.classList.add('hidden');
-    });
-    
-    // Hide all text snippets
-    document.querySelectorAll('.song-item .relative').forEach(snippet => {
-      snippet.classList.add('hidden');
-    });
-    
-    // Restore original titles (without highlights)
-    restoreOriginalTitles();
-    
-    // Reapply normal filtering
-    filterSongs();
-    searchInput.focus();
-  });
-  
-  // Helper function to restore original titles
-  function restoreOriginalTitles() {
-    const selectedLang = langSelect.value;
-    
-    songItems.forEach(item => {
-      let titleField;
-      
-      // Select the appropriate field based on language
-      if (selectedLang === 'ta') {
-        titleField = 'title';
-      } else if (selectedLang === 'en') {
-        titleField = 'titleEn';
-      } else if (selectedLang === 'de') {
-        titleField = 'titleDe';
-      }
-      
-      const originalTitle = item.querySelector('.original-title');
-      if (originalTitle) {
-        // Use the plain text content without any HTML/highlights
-        originalTitle.textContent = item.dataset[titleField] || item.dataset.title || '';
-      }
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      state.updateClearButtonVisibility();
+      filterSongs();
     });
   }
   
-  // Language change event
-  langSelect.addEventListener('change', function() {
-    updateSongDisplay();
-    
-    // Hide all text-related elements when changing language (if not searching)
-    if (searchInput.value.trim() === '') {
+  // Clear button event
+  if (clearButton) {
+    clearButton.addEventListener('click', function() {
+      if (searchInput) {
+        searchInput.value = '';
+        clearButton.classList.add('hidden');
+      }
+      
+      // Explicitly hide all match contexts
       document.querySelectorAll('.match-context').forEach(context => {
         context.classList.add('hidden');
       });
       
+      // Explicitly hide all match badges
       document.querySelectorAll('.match-badge').forEach(badge => {
         badge.classList.add('hidden');
       });
       
+      // Hide all text snippets
       document.querySelectorAll('.song-item .relative').forEach(snippet => {
         snippet.classList.add('hidden');
       });
-    } else {
-      // Reapply search if there's an active search term
+      
+      // Restore original titles (without highlights)
+      restoreOriginalTitles();
+      
+      // Reapply normal filtering
       filterSongs();
-    }
-  });
+      
+      // Focus the search input after clearing
+      if (searchInput) searchInput.focus();
+    });
+  }
+  
+  // Language change event
+  if (langSelect) {
+    langSelect.addEventListener('change', function() {
+      updateSongDisplay();
+      
+      // Hide all text-related elements when changing language (if not searching)
+      if (!searchInput || searchInput.value.trim() === '') {
+        document.querySelectorAll('.match-context').forEach(context => {
+          context.classList.add('hidden');
+        });
+        
+        document.querySelectorAll('.match-badge').forEach(badge => {
+          badge.classList.add('hidden');
+        });
+        
+        document.querySelectorAll('.song-item .relative').forEach(snippet => {
+          snippet.classList.add('hidden');
+        });
+      } else {
+        // Reapply search if there's an active search term
+        filterSongs();
+      }
+    });
+  }
   
   // Scroll event for "Go to Top" button
-  window.addEventListener('scroll', function() {
-    goToTopButton.classList.toggle('hidden', window.pageYOffset <= 300);
-  });
-  
-  // Go to Top button click
-  goToTopButton.addEventListener('click', function() {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
+  if (goToTopButton) {
+    window.addEventListener('scroll', function() {
+      goToTopButton.classList.toggle('hidden', window.pageYOffset <= 300);
     });
-  });
+    
+    // Go to Top button click
+    goToTopButton.addEventListener('click', function() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  }
   
   // Save state when navigating to a song
   document.querySelectorAll('.song-item a').forEach(link => {
@@ -850,12 +891,29 @@ function setupEventListeners() {
     state.updateClearButtonVisibility();
     filterSongs();
   });
+  
+  // Add resize listener to handle search bar appearance on window resize
+  window.addEventListener('resize', function() {
+    // If the search input is focused, maintain the expanded state
+    if (document.activeElement === searchInput) {
+      if (searchContainer) {
+        if (window.innerWidth >= 640) { // sm breakpoint
+          searchContainer.classList.add('max-w-xl');
+        } else {
+          searchContainer.classList.remove('max-w-xl');
+        }
+      }
+    }
+  });
 }
 
-// Initialize
+// Main initialization function
 function init() {
   // Set up all event listeners
   setupEventListeners();
+  
+  // Setup search expansion functionality
+  setupSearchExpansion();
   
   // Initialize song display
   updateSongDisplay();
@@ -875,6 +933,11 @@ function init() {
   document.querySelectorAll('.song-item .relative').forEach(snippet => {
     snippet.classList.add('hidden');
   });
+  
+  // Apply any active search on initial load
+  if (searchInput && searchInput.value.trim() !== '') {
+    filterSongs();
+  }
 }
 
 // Run initialization when DOM is loaded
