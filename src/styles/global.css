@@ -1,12 +1,7 @@
 @import "tailwindcss";
 
-@theme {
-  --color-darkblue: #223B62;  /*Title,*/
-  --color-babyblue: #21A6D3;
-  --color-seriousblue: #498397;
-  --color-deapseablue: #1441B3;
-  --color-wallpaintblue: #3071AB;
-}
+@import "tailwindcss";@custom-variant dark (&:where(.dark, .dark *));
+
 
 #song-text p {
   @apply mb-5;
