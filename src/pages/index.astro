@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
   </head>
 
   
-<body class="bg-gradient-to-b from-indigo-50 to-white dark:from-gray-900 dark:to-gray-800 min-h-screen font-tamil dark:text-gray-200 transition-colors duration-200">
+  <body class="bg-gradient-to-b from-indigo-50 to-white dark:from-gray-900 dark:to-gray-800 min-h-screen font-tamil dark:text-gray-200 transition-colors duration-200">
     <!-- Outer container -->
     <div class="max-w-6xl mx-auto px-4 py-8">
       <!-- Header with title -->
@@ -114,83 +114,82 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
   
       <!-- Search bar, language dropdown, and theme toggle -->
-      <!-- Update the existing search bar container with transition classes -->
-<div class="search-bar relative mb-10 max-w-3xl mx-auto">
-  <div class="bg-white dark:bg-gray-800 p-3 rounded-xl shadow-md dark:shadow-gray-900/30 flex items-center gap-4 transition-all duration-300 ease-in-out">
-    <!-- Language Selector -->
-    <div class="relative">
-      <label for="search-lang-select" class="text-xs text-gray-500 dark:text-gray-400 block mb-1 ml-1">Language</label>
-      <div class="relative">
-        <select 
-          id="search-lang-select" 
-          class="pl-3 pr-8 py-2 bg-indigo-50 dark:bg-gray-700 border border-indigo-100 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-600 text-gray-700 dark:text-gray-200 appearance-none transition-all duration-200"
-        >
-          <option value="ta">Tamil</option>
-          <option value="en">English</option>
-          <option value="de">German</option>
-        </select>
-        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-gray-400">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Search Input -->
-    <div class="flex-grow relative transition-all duration-300 ease-in-out transform-gpu" id="searchContainer">
-      <label for="searchInput" class="text-xs text-gray-500 dark:text-gray-400 block mb-1 ml-1">Search</label>
-      <div class="relative">
-        <!-- Search Icon -->
-        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-400" fill="none"
-               viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </div>
-        
-        <input
-          id="searchInput"
-          type="text"
-          placeholder="Search by title or lyrics..."
-          class="w-full pl-10 pr-10 py-2 border border-indigo-100 dark:border-gray-600 bg-indigo-50 dark:bg-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-600 text-gray-700 dark:text-gray-200 transition-all duration-200"
-        />
-        
-        <!-- Clear button -->
-        <button
-          id="clearButton"
-          type="button"
-          class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-md p-1 hidden focus:outline-none transition-colors"
-          aria-label="Clear search"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-    </div>
+      <div class="search-bar relative mb-10 max-w-3xl mx-auto">
+        <div class="bg-white dark:bg-gray-800 p-3 rounded-xl shadow-md dark:shadow-gray-900/30 flex items-center gap-4 transition-all duration-300 ease-in-out">
+          <!-- Language Selector -->
+          <div class="relative flex-shrink-0">
+            <label for="search-lang-select" class="text-xs text-gray-500 dark:text-gray-400 block mb-1 ml-1">Language</label>
+            <div class="relative">
+              <select 
+                id="search-lang-select" 
+                class="pl-3 pr-8 py-2 bg-indigo-50 dark:bg-gray-700 border border-indigo-100 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-600 text-gray-700 dark:text-gray-200 appearance-none transition-all duration-200"
+              >
+                <option value="ta">Tamil</option>
+                <option value="en">English</option>
+                <option value="de">German</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-gray-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Search Input Container -->
+          <div id="searchContainer" class="flex-1 relative transition-all duration-300 ease-in-out transform-gpu will-change-transform">
+            <label for="searchInput" class="text-xs text-gray-500 dark:text-gray-400 block mb-1 ml-1">Search</label>
+            <div class="relative">
+              <!-- Search Icon -->
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-400" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              
+              <input
+                id="searchInput"
+                type="text"
+                placeholder="Search by title or lyrics..."
+                class="w-full pl-10 pr-10 py-2 border border-indigo-100 dark:border-gray-600 bg-indigo-50 dark:bg-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-600 text-gray-700 dark:text-gray-200 transition-all duration-200"
+              />
+              
+              <!-- Clear button -->
+              <button
+                id="clearButton"
+                type="button"
+                class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-md p-1 hidden focus:outline-none transition-colors"
+                aria-label="Clear search"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
 
-    <!-- Theme Toggle Button -->
-    <div class="relative transition-all duration-300 ease-in-out transform-gpu" id="themeToggleContainer">
-      <label class="text-xs text-gray-500 dark:text-gray-400 block mb-1 ml-1">Theme</label>
-      <button 
-        id="theme-toggle" 
-        class="p-2 bg-indigo-50 dark:bg-gray-700 border border-indigo-100 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-600 text-gray-700 dark:text-gray-200 transition-all duration-200"
-        aria-label="Toggle dark mode"
-      >
-        <!-- Sun icon (shown in dark mode) -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 sun-icon hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-        <!-- Moon icon (shown in light mode) -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 moon-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-        </svg>
-      </button>
-    </div>
-  </div>
-</div>
+          <!-- Theme Toggle Button Container -->
+          <div id="themeToggleContainer" class="flex-shrink-0 transition-all duration-300 ease-in-out transform-gpu will-change-transform">
+            <label class="text-xs text-gray-500 dark:text-gray-400 block mb-1 ml-1">Theme</label>
+            <button 
+              id="theme-toggle" 
+              class="p-2 bg-indigo-50 dark:bg-gray-700 border border-indigo-100 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-600 text-gray-700 dark:text-gray-200 transition-all duration-200"
+              aria-label="Toggle dark mode"
+            >
+              <!-- Sun icon (shown in dark mode) -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 sun-icon hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+              <!-- Moon icon (shown in light mode) -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 moon-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
  
   
 <!-- Song list with fixed badge and proper centering -->
