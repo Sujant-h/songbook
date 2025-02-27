@@ -346,104 +346,156 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     <script>
-
-  // New approach: Open a new window for printing
-  document.addEventListener('DOMContentLoaded', function() {
-    const printButton = document.getElementById('print-song');
-    if (printButton) {
-      printButton.addEventListener('click', function() {
-        try {
-          
-          // Get song data
-          const titleElement = document.querySelector('h1');
-          const songTitle = titleElement ? titleElement.textContent.trim() : "Song Title";
-          
-          // Get song text
-          const firstPre = document.querySelector('pre');
-          const songText = firstPre ? firstPre.textContent.trim() : "Song lyrics not found";
-          
-          // Get original Tamil if available
-          let originalTitle = "";
-          let originalText = "";
-          
-          // Check for original section
-          const originalSection = document.querySelector('.mt-8.pt-6');
-          if (originalSection) {
-            const titleEl = originalSection.querySelector('h4');
-            if (titleEl) {
-              originalTitle = titleEl.textContent.trim();
-            }
-            
-            const originalPre = originalSection.querySelector('pre');
-            if (originalPre) {
-              originalText = originalPre.textContent.trim();
-            }
+// Improved printing functionality with enhanced styling
+document.addEventListener('DOMContentLoaded', function() {
+  const printButton = document.getElementById('print-song');
+  if (printButton) {
+    printButton.addEventListener('click', function() {
+      try {
+        // Get song data
+        const titleElement = document.querySelector('h1');
+        const songTitle = titleElement ? titleElement.textContent.trim() : "Song Title";
+        
+        // Get song text
+        const firstPre = document.querySelector('pre');
+        const songText = firstPre ? firstPre.textContent.trim() : "Song lyrics not found";
+        
+        // Get original Tamil if available
+        let originalTitle = "";
+        let originalText = "";
+        
+        // Check for original section
+        const originalSection = document.querySelector('.mt-8.pt-6');
+        if (originalSection) {
+          const titleEl = originalSection.querySelector('h4');
+          if (titleEl) {
+            originalTitle = titleEl.textContent.trim();
           }
           
-          // Create HTML for the new window
-          const printHTML = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <meta charset="UTF-8">
-              <style>
+          const originalPre = originalSection.querySelector('pre');
+          if (originalPre) {
+            originalText = originalPre.textContent.trim();
+          }
+        }
+        
+        // Create HTML for the new window
+        const printHTML = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <style>
+              @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap');
+              
+              @page {
+                margin: 0.5in;
+              }
+              
+              html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+              }
+              
+              body {
+                font-family: 'Merriweather', serif;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                color: #333;
+                line-height: 1.6;
+                position: relative;
+                min-height: 100vh;
+              }
+              
+              .content-wrapper {
+                padding-bottom: 100px; /* Ensure space for footer */
+              }
+              
+              .print-header {
+                text-align: center;
+                margin-bottom: 30px;
+                padding-bottom: 15px;
+                border-bottom: 2px solid #3b82f6;
+              }
+              
+              .print-title {
+                font-size: 28px;
+                font-weight: 700;
+                color: #1e40af;
+                margin-bottom: 10px;
+                line-height: 1.3;
+              }
+              
+              .print-lyrics {
+                white-space: pre-line;
+                font-size: 16px;
+                line-height: 1.8;
+                margin-bottom: 30px;
+                text-align: left;
+              }
+              
+              .print-original {
+                margin-top: 40px;
+                padding-top: 30px;
+                border-top: 1px dashed #94a3b8;
+                background-color: #f8fafc;
+                padding: 20px;
+                border-radius: 8px;
+              }
+              
+              .print-original-title {
+                font-weight: 700;
+                margin-bottom: 15px;
+                font-size: 20px;
+                color: #0f172a;
+              }
+              
+              .print-footer {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                text-align: center;
+                font-size: 12px;
+                color: #64748b;
+                border-top: 1px solid #e2e8f0;
+                padding-top: 15px;
+                padding-bottom: 20px;
+                font-style: italic;
+                background-color: white;
+              }
+              
+              @media print {
                 body {
-                  font-family: Arial, sans-serif;
-                  max-width: 800px;
-                  margin: 0 auto;
-                  padding: 20px;
+                  padding: 0;
+                  font-size: 12pt;
                 }
-                .print-header {
-                  text-align: center;
-                  margin-bottom: 20px;
-                  border-bottom: 1px solid #ccc;
-                  padding-bottom: 10px;
-                }
-                .print-title {
-                  font-size: 24px;
-                  font-weight: bold;
-                  margin-bottom: 5px;
-                }
-                .print-subtitle {
-                  font-size: 14px;
-                  color: #555;
-                  margin-bottom: 20px;
-                }
+                
                 .print-lyrics {
-                  white-space: pre-line;
-                  font-size: 14px;
+                  font-size: 12pt;
                   line-height: 1.6;
-                  margin-bottom: 30px;
                 }
+                
+                .no-print {
+                  display: none;
+                }
+                
                 .print-original {
-                  margin-top: 30px;
-                  padding-top: 20px;
-                  border-top: 1px dashed #ccc;
+                  break-inside: avoid;
+                  background-color: #f9fafb !important;
+                  -webkit-print-color-adjust: exact;
+                  print-color-adjust: exact;
                 }
-                .print-original-title {
-                  font-weight: bold;
-                  margin-bottom: 10px;
-                  font-size: 18px;
+                
+                .print-header {
+                  border-bottom-color: #666 !important;
                 }
-                .print-footer {
-                  margin-top: 30px;
-                  text-align: center;
-                  font-size: 12px;
-                  color: #777;
-                  border-top: 1px solid #ccc;
-                  padding-top: 10px;
-                }
-                @media print {
-                  body {
-                    padding: 0;
-                  }
-                  .no-print {
-                    display: none;
-                  }
-                }
-              </style>
-            </head>
-            <body>
+              }
+            </style>
+          </head>
+          <body>
+            <div class="content-wrapper" style="flex: 1;">
               <div class="print-header">
                 <div class="print-title">${songTitle}</div>
               </div>
@@ -452,47 +504,47 @@ document.addEventListener('DOMContentLoaded', () => {
               
               ${originalTitle && originalText ? `
                 <div class="print-original">
-                  <div class="print-original-title">Original (Tamil): ${originalTitle}</div>
+                  <div class="print-original-title">${originalTitle}</div>
                   <div class="print-lyrics">${originalText}</div>
                 </div>
               ` : ''}
-              
-              <div class="print-footer">
-                Printed from Tamil Christian Songbook on ${new Date().toLocaleDateString()}
-                <br>
-                ${window.location.href}
-              </div>
-              
-              <div class="no-print" style="text-align: center; margin-top: 30px;">
-                <button onclick="window.print();" style="padding: 10px 20px; background: #4f46e5; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
-                  Print Now
-                </button>
-                <button onclick="window.close();" style="padding: 10px 20px; background: #9ca3af; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-left: 10px;">
-                  Close
+            
+            <div class="print-footer">
+              Printed from Tamil Christian Songbook on ${new Date().toLocaleDateString()}
+              <br>
+              ${window.location.href}
+            </div>
+            
+                          <div class="no-print" style="text-align: center; margin-top: 40px;">
+                <button onclick="window.close();" style="padding: 12px 24px; background: #64748b; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">
+                  Close Window
                 </button>
               </div>
-            </body>
-            </html>
-          `;
-          
-          // Open a new window and write the content
-          const printWindow = window.open('', 'PrintSong', 'width=800,height=600');
-          printWindow.document.write(printHTML);
-          printWindow.document.close();
-          
-          // Focus the new window
-          printWindow.focus();
-          
-          // You can automatically print, or let the user click the Print button in the new window
-          // printWindow.print();
-          
-        } catch (error) {
-          console.error("Error in print function:", error);
-          alert("Sorry, there was a problem preparing the song for printing. Please try again.");
-        }
-      });
-    }
-  });
+            </div>
+          </body>
+          </html>
+        `;
+        
+        // Open a new window and write the content
+        const printWindow = window.open('', 'PrintSong', 'width=800,height=600');
+        printWindow.document.write(printHTML);
+        printWindow.document.close();
+        
+        // Focus the new window
+        printWindow.focus();
+        
+        // Automatically open the print dialog after a short delay
+        // This gives the window time to fully load
+        setTimeout(() => {
+          printWindow.print();
+        }, 500);
+      } catch (error) {
+        console.error("Error in print function:", error);
+        alert("Sorry, there was a problem preparing the song for printing. Please try again.");
+      }
+    });
+  }
+});
         // Social media share functionality
   document.addEventListener('DOMContentLoaded', function() {
     // Get the song title
