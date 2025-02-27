@@ -349,22 +349,14 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     </footer>
     
-    <!-- Go to Top Button with improved styling -->
-    <button id="goToTopButton" class="fixed bottom-8 right-8 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-800 text-white rounded-full shadow-xl dark:shadow-black/30 p-4 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 flex items-center justify-center hidden transition-all transform hover:scale-105">
-      <span class="hidden md:flex items-center justify-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-             viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-        </svg>
-        <span>Top</span>
-      </span>
-      <span class="md:hidden flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-             viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-        </svg>
-      </span>
-    </button>
+<!-- Improved Go to Top Button for Mobile -->
+<button id="goToTopButton" class="fixed bottom-4 sm:bottom-8 right-4 sm:right-8 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-800 text-white rounded-full shadow-xl dark:shadow-black/30 p-3 sm:p-4 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 flex items-center justify-center hidden transition-all transform hover:scale-105">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+       viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+  </svg>
+  </button></content>
+  
 
 
 
@@ -587,7 +579,7 @@ function filterSongs() {
           // Show and style the match badge appropriately
           matchBadge.classList.remove('hidden');
           
-          if (titleHit) {
+         if (titleHit) {
   matchBadge.style.backgroundColor = '#dcfce7'; // green-100
   matchBadge.style.color = '#166534';          // green-800
   matchBadge.textContent = 'Title';
