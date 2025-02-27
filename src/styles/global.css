@@ -10,3 +10,20 @@
 .highlighted {
   @apply bg-yellow-200;
 }
+
+/* Add this to your CSS file */
+.match-badge-green {
+  @apply absolute top-2 right-2 z-20 text-xs font-medium px-2 py-0.5 rounded-full;
+  @apply bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100;
+  @apply shadow-sm;
+  @apply border border-green-200 dark:border-green-800;
+  @apply flex items-center justify-center;
+}
+
+.match-badge-blue {
+  @apply absolute top-2 right-2 z-20 text-xs font-medium px-2 py-0.5 rounded-full;
+  @apply bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100;
+  @apply shadow-sm;
+  @apply border border-blue-200 dark:border-blue-800;
+  @apply flex items-center justify-center;
+}
