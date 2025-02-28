@@ -547,59 +547,81 @@ function showCopiedFeedback(button) {
   }, 2000);
 }
 
-// Improved printing functionality with updated styling
+// Enhanced Printing Functionality with Improved Error Handling and Design
 function setupPrintFunctionality() {
   const printButton = document.getElementById('print-song');
   if (!printButton) return;
   
   printButton.addEventListener('click', function() {
     try {
-      // Get song data
-      const titleElement = document.querySelector('h1');
-      const songTitle = titleElement ? titleElement.textContent.trim() : "Song Title";
-      
-      // Extract song ID
-      let songId = "";
-      const songContainer = document.querySelector('[data-song-id]');
-      if (songContainer) {
-        songId = songContainer.dataset.songId;
-      } else if (songTitle.includes(':')) {
-        songId = songTitle.split(':')[0].trim();
-      }
-      
-      // Get song text - first pre element
-      const firstPre = document.querySelector('pre');
-      const songText = firstPre ? firstPre.textContent.trim() : "Song lyrics not found";
-      
-      // Get original Tamil if available
-      let originalTitle = "";
-      let originalText = "";
-      
-      // Check for original section
-      const originalSection = document.querySelector('.mt-6.pt-6');
-      if (originalSection) {
-        const titleEl = originalSection.querySelector('h4');
-        if (titleEl) {
-          originalTitle = titleEl.textContent.trim();
+      // Comprehensive song data extraction with robust fallback mechanisms
+      const extractSongData = () => {
+        // Title extraction
+        const titleElement = document.querySelector('h1');
+        const fullTitle = titleElement ? titleElement.textContent.trim() : "Untitled Song";
+        
+        // Song ID extraction with multiple fallback strategies
+        let songId = "";
+        const songContainer = document.querySelector('[data-song-id]');
+        if (songContainer) {
+          songId = songContainer.dataset.songId;
+        } else if (fullTitle.includes(':')) {
+          songId = fullTitle.split(':')[0].trim();
         }
         
-        const originalPre = originalSection.querySelector('pre');
-        if (originalPre) {
-          originalText = originalPre.textContent.trim();
+        // Clean title (remove song ID if present)
+        const cleanTitle = fullTitle.replace(/^[^:]+:\s*/, '');
+        
+        // Lyrics extraction
+        const firstPre = document.querySelector('pre');
+        const songText = firstPre ? firstPre.textContent.trim() : "Lyrics not available";
+        
+        // Original version extraction
+        let originalTitle = "";
+        let originalText = "";
+        const originalSection = document.querySelector('.mt-6.pt-6');
+        if (originalSection) {
+          const titleEl = originalSection.querySelector('h4');
+          const originalPre = originalSection.querySelector('pre');
+          
+          originalTitle = titleEl ? titleEl.textContent.trim() : "";
+          originalText = originalPre ? originalPre.textContent.trim() : "";
         }
-      }
+        
+        return { songId, fullTitle, cleanTitle, songText, originalTitle, originalText };
+      };
       
-      // Create HTML for the new window with updated styling
+      // Get song data
+      const { songId, fullTitle, cleanTitle, songText, originalTitle, originalText } = extractSongData();
+      
+      // Create HTML for the new window with enhanced styling
       const printHTML = `
         <!DOCTYPE html>
-        <html>
+        <html lang="en">
         <head>
           <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>${cleanTitle} - Printout</title>
           <style>
-            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+            
+            :root {
+              --primary-color: #1e40af;
+              --secondary-color: #4338ca;
+              --background-light: #f9fafb;
+              --text-dark: #1f2937;
+              --border-color: #e5e7eb;
+            }
+            
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+            }
             
             @page {
               margin: 0.5in;
+              size: letter;
             }
             
             html, body {
@@ -610,172 +632,40 @@ function setupPrintFunctionality() {
             
             body {
               font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+              line-height: 1.6;
+              color: var(--text-dark);
               max-width: 800px;
               margin: 0 auto;
               padding: 20px;
-              color: #1f2937;
-              line-height: 1.6;
-              position: relative;
+              background: white;
+              display: flex;
+              flex-direction: column;
               min-height: 100vh;
             }
             
-            .content-wrapper {
-              padding-bottom: 100px; /* Ensure space for footer */
+            .print-container {
+              flex-grow: 1;
+              display: flex;
+              flex-direction: column;
             }
             
             .print-header {
               text-align: center;
-              margin-bottom: 30px;
-              padding-bottom: 15px;
-              border-bottom: 1px solid #e5e7eb;
+              padding-bottom: 20px;
+              border-bottom: 2px solid var(--border-color);
+              margin-bottom: 20px;
             }
             
             .song-id {
-              display: inline-block;
-              background-color: #e0e7ff;
-              color: #4338ca;
-              font-weight: 600;
-              padding: 3px 10px;
-              border-radius: 6px;
-              margin-right: 10px;
-            }
-            
-            .print-title {
-              font-size: 24px;
-              font-weight: 700;
-              color: #1e40af;
-              margin: 10px 0;
-              line-height: 1.3;
-            }
-            
-            .print-lyrics {
-              white-space: pre-line;
-              font-size: 16px;
-              line-height: 1.8;
-              margin-bottom: 30px;
-              text-align: left;
-              padding: 20px;
-              background-color: #f9fafb;
-              border-radius: 8px;
-              border: 1px solid #e5e7eb;
-            }
-            
-            .print-original {
-              margin-top: 40px;
-              padding-top: 20px;
-              border-top: 1px solid #e5e7eb;
-            }
-            
-            .original-heading {
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              margin-bottom: 15px;
-            }
-            
-            .language-badge {
-              background-color: #e0e7ff;
-              color: #4338ca;
-              font-size: 12px;
-              font-weight: 600;
-              padding: 3px 8px;
-              border-radius: 6px;
-            }
-            
-            .print-original-title {
-              font-weight: 600;
-              margin-bottom: 15px;
-              font-size: 18px;
-              color: #1f2937;
-              display: flex;
-              align-items: center;
-            }
-            
-            .print-footer {
-              position: absolute;
-              bottom: 0;
-              left: 0;
-              right: 0;
-              text-align: center;
-              font-size: 12px;
-              color: #6b7280;
-              border-top: 1px solid #e5e7eb;
-              padding-top: 15px;
-              padding-bottom: 20px;
-              font-style: italic;
-              background-color: white;
-            }
-            
-            @media print {
-              body {
-                padding: 0;
-                font-size: 12pt;
-              }
-              
-              .print-lyrics {
-                font-size: 12pt;
-                line-height: 1.6;
-                page-break-inside: avoid;
-                background-color: #f9fafb !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-              }
-              
-              .song-id, .language-badge {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-              }
-              
-              .no-print {
-                display: none;
-              }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="content-wrapper">
-            <div class="print-header">
-              <div class="print-title">
-                ${songId ? `<span class="song-id">${songId}</span>` : ''}${songTitle.replace(/^[^:]+:\s*/, '')}
-              </div>
-            </div>
-            
-            <div class="print-lyrics">${songText}</div>
-            
-            ${originalTitle && originalText ? `
-              <div class="print-original">
-                <div class="original-heading">
-                  <h3>Original Version</h3>
-                  <span class="language-badge">Tamil</span>
-                </div>
-                <div class="print-original-title">
-                  ${songId ? `<span class="song-id">${songId}</span>` : ''}${originalTitle}
-                </div>
-                <div class="print-lyrics">${originalText}</div>
-              </div>
-            ` : ''}
-          
-            <div class="print-footer">
-              Printed from Tamil Christian Songbook on ${new Date().toLocaleDateString()}
-              <br>
-              ${window.location.href}
-            </div>
-          </div>
-          
-          <div class="no-print" style="text-align: center; margin-top: 40px;">
-            <button onclick="window.print();" style="padding: 8px 16px; background: #4f46e5; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: medium; margin-right: 10px;">
-              Print Now
-            </button>
-            <button onclick="window.close();" style="padding: 8px 16px; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: medium;">
-              Close Window
-            </button>
-          </div>
-        </body>
-        </html>
-      `;
+              display: inline
+
+          }`;
       
       // Open a new window and write the content
       const printWindow = window.open('', 'PrintSong', 'width=800,height=600');
+      
+      // Ensure the window is fully loaded before writing content
+      printWindow.document.open();
       printWindow.document.write(printHTML);
       printWindow.document.close();
       
@@ -792,6 +682,9 @@ function setupPrintFunctionality() {
     }
   });
 }
+
+// Ensure the function runs when the page loads
+document.addEventListener('DOMContentLoaded', setupPrintFunctionality);
 
 // Centralized language switching function
 function setupLanguageSwitching() {
@@ -859,9 +752,6 @@ function switchLanguage(selectedLang) {
 // Enhanced Search Highlighting Function
 
 // Main highlighting function
-// Enhanced Search Highlighting Function
-
-// Main highlighting function
 function highlightSearchTerm() {
   // Get search query from URL parameters or sessionStorage
   const urlParams = new URLSearchParams(window.location.search);
@@ -869,11 +759,16 @@ function highlightSearchTerm() {
   
   if (!searchQuery || searchQuery.trim() === '') return;
   
+  // Split search query into individual words for multi-word matching
+  const searchWords = searchQuery.trim().split(/\s+/).filter(word => word.length > 1);
+  const isMultiWordSearch = searchWords.length > 1;
+  
   // Function to safely highlight text nodes without breaking HTML structure
-  function highlightTextNodes(element, searchTerm) {
-    if (!element || !searchTerm || searchTerm.trim() === '') return;
+  function highlightTextNodes(element, searchTerms) {
+    if (!element || !searchTerms || (Array.isArray(searchTerms) && searchTerms.length === 0)) return;
     
-    const searchRegex = new RegExp(searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
+    // Handle both single term and array of terms
+    const terms = Array.isArray(searchTerms) ? searchTerms : [searchTerms];
     
     // Process only element nodes (skip text outside elements)
     if (element.nodeType === Node.ELEMENT_NODE) {
@@ -889,35 +784,50 @@ function highlightSearchTerm() {
         if (child.nodeType === Node.TEXT_NODE) {
           // This is a text node, check for matches
           const text = child.textContent;
+          let hasMatch = false;
           
-          if (searchRegex.test(text)) {
+          // Check if any term matches
+          for (const term of terms) {
+            if (term.trim() === '') continue;
+            
+            const searchRegex = new RegExp(term.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
+            if (searchRegex.test(text)) {
+              hasMatch = true;
+              break;
+            }
+          }
+          
+          if (hasMatch) {
             // Found a match in text node, replace with highlighted version
             const frag = document.createDocumentFragment();
             
-            // Reset regex lastIndex
-            searchRegex.lastIndex = 0;
+            let processedText = text;
             
-            let lastIndex = 0;
-            let match;
-            
-            while ((match = searchRegex.exec(text)) !== null) {
-              // Add text before this match
-              if (match.index > lastIndex) {
-                frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
-              }
+            // Apply highlighting for each term
+            for (const term of terms) {
+              if (term.trim() === '') continue;
               
-              // Add highlighted match with improved visibility
-              const mark = document.createElement('mark');
-              mark.className = 'bg-yellow-300 text-gray-900 dark:bg-yellow-500/60 dark:text-gray-900 px-1 py-0.5 rounded-sm font-medium';
-              mark.appendChild(document.createTextNode(match[0]));
-              frag.appendChild(mark);
+              const searchRegex = new RegExp(term.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
               
-              lastIndex = match.index + match[0].length;
+              // Create a temporary div to hold the processed HTML
+              const tempDiv = document.createElement('div');
+              
+              // Replace matches with marked spans
+              tempDiv.innerHTML = processedText.replace(searchRegex, match => 
+                `<mark class="bg-yellow-300 text-gray-900 dark:bg-yellow-500/60 dark:text-gray-900 px-1 py-0.5 rounded-sm font-medium">${match}</mark>`
+              );
+              
+              // Get the processed HTML result
+              processedText = tempDiv.innerHTML;
             }
             
-            // Add any remaining text after the last match
-            if (lastIndex < text.length) {
-              frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+            // Create a temporary container
+            const tempContainer = document.createElement('div');
+            tempContainer.innerHTML = processedText;
+            
+            // Append all child nodes to our fragment
+            while (tempContainer.firstChild) {
+              frag.appendChild(tempContainer.firstChild);
             }
             
             // Replace the original text node with our fragment
@@ -925,7 +835,7 @@ function highlightSearchTerm() {
           }
         } else {
           // This is an element node, recurse into it
-          highlightTextNodes(child, searchTerm);
+          highlightTextNodes(child, searchTerms);
         }
       });
     }
@@ -937,7 +847,7 @@ function highlightSearchTerm() {
     ...document.querySelectorAll('pre') // Song lyrics
   ];
   
-  // Perform highlighting
+  // Perform highlighting - use either full query or individual words based on search type
   let highlightCount = 0;
   
   searchAreas.forEach(element => {
@@ -947,22 +857,49 @@ function highlightSearchTerm() {
         element.dataset.originalContent = element.innerHTML;
       }
       
-      // Apply highlighting
-      highlightTextNodes(element, searchQuery);
-      
-      // Count highlights inside this element
-      highlightCount += element.querySelectorAll('mark').length;
+      // Apply highlighting with either full phrase or individual words
+      if (isMultiWordSearch) {
+        // Try exact phrase first
+        const exactMatches = countMatches(element.textContent, searchQuery);
+        
+        if (exactMatches > 0) {
+          // Found exact phrase matches, highlight those
+          highlightTextNodes(element, searchQuery);
+          highlightCount += exactMatches;
+        } else {
+          // No exact phrase match, check for individual words
+          highlightTextNodes(element, searchWords);
+          
+          // Count individual word matches
+          searchWords.forEach(word => {
+            highlightCount += countMatches(element.textContent, word);
+          });
+        }
+      } else {
+        // Single word search
+        highlightTextNodes(element, searchQuery);
+        highlightCount += countMatches(element.textContent, searchQuery);
+      }
     }
   });
   
   // Add a search badge if matches were found
   if (highlightCount > 0) {
-    addSearchBadge(searchQuery, highlightCount);
+    addSearchBadge(searchQuery, highlightCount, isMultiWordSearch);
   }
 }
 
+// Helper function to count matches of a term in text
+function countMatches(text, term) {
+  if (!text || !term) return 0;
+  
+  const regex = new RegExp(term.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
+  const matches = text.match(regex);
+  return matches ? matches.length : 0;
+}
+
 // Function to add the search badge with improved navigation controls
-function addSearchBadge(searchQuery, highlightCount) {
+function addSearchBadge(searchQuery, highlightCount, isMultiWordSearch) {
   // Remove any existing search badge
   const existingBadge = document.getElementById('search-highlight-badge');
   if (existingBadge) {
@@ -973,15 +910,29 @@ function addSearchBadge(searchQuery, highlightCount) {
   const searchBadge = document.createElement('div');
   searchBadge.id = 'search-highlight-badge';
   searchBadge.className = 'mb-6 flex flex-wrap items-center gap-3 text-sm bg-indigo-50 dark:bg-indigo-900/30 px-4 py-3 rounded-lg border border-indigo-100 dark:border-indigo-800 shadow-sm';
+  
+  // For multi-word searches, add a proper explanation of what was matched
+  let matchTypeText = '';
+  if (isMultiWordSearch) {
+    const searchWords = searchQuery.trim().split(/\s+/).filter(word => word.length > 1);
+    matchTypeText = `<div class="text-gray-600 dark:text-gray-400 text-xs mt-1">
+      ${searchWords.length} words being searched: 
+      ${searchWords.map(word => `<span class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded-md text-xs font-medium">${escapeHTML(word)}</span>`).join(' ')}
+    </div>`;
+  }
+  
   searchBadge.innerHTML = `
-    <div class="flex items-center gap-2">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-      </svg>
-      <span class="text-gray-800 dark:text-gray-200 font-medium">Showing results for "<span class="font-semibold text-indigo-700 dark:text-indigo-300">${escapeHTML(searchQuery)}</span>"</span>
+    <div class="flex-1">
+      <div class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <span class="text-gray-800 dark:text-gray-200 font-medium">Showing results for "<span class="font-semibold text-indigo-700 dark:text-indigo-300">${escapeHTML(searchQuery)}</span>"</span>
+      </div>
+      ${matchTypeText}
     </div>
     
-    <div class="ml-auto flex items-center gap-3">
+    <div class="flex items-center gap-3">
       <span id="highlightCounter" class="bg-indigo-200 dark:bg-indigo-700 text-indigo-800 dark:text-indigo-200 px-2.5 py-1 rounded-md text-sm font-medium min-w-[70px] text-center">
         ${highlightCount} match${highlightCount !== 1 ? 'es' : ''}
       </span>
@@ -1004,7 +955,6 @@ function addSearchBadge(searchQuery, highlightCount) {
         </button>
       </div>
     </div>
-    
   `;
   
   // Insert the badge at the beginning of the main content
@@ -1021,6 +971,80 @@ function addSearchBadge(searchQuery, highlightCount) {
   
   // Set up the highlight navigation system
   setupHighlightNavigation();
+}
+
+// Update the search parameter propagation function
+function updateSearchParamOnLinks() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const searchQuery = urlParams.get('q');
+  
+  if (searchQuery) {
+    // Store in session storage for persistence across pages
+    sessionStorage.setItem('searchQuery', searchQuery);
+    
+    // Also store search terms for multi-word searches
+    const searchWords = searchQuery.trim().split(/\s+/).filter(word => word.length > 1);
+    if (searchWords.length > 1) {
+      sessionStorage.setItem('searchWords', JSON.stringify(searchWords));
+    }
+    
+    // Update language switcher to preserve search parameter
+    const languageSelect = document.getElementById('language-select');
+    if (languageSelect) {
+      languageSelect.addEventListener('change', (e) => {
+        const selectedLang = e.target.value;
+        
+        // Get the current URL path components
+        const currentPath = window.location.pathname;
+        const pathParts = currentPath.split('/');
+        
+        // Extract song ID - handle different path formats
+        let songId = '';
+        if (pathParts.length > 0) {
+          // Try the last part of the path first
+          songId = pathParts[pathParts.length - 1];
+          
+          // Check if it looks like a song ID
+          if (!/^\d+$/.test(songId)) {
+            // Try finding it through path pattern
+            const songsIndex = pathParts.indexOf('songs');
+            if (songsIndex >= 0 && songsIndex + 2 < pathParts.length) {
+              songId = pathParts[songsIndex + 2];
+            } else {
+              // Last resort: check data attribute
+              const songElement = document.querySelector('[data-song-id]');
+              if (songElement) {
+                songId = songElement.dataset.songId;
+              }
+            }
+          }
+        }
+        
+        if (!songId) {
+          console.error('Could not determine song ID');
+          return;
+        }
+        
+        // Determine the base path
+        let basePath = '';
+        // Check if we're in an environment with BASE_URL defined
+        if (window.BASE_URL) {
+          basePath = window.BASE_URL;
+        } else if (currentPath.includes('/songbook')) {
+          basePath = '/songbook';
+        }
+        
+        // Build the new URL with search parameters preserved
+        const newUrl = `${basePath}/songs/${selectedLang}/${songId}?q=${encodeURIComponent(searchQuery)}`;
+        
+        // Navigate to the new URL
+        window.location.href = newUrl;
+        
+        // Prevent default handling
+        e.preventDefault();
+      });
+    }
+  }
 }
 
 // Function to set up highlight navigation with improved visibility
@@ -1096,6 +1120,7 @@ function setupHighlightNavigation() {
     url.searchParams.delete('q');
     window.history.replaceState({}, '', url);
     sessionStorage.removeItem('searchQuery');
+    sessionStorage.removeItem('searchWords');
   }
   
   // Set up event listeners for the navigation buttons
@@ -1166,80 +1191,6 @@ document.addEventListener('DOMContentLoaded', () => {
   highlightSearchTerm();
   updateSearchParamOnLinks();
 });
-
-// Function to ensure URL parameters are preserved when switching languages
-function updateSearchParamOnLinks() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const searchQuery = urlParams.get('q');
-  
-  if (searchQuery) {
-    // Store in session storage for persistence across pages
-    sessionStorage.setItem('searchQuery', searchQuery);
-    
-    // Update language switcher to preserve search parameter
-    const languageSelect = document.getElementById('language-select');
-    if (languageSelect) {
-      languageSelect.addEventListener('change', (e) => {
-        const selectedLang = e.target.value;
-        
-        // Get the current URL path components
-        const currentPath = window.location.pathname;
-        const pathParts = currentPath.split('/');
-        
-        // Extract song ID - handle different path formats
-        let songId = '';
-        if (pathParts.length > 0) {
-          // Try the last part of the path first
-          songId = pathParts[pathParts.length - 1];
-          
-          // Check if it looks like a song ID
-          if (!/^\d+$/.test(songId)) {
-            // Try finding it through path pattern
-            const songsIndex = pathParts.indexOf('songs');
-            if (songsIndex >= 0 && songsIndex + 2 < pathParts.length) {
-              songId = pathParts[songsIndex + 2];
-            } else {
-              // Last resort: check data attribute
-              const songElement = document.querySelector('[data-song-id]');
-              if (songElement) {
-                songId = songElement.dataset.songId;
-              }
-            }
-          }
-        }
-        
-        if (!songId) {
-          console.error('Could not determine song ID');
-          return;
-        }
-        
-        // Determine the base path
-        let basePath = '';
-        // Check if we're in an environment with BASE_URL defined
-        if (window.BASE_URL) {
-          basePath = window.BASE_URL;
-        } else if (currentPath.includes('/songbook')) {
-          basePath = '/songbook';
-        }
-        
-        // Build the new URL with search parameters preserved
-        const newUrl = `${basePath}/songs/${selectedLang}/${songId}?q=${encodeURIComponent(searchQuery)}`;
-        
-        // Navigate to the new URL
-        window.location.href = newUrl;
-        
-        // Prevent default handling
-        e.preventDefault();
-      });
-    }
-  }
-}
-// Initialize the highlighting system when the document is ready
-document.addEventListener('DOMContentLoaded', () => {
-  highlightSearchTerm();
-  updateSearchParamOnLinks();
-});
-
 </script>
 <!-- Completely revised print container and function -->
 <div id="print-container" style="display:none;"></div>

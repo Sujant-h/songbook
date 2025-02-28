@@ -585,16 +585,35 @@ function reorderSongsByMatchPriority() {
   
   if (searchTerm === '') return;
   
-  // Sort visible songs by match type (ID matches first, then title matches, then text matches)
+  // Sort visible songs by match type
   songItemsArray
     .filter(item => !item.classList.contains('hidden'))
     .sort((a, b) => {
       const aBadge = a.querySelector('.match-badge').textContent || '';
       const bBadge = b.querySelector('.match-badge').textContent || '';
       
-      // Assign priority: ID = 2, Title = 1, Text = 0
-      const aPriority = aBadge.includes('ID') ? 2 : (aBadge.includes('Title') ? 1 : 0);
-      const bPriority = bBadge.includes('ID') ? 2 : (bBadge.includes('Title') ? 1 : 0);
+      // Assign priority: ID = 3, Title = 2, Text = 1, Word matches = 0
+      let aPriority = 0;
+      let bPriority = 0;
+      
+      if (aBadge.includes('ID')) aPriority = 3;
+      else if (aBadge.includes('Title')) aPriority = 2;
+      else if (aBadge === 'Text') aPriority = 1;
+      // Word matches get priority 0
+      
+      if (bBadge.includes('ID')) bPriority = 3;
+      else if (bBadge.includes('Title')) bPriority = 2;
+      else if (bBadge === 'Text') bPriority = 1;
+      // Word matches get priority 0
+      
+      // If both are word matches (all words match), sort by ID
+      if (aPriority === 0 && bPriority === 0) {
+        // Sort by song ID as a tiebreaker
+        const aId = parseInt(a.dataset.id);
+        const bId = parseInt(b.dataset.id);
+        
+        return aId - bId;
+      }
       
       return bPriority - aPriority;
     })
@@ -603,7 +622,8 @@ function reorderSongsByMatchPriority() {
     });
 }
 // Update the filterSongs function to handle badge classes properly
-// Updated filterSongs function to include search in song ID
+// Enhanced filterSongs function that checks individual words when no results are found
+// Enhanced filterSongs function that checks individual words when no results are found
 function filterSongs() {
   const searchTerm = searchInput.value.toLowerCase().trim();
   const selectedLang = langSelect.value;
@@ -620,6 +640,7 @@ function filterSongs() {
     badge.className = 'match-badge hidden absolute top-0 right-0 z-20 text-xs font-medium px-1.5 py-0.5 rounded-md bg-opacity-90 shadow-sm mt-3 mr-3';
   });
   
+  // Perform initial search with the full search term
   songItems.forEach(item => {
     let titleField, textField;
     
@@ -725,14 +746,169 @@ function filterSongs() {
     }
   });
   
+  // If no songs are visible and we have a search term with multiple words, try searching for songs that contain ALL individual words
+  if (visibleCount === 0 && searchTerm !== '') {
+    // Split the search term into individual words
+    const searchWords = searchTerm.split(/\s+/).filter(word => word.length > 1);
+    
+    // Only proceed if we have multiple words to search
+    if (searchWords.length > 0) {
+      // Create a status message for the no results panel
+      const statusMessageEl = document.createElement('div');
+      statusMessageEl.className = 'text-gray-600 dark:text-gray-400 text-sm mt-2';
+      statusMessageEl.innerHTML = 'No exact phrase matches found. Showing results containing all words:';
+      
+      // Add a list of the words we're searching for
+      const wordsList = document.createElement('div');
+      wordsList.className = 'flex flex-wrap gap-2 mt-2';
+      searchWords.forEach(word => {
+        const wordBadge = document.createElement('span');
+        wordBadge.className = 'px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-md text-xs font-medium';
+        wordBadge.textContent = word;
+        wordsList.appendChild(wordBadge);
+      });
+      
+      // Check individual words
+      songItems.forEach(item => {
+        let titleField, textField;
+        
+        // Select the appropriate fields based on language
+        if (selectedLang === 'ta') {
+          titleField = 'title';
+          textField = 'text';
+        } else if (selectedLang === 'en') {
+          titleField = 'titleEn';
+          textField = 'textEn';
+        } else if (selectedLang === 'de') {
+          titleField = 'titleDe';
+          textField = 'textDe';
+        }
+        
+        // Get text content
+        const title = item.dataset[titleField] ? 
+          item.dataset[titleField].toLowerCase() : 
+          item.dataset.title.toLowerCase();
+          
+        const text = item.dataset[textField] ? 
+          item.dataset[textField].toLowerCase() : 
+          item.dataset.text.toLowerCase();
+        
+        const songId = item.dataset.id;
+        
+        const originalTitle = item.querySelector('.original-title');
+        const matchBadge = item.querySelector('.match-badge');
+        const matchContext = item.querySelector('.match-context');
+        const matchTextEl = matchContext ? matchContext.querySelector('p') : null;
+        
+        // Check if ALL individual words match (must be in the text)
+        const allWordsMatch = searchWords.every(word => text.includes(word));
+        
+        if (allWordsMatch) {
+          // Mark as visible
+          item.classList.remove('hidden');
+          visibleCount++;
+          
+          // Show match badge
+          matchBadge.classList.remove('hidden');
+          matchBadge.style.backgroundColor = '#dbeafe'; // blue-100
+          matchBadge.style.color = '#1e40af';          // blue-800
+          matchBadge.textContent = `All ${searchWords.length} words`;
+          
+          // Find and highlight the first matching word in the text
+          if (matchTextEl) {
+            let context = '';
+            for (const word of matchingWords) {
+              if (text.includes(word)) {
+                const rawText = item.dataset[textField] || item.dataset.text || '';
+                context = findMatchContext(rawText, word);
+                if (context) {
+                  // Highlight all matching words in the context
+                  let highlightedContext = context;
+                  for (const matchWord of matchingWords) {
+                    highlightedContext = highlightMatches(highlightedContext, matchWord);
+                  }
+                  matchTextEl.innerHTML = highlightedContext;
+                  matchContext.classList.remove('hidden');
+                  break;
+                }
+              }
+            }
+            
+            // If no context found in text, try title
+            if (!context && title) {
+              for (const word of matchingWords) {
+                if (title.includes(word)) {
+                  const rawTitle = item.dataset[titleField] || item.dataset.title || '';
+                  // Highlight all matching words in the title
+                  let highlightedTitle = rawTitle;
+                  for (const matchWord of matchingWords) {
+                    highlightedTitle = highlightMatches(highlightedTitle, matchWord);
+                  }
+                  originalTitle.innerHTML = highlightedTitle;
+                  break;
+                }
+              }
+            }
+          }
+        }
+      });
+      
+      // If we now have results, modify the no results message
+      if (visibleCount > 0) {
+        // Clear existing no results message content
+        while (noResultsMessage.firstChild) {
+          noResultsMessage.removeChild(noResultsMessage.firstChild);
+        }
+        
+        // Create new elements for the modified message
+        const icon = document.createElement('svg');
+        icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto text-yellow-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>';
+        
+        const title = document.createElement('h3');
+        title.className = 'text-base font-medium text-gray-700 dark:text-gray-300 mb-1';
+        title.textContent = 'No exact phrase matches found';
+        
+        const subtitle = document.createElement('p');
+        subtitle.className = 'text-gray-500 dark:text-gray-400 text-sm mb-3';
+        subtitle.textContent = `Showing ${visibleCount} results containing all search words`;
+        
+        // Add button for clear search
+        const clearButton = document.createElement('button');
+        clearButton.id = 'clearPartialSearchButton';
+        clearButton.className = 'inline-flex items-center px-4 py-2 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-800/50 border border-indigo-200 dark:border-indigo-700 rounded-lg text-indigo-700 dark:text-indigo-300 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-600';
+        clearButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>Clear Search';
+        
+        // Add elements to the no results message
+        noResultsMessage.appendChild(icon);
+        noResultsMessage.appendChild(title);
+        noResultsMessage.appendChild(subtitle);
+        noResultsMessage.appendChild(document.createElement('div')).appendChild(wordsList);
+        noResultsMessage.appendChild(document.createElement('div')).appendChild(clearButton);
+        
+        // Add event listener to the new clear button
+        clearButton.addEventListener('click', function() {
+          searchInput.value = '';
+          clearButton.classList.add('hidden');
+          filterSongs();
+        });
+        
+        // Show the modified message
+        noResultsMessage.classList.remove('hidden');
+      }
+    }
+  }
+  
   // Show/hide no results message
   noResultsMessage.classList.toggle('hidden', visibleCount > 0);
   
   // Reorder songs to prioritize ID, title, and then text matches
-  if (searchTerm !== '') {
+  if (searchTerm !== '' && visibleCount > 0) {
     reorderSongsByMatchPriority();
   }
 }
+
+
+
 
 // Update song display based on selected language
 function updateSongDisplay() {
