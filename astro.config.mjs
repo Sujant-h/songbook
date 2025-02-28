@@ -4,8 +4,8 @@ import tailwindcss from '@tailwindcss/vite';
 import AstroPWA from '@vite-pwa/astro';
 
 export default defineConfig({
-  site: 'https://sujanth.de',
   base: '/',
+  site: 'https://songbook.sujanth.de',
   trailingSlash: 'ignore',
   vite: {
     logLevel: 'info',

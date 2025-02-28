@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
       data-text-de={song.text_de}
       class="song-item bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700 hover:shadow-md hover:border-gray-200 dark:hover:border-gray-600 transition-all duration-200 relative mb-3 overflow-hidden group"
     >
-  <a href={`https://sujanth.de/songs/ta/${song.id}`} class="block h-full">
+  <a href={`https://songbook.sujanth.de/songs/ta/${song.id}`} class="block h-full">
     <!-- Match Badge - Moved to top-right corner with proper spacing -->
         <div class="match-badge hidden absolute top-0 right-0 z-20 text-xs font-medium px-1.5 py-0.5 rounded-md bg-opacity-90 shadow-sm mt-3 mr-3"></div>
         
@@ -915,7 +915,7 @@ function filterSongs() {
 function updateSongDisplay() {
   const selectedLang = langSelect.value;
   // Update this line to use the full URL
-  const baseUrl = 'https://sujanth.de';
+  const baseUrl = 'https://songbook.sujanth.de';
   const searchTerm = searchInput.value.trim();
   
   // Always hide text snippets
