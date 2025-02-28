@@ -1097,23 +1097,16 @@ function switchLanguage(selectedLang) {
           songId = songIdElement.dataset.songId;
         } else {
           console.error('Could not determine song ID. Redirecting to home page.');
-          window.location.href = import.meta.env.BASE_URL || '/songbook';
+          window.location.href = 'https://sujanth.de';
           return;
         }
       }
     }
   }
   
-  // Ensure we have a base path
-  let basePath = import.meta.env.BASE_URL || '/songbook';
-  // Check if we're in a development environment without the prefix
-  if (!currentPath.includes('/songbook') && currentPath.includes('/songs/')) {
-    basePath = '';
-  }
-  
   // Construct the new URL, preserving any query parameters
   const queryString = window.location.search;
-  const newUrl = `${basePath}/songs/${selectedLang}/${songId}${queryString}`;
+  const newUrl = `https://sujanth.de/songs/${selectedLang}/${songId}${queryString}`;
   
   // Save language preference
   sessionStorage.setItem('selectedLanguage', selectedLang);
