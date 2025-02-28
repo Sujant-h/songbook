@@ -57,58 +57,58 @@ if (lang === 'en') {
     }
 
     // theme-toggle.js
-document.addEventListener('DOMContentLoaded', () => {
-    // Check for saved theme preference or use the system preference
-    const savedTheme = localStorage.getItem('theme');
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    // Apply the theme based on saved preference or system preference
-    if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    
-    // Update the toggle button's state
-    updateToggleState();
-    
-    // Add event listener to the theme toggle button
-    const themeToggle = document.getElementById('theme-toggle');
-    if (themeToggle) {
-      themeToggle.addEventListener('click', () => {
-        // Toggle the dark class on the html element
-        document.documentElement.classList.toggle('dark');
-        
-        // Save the current preference to localStorage
-        const isDark = document.documentElement.classList.contains('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        
-        // Update the toggle button's state
-        updateToggleState();
-      });
-    }
-  });
-  
-  // Update the toggle button to reflect the current theme
-  function updateToggleState() {
-    const themeToggle = document.getElementById('theme-toggle');
-    const isDark = document.documentElement.classList.contains('dark');
-    
-    if (themeToggle) {
-      const sunIcon = themeToggle.querySelector('.sun-icon');
-      const moonIcon = themeToggle.querySelector('.moon-icon');
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check for saved theme preference or use the system preference
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       
-      if (sunIcon && moonIcon) {
-        if (isDark) {
-          sunIcon.classList.remove('hidden');
-          moonIcon.classList.add('hidden');
-        } else {
-          sunIcon.classList.add('hidden');
-          moonIcon.classList.remove('hidden');
+      // Apply the theme based on saved preference or system preference
+      if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      
+      // Update the toggle button's state
+      updateToggleState();
+      
+      // Add event listener to the theme toggle button
+      const themeToggle = document.getElementById('theme-toggle');
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          // Toggle the dark class on the html element
+          document.documentElement.classList.toggle('dark');
+          
+          // Save the current preference to localStorage
+          const isDark = document.documentElement.classList.contains('dark');
+          localStorage.setItem('theme', isDark ? 'dark' : 'light');
+          
+          // Update the toggle button's state
+          updateToggleState();
+        });
+      }
+    });
+    
+    // Update the toggle button to reflect the current theme
+    function updateToggleState() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const isDark = document.documentElement.classList.contains('dark');
+      
+      if (themeToggle) {
+        const sunIcon = themeToggle.querySelector('.sun-icon');
+        const moonIcon = themeToggle.querySelector('.moon-icon');
+        
+        if (sunIcon && moonIcon) {
+          if (isDark) {
+            sunIcon.classList.remove('hidden');
+            moonIcon.classList.add('hidden');
+          } else {
+            sunIcon.classList.add('hidden');
+            moonIcon.classList.remove('hidden');
+          }
         }
       }
     }
-  }
   </script>
 <head>
   <meta charset="UTF-8" />
@@ -149,7 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
   <!-- Twitter Card Tags -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content={`${songId}: ${songTitle} | Tamil Christian Song`}>
-  <meta name="twitter:description" content={`Listen to the original Tamil song ${songId}: ${songTitle} ${lang === 'en' ? 'with English translation' : lang === 'de' ? 'with German translation' : ''}`}>  <meta name="twitter:image" content="https://sujant-h.github.io/songbook/og-song-image.jpg">
+  <meta name="twitter:description" content={`Listen to the original Tamil song ${songId}: ${songTitle} ${lang === 'en' ? 'with English translation' : lang === 'de' ? 'with German translation' : ''}`}>  
+  <meta name="twitter:image" content="https://sujant-h.github.io/songbook/og-song-image.jpg">
   
   <!-- PWA Related -->
   <script src="/src/pwa.ts"></script>
@@ -158,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@100..900&family=Inter:wght@300..700&display=swap" rel="stylesheet">
   
   <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -186,252 +187,261 @@ document.addEventListener('DOMContentLoaded', () => {
   </script>
 </head>
 
-
-    <body class="bg-gradient-to-b from-indigo-50 to-white min-h-screen dark:from-gray-900 dark:to-gray-800 dark:text-gray-200 transition-colors duration-200">
-      <div class="max-w-3xl mx-auto px-4 py-8">
-        <!-- Header with back button, language selector, and dark mode toggle -->
-      <!-- Header with back button, language selector, and dark mode toggle -->
-      <div class="flex justify-between items-center mb-6">
-          <a href={`${import.meta.env.BASE_URL}`} id="back-button" class="flex items-center text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors group">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+<body class="bg-gradient-to-b from-indigo-50/40 to-white dark:from-gray-900 dark:to-gray-800 min-h-screen dark:text-gray-200 transition-colors duration-300 font-sans">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <!-- Top Navigation Bar with Back button, Language, and Theme Toggle -->
+    <header class=" top-0 z-10 backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-b border-gray-100 dark:border-gray-800 rounded-xl shadow-sm mb-6 px-4 py-3">
+      <div class="flex justify-between items-center">
+        <!-- Back Button with improved hover effect -->
+        <a href={`${import.meta.env.BASE_URL}`} id="back-button" class="flex items-center text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 transition-all duration-200 group">
+          <span class="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-900/30 mr-2 group-hover:-translate-x-1 transition-transform duration-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            <span class="font-medium">Home</span>
-          </a>
-          
-          <div class="flex items-center gap-4">
-            <!-- Theme Toggle Button -->
-            <button 
-              id="theme-toggle" 
-              class="flex items-center justify-center rounded-full p-2 bg-white dark:bg-gray-800 shadow-sm border border-indigo-100 dark:border-gray-700 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-600"
-              aria-label="Toggle dark mode"
-            >
-              <!-- Sun icon (shown in dark mode) -->
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 sun-icon hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-              <!-- Moon icon (shown in light mode) -->
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 moon-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              </svg>
-            </button>
-      
-  <!-- After (fixed version with proper arrow placement) -->
-  <!-- Fixed and centered language selector -->
-  <div class="relative">
-      <div class="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-full px-4 py-2 shadow-sm border border-indigo-100 dark:border-gray-700">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-        </svg>
+          </span>
+          <span class="font-medium">Home</span>
+        </a>
         
-        <!-- Wrapping select and arrow in a relative container with fixed width -->
-        <div class="relative w-24">
-          <select 
-            id="language-select" 
-            class="bg-transparent border-none text-gray-700 dark:text-gray-200 dark:bg-gray-800 font-medium focus:outline-none cursor-pointer appearance-none w-full pr-6 text-center"
+        <div class="flex items-center gap-3">
+          <!-- Theme Toggle Button - Redesigned with animation -->
+           
+          <button 
+            id="theme-toggle" 
+            class="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-500 text-gray-700 dark:text-gray-200 transition-all duration-200"
+            aria-label="Toggle dark mode"
           >
-            <option value="ta" selected={lang === 'ta'} class="text-center bg-white dark:bg-gray-700">Tamil</option>
-            <option value="en" selected={lang === 'en'} class="text-center bg-white dark:bg-gray-700">English</option>
-            <option value="de" selected={lang === 'de'} class="text-center bg-white dark:bg-gray-700">German</option>
-          </select>
-          
-          <!-- Arrow positioned correctly within its own parent container -->
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center">
-            <svg class="h-4 w-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            <!-- Sun icon (shown in dark mode) -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500 rotate-0 scale-100 transition-all duration-300 sun-icon hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
+            <!-- Moon icon (shown in light mode) -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 rotate-0 scale-100 transition-all duration-300 moon-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          </button>
+      
+          <!-- Language Selector - Improved dropdown -->
+          <div class="relative">
+            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow duration-200">
+              <div class="relative">
+                <select 
+                  id="language-select" 
+                  class="appearance-none bg-transparent w-full pl-4 pr-10 py-2 border-none text-gray-700 dark:text-gray-200 font-medium focus:outline-none cursor-pointer"
+                >
+                  <option value="ta" selected={lang === 'ta'} class="bg-white dark:bg-gray-800">Tamil</option>
+                  <option value="en" selected={lang === 'en'} class="bg-white dark:bg-gray-800">English</option>
+                  <option value="de" selected={lang === 'de'} class="bg-white dark:bg-gray-800">German</option>
+                </select>
+                
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-indigo-600 dark:text-indigo-400">
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </header>
+
+    <!-- Main Content with Card Shadow & Animation -->
+    <main>
+      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-md hover:shadow-lg transition-all duration-300 mb-8 overflow-hidden" data-song-id={song.id}>
+        <!-- Song Title Banner -->
+        <div class="bg-gradient-to-r from-indigo-600 to-indigo-500 dark:from-indigo-700 dark:to-indigo-600 py-6 px-6">
+          <div class="flex items-center flex-wrap gap-2">
+            <div class="flex items-center">
+              <span class="inline-flex items-center justify-center bg-white dark:bg-indigo-900/60 text-indigo-600 dark:text-indigo-200 text-sm font-bold rounded-lg h-8 min-w-[2.5rem] px-3 mr-3 shadow-sm">
+                {songId}
+              </span>
+              <h1 class="text-2xl sm:text-3xl font-bold text-white leading-tight">{songTitle}</h1>
+            </div>
+          </div>
+        </div>
+            
+        <!-- Song Content with improved typography -->
+        <div class="p-5 sm:p-8">
+          <!-- Song Text -->
+          <div class="relative">
+            <pre class="whitespace-pre-line text-gray-700 dark:text-gray-200 font-sans text-base leading-relaxed p-6 bg-gray-50 dark:bg-gray-700/40 rounded-xl border border-gray-100 dark:border-gray-700 shadow-inner">
+              {songText}
+            </pre>
+  
+          </div>
+          
+          {/* Original Tamil version with improved styling */}
+          {showOriginal && (
+            <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-indigo-500 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                  </svg>
+                  Original Version
+                </h3>
+                <span class="inline-flex items-center justify-center bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 text-sm font-medium rounded-full px-3 py-1">
+                  Tamil
+                </span>
+              </div>
+              <div class="flex items-center mb-4">
+                <span class="inline-flex items-center justify-center bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 text-sm font-medium rounded-lg h-8 min-w-[2.5rem] px-3 mr-3">
+                  {song.id}
+                </span>
+                <h4 class="text-lg font-medium text-gray-800 dark:text-gray-300">{song.title}</h4>
+              </div>
+              <pre class="whitespace-pre-line text-gray-700 dark:text-gray-200 font-sans text-base leading-relaxed p-6 bg-gray-50 dark:bg-gray-700/40 rounded-xl border border-gray-100 dark:border-gray-700 shadow-inner">
+                {song.text}
+              </pre>
+            </div>
+          )}
+
+          <!-- Audio Player with enhanced design -->
+          <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <div class="flex items-center mb-4">
+              <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-300">Listen to the Song</h3>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-700/40 p-5 rounded-xl border border-gray-100 dark:border-gray-700 shadow-inner">
+              <audio controls class="w-full focus:outline-none">
+                <source src={audioUrl} type="audio/mpeg">
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          </div>
+          
+          <!-- Social Media Share Buttons with improved styling -->
+          <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <div class="flex items-center mb-4">
+              <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                </svg>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-300">Share this Song</h3>
+            </div>
+          
+          <div class="flex flex-wrap gap-2">
+            <!-- Share buttons - Updated styling to be more consistent -->
+            <a 
+              id="whatsapp-share" 
+              href="#" 
+              class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-md text-sm transition-colors"
+              aria-label="Share on WhatsApp"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              WhatsApp
+            </a>
+
+            <a 
+              id="facebook-share" 
+              href="#" 
+              class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md text-sm transition-colors"
+              aria-label="Share on Facebook"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+              Facebook
+            </a>
+
+            <a 
+              id="twitter-share" 
+              href="#" 
+              class="flex items-center gap-2 bg-black hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm transition-colors"
+              aria-label="Share on X"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/>
+              </svg>
+              X
+            </a>
+
+            <a 
+              id="telegram-share" 
+              href="#" 
+              class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-md text-sm transition-colors"
+              aria-label="Share on Telegram"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.96 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+              </svg>
+              Telegram
+            </a>
+
+            <button 
+              id="copy-link" 
+              class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 px-3 py-1.5 rounded-md text-sm transition-colors"
+              aria-label="Copy link"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+              </svg>
+              Copy Link
+            </button>
+          </div>
         </div>
       </div>
 
-        <!-- Main Content Card -->
-  <!-- Add this data attribute to your main song container div -->
-  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-8 transition-all hover:shadow-xl dark:shadow-gray-900/30" data-song-id="{song.id}">        <!-- Song Title -->
- <!-- Song Title with ID Badge -->
-<div class="bg-indigo-600 dark:bg-indigo-800 py-6 px-6 sm:px-8">
-  <div class="flex items-center flex-wrap gap-3">
-    <div class="flex items-center">
-      <span class="inline-flex items-center justify-center bg-white dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-sm font-bold rounded-full h-8 w-auto px-3 mr-3 shadow-sm">
-        #{songId}
-      </span>
-      <h1 class="text-2xl sm:text-3xl font-bold text-white">{songTitle}</h1>
-    </div>
-  </div>
-</div>
-          
-  <!-- Song Content -->
-  <div class="p-6 sm:p-8">
-    <!-- Song Text - Box removed on mobile, kept on larger screens -->
-    <pre class="whitespace-pre-line text-gray-700 dark:text-gray-200 font-sans leading-relaxed sm:p-6 sm:bg-indigo-50 sm:dark:bg-gray-700 sm:rounded-lg sm:border sm:border-indigo-100 sm:dark:border-gray-600">
-      {songText}
-    </pre>
-    
-{/* Original Tamil */}
-{showOriginal && (
-  <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-    <div class="flex items-center justify-end mb-3">
-      <span class="inline-flex items-center justify-center bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm font-bold rounded-full h-7 w-auto px-4 shadow-md">
-        Tamil
-      </span>
-    </div>
-    <div class="flex items-center mb-3">
-      <span class="inline-flex items-center justify-center bg-white dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-sm font-bold rounded-full h-7 w-auto px-3 mr-3 shadow-sm">
-        #{song.id}
-      </span>
-      <h4 class="text-lg font-medium text-gray-700 dark:text-gray-300">{song.title}</h4>
-    </div>
-    <pre class="whitespace-pre-line text-gray-700 dark:text-gray-200 font-sans leading-relaxed sm:p-6 sm:bg-indigo-50 sm:dark:bg-gray-700 sm:rounded-lg sm:border sm:border-indigo-100 sm:dark:border-gray-600">
-      {song.text}
-    </pre>
-  </div>
-)}
-
-    <!-- Audio Player -->
-    <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-      <div class="flex items-center mb-4">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <h3 class="text-lg font-semibold text-indigo-800 dark:text-indigo-400">Listen to the Song</h3>
-      </div>
-      <div class="bg-indigo-50 dark:bg-gray-700 p-4 rounded-lg border border-indigo-100 dark:border-gray-600">
-        <audio controls class="w-full focus:outline-none">
-          <source src={audioUrl} type="audio/mpeg">
-          Your browser does not support the audio element.
-        </audio>
+      <!-- Print button - Moved inside the card and updated styling -->
+      <div class="px-4 sm:px-6 pb-4 sm:pb-6">
+        <button 
+          id="print-song" 
+          class="flex items-center gap-2 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md transition-colors w-full justify-center"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          </svg>
+          Print Song Lyrics
+        </button>
       </div>
     </div>
-    
-    <!-- Social Media Share Buttons -->
-  <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-    <div class="flex items-center mb-4">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-      </svg>
-      <h3 class="text-lg font-semibold text-indigo-800 dark:text-indigo-400">Share this Song</h3>
-    </div>
-    
-    <div class="flex flex-wrap gap-3">
-      <!-- WhatsApp share button -->
-      <a 
-        id="whatsapp-share" 
-        href="#" 
-        class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors"
-        aria-label="Share on WhatsApp"
-      >
-        <!-- WhatsApp icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-        </svg>
-        WhatsApp
-      </a>
 
-      <!-- Facebook share button -->
-      <a 
-        id="facebook-share" 
-        href="#" 
-        class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
-        aria-label="Share on Facebook"
-      >
-        <!-- Facebook icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-        </svg>
-        Facebook
-      </a>
-
-      <!-- Twitter/X share button -->
-      <a 
-        id="twitter-share" 
-        href="#" 
-        class="flex items-center gap-2 bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-lg transition-colors"
-        aria-label="Share on X"
-      >
-        <!-- X icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/>
-        </svg>
-        
-      </a>
-
-      <!-- Telegram share button -->
-      <a 
-        id="telegram-share" 
-        href="#" 
-        class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
-        aria-label="Share on Telegram"
-      >
-        <!-- Telegram icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.96 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-        </svg>
-        Telegram
-      </a>
-
-      <!-- Copy Link button -->
-      <button 
-        id="copy-link" 
-        class="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 px-4 py-2 rounded-lg transition-colors"
-        aria-label="Copy link"
-      >
-        <!-- Link icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-        </svg>
-        Copy Link
-      </button>
-    </div>
-  </div>
+    <!-- Footer - Updated styling -->
+    <footer class="text-center text-gray-500 dark:text-gray-400 text-sm mt-8 pb-6">
+      <p class="py-2 border-t border-gray-200 dark:border-gray-700">© 2025 Tamil Christian Songbook | All Rights Reserved</p>
+    </footer>
   </div>
 
-    
-    <button 
-      id="print-song" 
-      class="flex items-center gap-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-800 dark:bg-indigo-900 dark:hover:bg-indigo-800 dark:text-indigo-200 px-4 py-2 rounded-lg transition-colors mt-2"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-      </svg>
-      Print Song Lyrics
-    </button>
-  </div>
+<script>
+  // Combined JavaScript for the song detail page
 
-  </div>
-        <!-- Footer -->
-        <footer class="text-center text-gray-500 dark:text-gray-400 text-sm mt-8">
-          <p>© 2025 Tamil Christian Songbook | All Rights Reserved</p>
-        </footer>
-
-
-    <script>
-
-      // Social media share functionality
 document.addEventListener('DOMContentLoaded', function() {
+  // Initialize all functionality
+  initializeSharing();
+  setupPrintFunctionality();
+  setupLanguageSwitching();
+  highlightSearchTerm();
+  updateSearchParamOnLinks();
+});
+
+// Social media sharing functionality
+function initializeSharing() {
   // Get the song title and ID
   const titleElement = document.querySelector('h1');
   const songTitle = titleElement ? titleElement.textContent.trim() : "Song Title";
   
-  // Extract the song ID from the title (format usually "ID: Title")
+  // Extract the song ID from the title or data attribute
   let songId = "";
-  if (songTitle.includes(':')) {
+  const songContainer = document.querySelector('[data-song-id]');
+  if (songContainer) {
+    songId = songContainer.dataset.songId;
+  } else if (songTitle.includes(':')) {
     songId = songTitle.split(':')[0].trim();
-  } else {
-    // Fallback: Try to get from data attribute
-    const songContainer = document.querySelector('[data-song-id]');
-    if (songContainer) {
-      songId = songContainer.dataset.songId;
-    }
   }
   
   // Current URL
   const url = window.location.href;
   
   // Create share text
-  const shareText = `${songId ? songId + ': ' : ''}${songTitle.replace(/^[^:]+:\s*/, '')} - Listen to this beautiful song on Tamil Christian Songbook`;
+  const shareText = `${songId ? songId + ': ' : ''}${songTitle.replace(/^[^:]+:\s*/, '')} - Tamil Christian Songbook`;
   
   // WhatsApp share
   const whatsappBtn = document.getElementById('whatsapp-share');
@@ -459,8 +469,7 @@ document.addEventListener('DOMContentLoaded', function() {
     twitterBtn.addEventListener('click', function(e) {
       e.preventDefault();
       const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
-      window.open(twitterBtn) // FIX THIS ERROR - It's passing the button instead of the URL
-      window.open(twitterUrl, '_blank'); // CORRECT VERSION
+      window.open(twitterUrl, '_blank');
     });
   }
   
@@ -474,353 +483,327 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Copy link functionality
+  // Copy link functionality with updated styling
   const copyLinkBtn = document.getElementById('copy-link');
   if (copyLinkBtn) {
     copyLinkBtn.addEventListener('click', function() {
-      // Create a temporary input element
-      const tempInput = document.createElement('input');
-      tempInput.value = url;
-      document.body.appendChild(tempInput);
-      
-      // Select and copy the link
-      tempInput.select();
-      document.execCommand('copy');
-      
-      // Remove the temporary element
-      document.body.removeChild(tempInput);
-      
-      // Visual feedback for user
-      const originalText = this.innerHTML;
-      this.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
-        Copied!
-      `;
-      
-      // Reset button after 2 seconds
-      setTimeout(() => {
-        this.innerHTML = originalText;
-      }, 2000);
-    });
-  }
-  
-  // Log for debugging
-  console.log('Share buttons initialized:', {
-    shareText,
-    url,
-    buttonsFound: {
-      whatsapp: !!whatsappBtn,
-      facebook: !!facebookBtn,
-      twitter: !!twitterBtn,
-      telegram: !!telegramBtn,
-      copyLink: !!copyLinkBtn
-    }
-  });
-});
-
-
-// Improved printing functionality with enhanced styling
-document.addEventListener('DOMContentLoaded', function() {
-  const printButton = document.getElementById('print-song');
-  if (printButton) {
-    printButton.addEventListener('click', function() {
       try {
-        // Get song data
-        const titleElement = document.querySelector('h1');
-        const songTitle = titleElement ? titleElement.textContent.trim() : "Song Title";
-        
-        // Extract the song ID from the title text or data attribute
-        let songId = "";
-        
-        // Try to get song ID from the title (format: "ID: Title")
-        if (songTitle.includes(':')) {
-          songId = songTitle.split(':')[0].trim();
+        // Use modern clipboard API if available
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url)
+            .then(() => showCopiedFeedback(this))
+            .catch(err => {
+              console.error('Failed to copy:', err);
+              fallbackCopyLink(this, url);
+            });
+        } else {
+          fallbackCopyLink(this, url);
         }
-        
-        // If that fails, try to get it from the data-song-id attribute
-        if (!songId) {
-          const songContainer = document.querySelector('[data-song-id]');
-          if (songContainer) {
-            songId = songContainer.dataset.songId;
-          }
-        }
-        
-        // Get song text
-        const firstPre = document.querySelector('pre');
-        const songText = firstPre ? firstPre.textContent.trim() : "Song lyrics not found";
-        
-        // Get original Tamil if available
-        let originalTitle = "";
-        let originalText = "";
-        
-        // Check for original section
-        const originalSection = document.querySelector('.mt-8.pt-6');
-        if (originalSection) {
-          const titleEl = originalSection.querySelector('h4');
-          if (titleEl) {
-            originalTitle = titleEl.textContent.trim();
-          }
-          
-          const originalPre = originalSection.querySelector('pre');
-          if (originalPre) {
-            originalText = originalPre.textContent.trim();
-          }
-        }
-        
-        // Create HTML for the new window
-        const printHTML = `
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <meta charset="UTF-8">
-            <style>
-              @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap');
-              
-              @page {
-                margin: 0.5in;
-              }
-              
-              html, body {
-                height: 100%;
-                margin: 0;
-                padding: 0;
-              }
-              
-              body {
-                font-family: 'Merriweather', serif;
-                max-width: 800px;
-                margin: 0 auto;
-                padding: 20px;
-                color: #333;
-                line-height: 1.6;
-                position: relative;
-                min-height: 100vh;
-              }
-              
-              .content-wrapper {
-                padding-bottom: 100px; /* Ensure space for footer */
-              }
-              
-              .print-header {
-                text-align: center;
-                margin-bottom: 30px;
-                padding-bottom: 15px;
-                border-bottom: 2px solid #3b82f6;
-              }
-              
-              .print-title {
-                font-size: 28px;
-                font-weight: 700;
-                color: #1e40af;
-                margin-bottom: 10px;
-                line-height: 1.3;
-              }
-              
-              .print-lyrics {
-                white-space: pre-line;
-                font-size: 16px;
-                line-height: 1.8;
-                margin-bottom: 30px;
-                text-align: left;
-              }
-              
-              .print-original {
-                margin-top: 40px;
-                padding-top: 30px;
-                border-top: 1px dashed #94a3b8;
-                background-color: #f8fafc;
-                padding: 20px;
-                border-radius: 8px;
-              }
-              
-              .print-original-title {
-                font-weight: 700;
-                margin-bottom: 15px;
-                font-size: 20px;
-                color: #0f172a;
-              }
-              
-              .print-footer {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                text-align: center;
-                font-size: 12px;
-                color: #64748b;
-                border-top: 1px solid #e2e8f0;
-                padding-top: 15px;
-                padding-bottom: 20px;
-                font-style: italic;
-                background-color: white;
-              }
-              
-              @media print {
-                body {
-                  padding: 0;
-                  font-size: 12pt;
-                }
-                
-                .print-lyrics {
-                  font-size: 12pt;
-                  line-height: 1.6;
-                }
-                
-                .no-print {
-                  display: none;
-                }
-                
-                .print-original {
-                  break-inside: avoid;
-                  background-color: #f9fafb !important;
-                  -webkit-print-color-adjust: exact;
-                  print-color-adjust: exact;
-                }
-                
-                .print-header {
-                  border-bottom-color: #666 !important;
-                }
-              }
-            </style>
-          </head>
-          <body>
-            <div class="content-wrapper">
-              <div class="print-header">
-                <div class="print-title">${songId ? songId + ': ' : ''}${songTitle.replace(/^[^:]+:\s*/, '')}</div>
-              </div>
-              
-              <div class="print-lyrics">${songText}</div>
-              
-              ${originalTitle && originalText ? `
-                <div class="print-original">
-                  <div class="print-original-title">${originalTitle}</div>
-                  <div class="print-lyrics">${originalText}</div>
-                </div>
-              ` : ''}
-            
-              <div class="print-footer">
-                Printed from Tamil Christian Songbook on ${new Date().toLocaleDateString()}
-                <br>
-                ${window.location.href}
-              </div>
-            </div>
-            
-            <div class="no-print" style="text-align: center; margin-top: 40px;">
-              <button onclick="window.close();" style="padding: 12px 24px; background: #64748b; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease;">
-                Close Window
-              </button>
-            </div>
-          </body>
-          </html>
-        `;
-        
-        // Open a new window and write the content
-        const printWindow = window.open('', 'PrintSong', 'width=800,height=600');
-        printWindow.document.write(printHTML);
-        printWindow.document.close();
-        
-        // Focus the new window
-        printWindow.focus();
-        
-        // Automatically open the print dialog after a short delay
-        // This gives the window time to fully load
-        setTimeout(() => {
-          printWindow.print();
-        }, 500);
       } catch (error) {
-        console.error("Error in print function:", error);
-        alert("Sorry, there was a problem preparing the song for printing. Please try again.");
+        console.error('Copy error:', error);
+        fallbackCopyLink(this, url);
       }
     });
   }
-});
-        // Social media share functionality
-  document.addEventListener('DOMContentLoaded', function() {
-    // Get the song title
-    const songTitle = document.querySelector('h1').textContent;
-    // Current URL
-    const url = window.location.href;
-    // Create share text
-    const shareText = `${songId}: ${songTitle} - Listen to this beautiful song on Tamil Christian Songbook`;
-    
-    // WhatsApp share
-    const whatsappBtn = document.getElementById('whatsapp-share');
-    if (whatsappBtn) {
-      whatsappBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText + ': ' + url)}`;
-        window.open(whatsappUrl, '_blank');
-      });
-    }
-    
-    // Facebook share
-    const facebookBtn = document.getElementById('facebook-share');
-    if (facebookBtn) {
-      facebookBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-        window.open(facebookUrl, '_blank');
-      });
-    }
-    
-    // Twitter/X share
-    const twitterBtn = document.getElementById('twitter-share');
-    if (twitterBtn) {
-      twitterBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
-        window.open(twitterUrl, '_blank');
-      });
-    }
-    
-    // Telegram share
-    const telegramBtn = document.getElementById('telegram-share');
-    if (telegramBtn) {
-      telegramBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(shareText)}`;
-        window.open(telegramUrl, '_blank');
-      });
-    }
-    
-    // Copy link functionality
-    const copyLinkBtn = document.getElementById('copy-link');
-    if (copyLinkBtn) {
-      copyLinkBtn.addEventListener('click', function() {
-        // Create a temporary input element
-        const tempInput = document.createElement('input');
-        tempInput.value = url;
-        document.body.appendChild(tempInput);
+}
+
+// Fallback method for copying link
+function fallbackCopyLink(button, text) {
+  // Create a temporary input element
+  const tempInput = document.createElement('input');
+  tempInput.value = text;
+  document.body.appendChild(tempInput);
+  
+  // Select and copy the link
+  tempInput.select();
+  document.execCommand('copy');
+  
+  // Remove the temporary element
+  document.body.removeChild(tempInput);
+  
+  // Show feedback
+  showCopiedFeedback(button);
+}
+
+// Shows "Copied!" feedback on button
+function showCopiedFeedback(button) {
+  const originalText = button.innerHTML;
+  
+  // Updated design for the "Copied!" feedback
+  button.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+    </svg>
+    <span>Copied!</span>
+  `;
+  
+  // Add a temporary success class
+  button.classList.add('bg-green-50', 'dark:bg-green-900/20', 'text-green-700', 'dark:text-green-300', 'border-green-200', 'dark:border-green-800');
+  
+  // Reset button after 2 seconds
+  setTimeout(() => {
+    button.innerHTML = originalText;
+    button.classList.remove('bg-green-50', 'dark:bg-green-900/20', 'text-green-700', 'dark:text-green-300', 'border-green-200', 'dark:border-green-800');
+  }, 2000);
+}
+
+// Improved printing functionality with updated styling
+function setupPrintFunctionality() {
+  const printButton = document.getElementById('print-song');
+  if (!printButton) return;
+  
+  printButton.addEventListener('click', function() {
+    try {
+      // Get song data
+      const titleElement = document.querySelector('h1');
+      const songTitle = titleElement ? titleElement.textContent.trim() : "Song Title";
+      
+      // Extract song ID
+      let songId = "";
+      const songContainer = document.querySelector('[data-song-id]');
+      if (songContainer) {
+        songId = songContainer.dataset.songId;
+      } else if (songTitle.includes(':')) {
+        songId = songTitle.split(':')[0].trim();
+      }
+      
+      // Get song text - first pre element
+      const firstPre = document.querySelector('pre');
+      const songText = firstPre ? firstPre.textContent.trim() : "Song lyrics not found";
+      
+      // Get original Tamil if available
+      let originalTitle = "";
+      let originalText = "";
+      
+      // Check for original section
+      const originalSection = document.querySelector('.mt-6.pt-6');
+      if (originalSection) {
+        const titleEl = originalSection.querySelector('h4');
+        if (titleEl) {
+          originalTitle = titleEl.textContent.trim();
+        }
         
-        // Select and copy the link
-        tempInput.select();
-        document.execCommand('copy');
-        
-        // Remove the temporary element
-        document.body.removeChild(tempInput);
-        
-        // Visual feedback for user
-        const originalText = this.innerHTML;
-        this.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
-          Copied!
-        `;
-        
-        // Reset button after 2 seconds
-        setTimeout(() => {
-          this.innerHTML = originalText;
-        }, 2000);
-      });
+        const originalPre = originalSection.querySelector('pre');
+        if (originalPre) {
+          originalText = originalPre.textContent.trim();
+        }
+      }
+      
+      // Create HTML for the new window with updated styling
+      const printHTML = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+            
+            @page {
+              margin: 0.5in;
+            }
+            
+            html, body {
+              height: 100%;
+              margin: 0;
+              padding: 0;
+            }
+            
+            body {
+              font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+              max-width: 800px;
+              margin: 0 auto;
+              padding: 20px;
+              color: #1f2937;
+              line-height: 1.6;
+              position: relative;
+              min-height: 100vh;
+            }
+            
+            .content-wrapper {
+              padding-bottom: 100px; /* Ensure space for footer */
+            }
+            
+            .print-header {
+              text-align: center;
+              margin-bottom: 30px;
+              padding-bottom: 15px;
+              border-bottom: 1px solid #e5e7eb;
+            }
+            
+            .song-id {
+              display: inline-block;
+              background-color: #e0e7ff;
+              color: #4338ca;
+              font-weight: 600;
+              padding: 3px 10px;
+              border-radius: 6px;
+              margin-right: 10px;
+            }
+            
+            .print-title {
+              font-size: 24px;
+              font-weight: 700;
+              color: #1e40af;
+              margin: 10px 0;
+              line-height: 1.3;
+            }
+            
+            .print-lyrics {
+              white-space: pre-line;
+              font-size: 16px;
+              line-height: 1.8;
+              margin-bottom: 30px;
+              text-align: left;
+              padding: 20px;
+              background-color: #f9fafb;
+              border-radius: 8px;
+              border: 1px solid #e5e7eb;
+            }
+            
+            .print-original {
+              margin-top: 40px;
+              padding-top: 20px;
+              border-top: 1px solid #e5e7eb;
+            }
+            
+            .original-heading {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              margin-bottom: 15px;
+            }
+            
+            .language-badge {
+              background-color: #e0e7ff;
+              color: #4338ca;
+              font-size: 12px;
+              font-weight: 600;
+              padding: 3px 8px;
+              border-radius: 6px;
+            }
+            
+            .print-original-title {
+              font-weight: 600;
+              margin-bottom: 15px;
+              font-size: 18px;
+              color: #1f2937;
+              display: flex;
+              align-items: center;
+            }
+            
+            .print-footer {
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              text-align: center;
+              font-size: 12px;
+              color: #6b7280;
+              border-top: 1px solid #e5e7eb;
+              padding-top: 15px;
+              padding-bottom: 20px;
+              font-style: italic;
+              background-color: white;
+            }
+            
+            @media print {
+              body {
+                padding: 0;
+                font-size: 12pt;
+              }
+              
+              .print-lyrics {
+                font-size: 12pt;
+                line-height: 1.6;
+                page-break-inside: avoid;
+                background-color: #f9fafb !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+              }
+              
+              .song-id, .language-badge {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+              }
+              
+              .no-print {
+                display: none;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="content-wrapper">
+            <div class="print-header">
+              <div class="print-title">
+                ${songId ? `<span class="song-id">${songId}</span>` : ''}${songTitle.replace(/^[^:]+:\s*/, '')}
+              </div>
+            </div>
+            
+            <div class="print-lyrics">${songText}</div>
+            
+            ${originalTitle && originalText ? `
+              <div class="print-original">
+                <div class="original-heading">
+                  <h3>Original Version</h3>
+                  <span class="language-badge">Tamil</span>
+                </div>
+                <div class="print-original-title">
+                  ${songId ? `<span class="song-id">${songId}</span>` : ''}${originalTitle}
+                </div>
+                <div class="print-lyrics">${originalText}</div>
+              </div>
+            ` : ''}
+          
+            <div class="print-footer">
+              Printed from Tamil Christian Songbook on ${new Date().toLocaleDateString()}
+              <br>
+              ${window.location.href}
+            </div>
+          </div>
+          
+          <div class="no-print" style="text-align: center; margin-top: 40px;">
+            <button onclick="window.print();" style="padding: 8px 16px; background: #4f46e5; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: medium; margin-right: 10px;">
+              Print Now
+            </button>
+            <button onclick="window.close();" style="padding: 8px 16px; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: medium;">
+              Close Window
+            </button>
+          </div>
+        </body>
+        </html>
+      `;
+      
+      // Open a new window and write the content
+      const printWindow = window.open('', 'PrintSong', 'width=800,height=600');
+      printWindow.document.write(printHTML);
+      printWindow.document.close();
+      
+      // Focus the new window
+      printWindow.focus();
+      
+      // Automatically open the print dialog after a short delay
+      setTimeout(() => {
+        printWindow.print();
+      }, 500);
+    } catch (error) {
+      console.error("Error in print function:", error);
+      alert("Sorry, there was a problem preparing the song for printing. Please try again.");
     }
   });
+}
 
+// Centralized language switching function
+function setupLanguageSwitching() {
+  const languageSelect = document.getElementById('language-select');
+  if (!languageSelect) return;
+  
+  languageSelect.addEventListener('change', (e) => {
+    const selectedLang = e.target.value;
+    switchLanguage(selectedLang);
+  });
+}
 
-
-      // Centralized language switching function
 function switchLanguage(selectedLang) {
   // Get the current URL path
   const currentPath = window.location.pathname;
@@ -848,7 +831,7 @@ function switchLanguage(selectedLang) {
           songId = songIdElement.dataset.songId;
         } else {
           console.error('Could not determine song ID. Redirecting to home page.');
-          window.location.href = '/songbook';
+          window.location.href = import.meta.env.BASE_URL || '/songbook';
           return;
         }
       }
@@ -856,14 +839,15 @@ function switchLanguage(selectedLang) {
   }
   
   // Ensure we have a base path
-  let basePath = '/songbook';
-  // Check if we're in a development environment without the /songbook prefix
+  let basePath = import.meta.env.BASE_URL || '/songbook';
+  // Check if we're in a development environment without the prefix
   if (!currentPath.includes('/songbook') && currentPath.includes('/songs/')) {
     basePath = '';
   }
   
-  // Construct the new URL
-  const newUrl = `${basePath}/songs/${selectedLang}/${songId}`;
+  // Construct the new URL, preserving any query parameters
+  const queryString = window.location.search;
+  const newUrl = `${basePath}/songs/${selectedLang}/${songId}${queryString}`;
   
   // Save language preference
   sessionStorage.setItem('selectedLanguage', selectedLang);
@@ -872,176 +856,344 @@ function switchLanguage(selectedLang) {
   window.location.href = newUrl;
 }
 
-// Add event listener to the language selector
-document.getElementById('language-select').addEventListener('change', (e) => {
-  const selectedLang = e.target.value;
-  switchLanguage(selectedLang);
-});
-        
-        // Search term highlighting functionality
-        function highlightSearchTerm() {
-          // Get search query from URL parameters or sessionStorage
-          const urlParams = new URLSearchParams(window.location.search);
-          const searchQuery = urlParams.get('q') || sessionStorage.getItem('searchQuery');
+// Enhanced Search Highlighting Function
+
+// Main highlighting function
+function highlightSearchTerm() {
+  // Get search query from URL parameters or sessionStorage
+  const urlParams = new URLSearchParams(window.location.search);
+  const searchQuery = urlParams.get('q') || sessionStorage.getItem('searchQuery');
+  
+  if (!searchQuery || searchQuery.trim() === '') return;
+  
+  // Function to safely highlight text without breaking HTML structure
+  function highlightTextNodes(element, searchTerm) {
+    if (!element || !searchTerm || searchTerm.trim() === '') return;
+    
+    const searchRegex = new RegExp(searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
+    
+    // Process only element nodes (skip text outside elements)
+    if (element.nodeType === Node.ELEMENT_NODE) {
+      // Skip certain elements that shouldn't be highlighted
+      if (['SCRIPT', 'STYLE', 'MARK', 'CODE', 'BUTTON', 'SELECT', 'OPTION'].includes(element.tagName)) {
+        return;
+      }
+      
+      // Process child nodes recursively
+      const childNodes = [...element.childNodes]; // Create a copy to avoid live collection issues
+      
+      childNodes.forEach(child => {
+        if (child.nodeType === Node.TEXT_NODE) {
+          // This is a text node, check for matches
+          const text = child.textContent;
           
-          if (!searchQuery || searchQuery.trim() === '') return;
-          
-          // Function to highlight matches in text
-          function highlightMatches(element, searchTerm) {
-            if (!element || !searchTerm || searchTerm.trim() === '') return;
+          if (searchRegex.test(text)) {
+            // Found a match in text node, replace with highlighted version
+            const frag = document.createDocumentFragment();
             
-            const text = element.innerHTML;
-            const regex = new RegExp(`(${searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
+            // Reset regex lastIndex
+            searchRegex.lastIndex = 0;
             
-            // Only process if there's a match
-            if (regex.test(text)) {
-              element.innerHTML = text.replace(regex, '<mark class="bg-yellow-200 text-gray-800">$1</mark>');
-            }
-          }
-          
-          // Highlight matches in song title
-          const titleElement = document.querySelector('h1');
-          highlightMatches(titleElement, searchQuery);
-          
-          // Highlight matches in song text
-          const textElements = document.querySelectorAll('pre');
-          textElements.forEach(element => {
-            highlightMatches(element, searchQuery);
-          });
-          
-          // Add a search badge at the top if matches were found
-          const songContent = document.querySelector('.p-6.sm\\:p-8');
-          if (songContent) {
-            // Check if any highlights were added
-            const highlights = document.querySelectorAll('mark.bg-yellow-200');
+            let lastIndex = 0;
+            let match;
             
-            if (highlights.length > 0) {
-              // Create the search badge
-              const searchBadge = document.createElement('div');
-              searchBadge.className = 'mb-4 flex items-center gap-2 text-sm bg-indigo-100 text-indigo-800 px-3 py-2 rounded-lg';
-              searchBadge.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <span>Showing ${highlights.length} matches for "${searchQuery}"</span>
-                <button id="clearHighlights" class="ml-auto text-indigo-600 hover:text-indigo-800">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              `;
-              
-              // Insert at the beginning of the content
-              songContent.insertBefore(searchBadge, songContent.firstChild);
-              
-              // Add clear highlights functionality
-              document.getElementById('clearHighlights').addEventListener('click', () => {
-                // Remove all highlights
-                document.querySelectorAll('mark.bg-yellow-200').forEach(mark => {
-                  const parent = mark.parentNode;
-                  const text = mark.textContent;
-                  const textNode = document.createTextNode(text);
-                  parent.replaceChild(textNode, mark);
-                });
-                
-                // Remove the search badge
-                searchBadge.remove();
-              });
-              
-              // Add keyboard navigation between highlights
-              let currentHighlightIndex = -1;
-              
-              function navigateHighlights(direction) {
-                const highlights = document.querySelectorAll('mark.bg-yellow-200');
-                if (highlights.length === 0) return;
-                
-                // Remove current highlight
-                if (currentHighlightIndex >= 0 && currentHighlightIndex < highlights.length) {
-                  highlights[currentHighlightIndex].classList.remove('ring', 'ring-indigo-500');
-                }
-                
-                // Update index
-                currentHighlightIndex += direction;
-                if (currentHighlightIndex >= highlights.length) currentHighlightIndex = 0;
-                if (currentHighlightIndex < 0) currentHighlightIndex = highlights.length - 1;
-                
-                // Highlight current and scroll to it
-                const currentHighlight = highlights[currentHighlightIndex];
-                currentHighlight.classList.add('ring', 'ring-indigo-500');
-                currentHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
-                // Update the counter in search badge
-                const counter = document.querySelector('#highlightCounter');
-                if (counter) {
-                  counter.textContent = `${currentHighlightIndex + 1}/${highlights.length}`;
-                } else {
-                  const counterSpan = document.createElement('span');
-                  counterSpan.id = 'highlightCounter';
-                  counterSpan.className = 'ml-2 bg-indigo-200 text-indigo-800 px-2 py-0.5 rounded-full text-xs';
-                  counterSpan.textContent = `${currentHighlightIndex + 1}/${highlights.length}`;
-                  searchBadge.querySelector('span').appendChild(counterSpan);
-                }
+            while ((match = searchRegex.exec(text)) !== null) {
+              // Add text before this match
+              if (match.index > lastIndex) {
+                frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
               }
               
-              // Add navigation buttons to search badge
-              const navButtons = document.createElement('div');
-              navButtons.className = 'flex items-center gap-1 ml-2';
-              navButtons.innerHTML = `
-                <button id="prevHighlight" class="p-1 rounded-full hover:bg-indigo-200" title="Previous match">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                <button id="nextHighlight" class="p-1 rounded-full hover:bg-indigo-200" title="Next match">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              `;
+              // Add highlighted match
+              const mark = document.createElement('mark');
+              mark.className = 'bg-yellow-100 text-gray-800 dark:bg-yellow-800/30 dark:text-gray-200 px-0.5 rounded';
+              mark.appendChild(document.createTextNode(match[0]));
+              frag.appendChild(mark);
               
-              searchBadge.insertBefore(navButtons, document.getElementById('clearHighlights'));
-              
-              document.getElementById('prevHighlight').addEventListener('click', () => navigateHighlights(-1));
-              document.getElementById('nextHighlight').addEventListener('click', () => navigateHighlights(1));
-              
-              // Start with the first highlight
-              navigateHighlights(1);
-              
-              // Keyboard shortcuts for navigation
-              document.addEventListener('keydown', (e) => {
-                if (e.key === 'F3' || (e.ctrlKey && e.key === 'g')) {
-                  e.preventDefault();
-                  navigateHighlights(1);
-                } else if (e.shiftKey && e.key === 'F3' || (e.ctrlKey && e.shiftKey && e.key === 'g')) {
-                  e.preventDefault();
-                  navigateHighlights(-1);
-                }
-              });
+              lastIndex = match.index + match[0].length;
+            }
+            
+            // Add any remaining text after the last match
+            if (lastIndex < text.length) {
+              frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+            }
+            
+            // Replace the original text node with our fragment
+            element.replaceChild(frag, child);
+          }
+        } else {
+          // This is an element node, recurse into it
+          highlightTextNodes(child, searchTerm);
+        }
+      });
+    }
+  }
+  
+  // Areas to search for the query
+  const searchAreas = [
+    document.querySelector('h1'), // Song title
+    ...document.querySelectorAll('pre') // Song lyrics
+  ];
+  
+  // Perform highlighting
+  let highlightCount = 0;
+  
+  searchAreas.forEach(element => {
+    if (element) {
+      // Store the original innerHTML for potential reset
+      if (!element.dataset.originalContent) {
+        element.dataset.originalContent = element.innerHTML;
+      }
+      
+      // Apply highlighting
+      highlightTextNodes(element, searchQuery);
+      
+      // Count highlights inside this element
+      highlightCount += element.querySelectorAll('mark').length;
+    }
+  });
+  
+  // Add a search badge if matches were found
+  if (highlightCount > 0) {
+    addSearchBadge(searchQuery, highlightCount);
+  }
+}
+
+// Function to add the search badge with navigation controls
+function addSearchBadge(searchQuery, highlightCount) {
+  // Remove any existing search badge
+  const existingBadge = document.getElementById('search-highlight-badge');
+  if (existingBadge) {
+    existingBadge.remove();
+  }
+  
+  // Create the search badge with navigation
+  const searchBadge = document.createElement('div');
+  searchBadge.id = 'search-highlight-badge';
+  searchBadge.className = 'mb-4 flex items-center gap-2 text-sm bg-gray-50 dark:bg-gray-700/50 px-3 py-2 rounded-lg border border-gray-100 dark:border-gray-700';
+  searchBadge.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-500 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    </svg>
+    <span class="text-gray-700 dark:text-gray-300">Showing results for "${escapeHTML(searchQuery)}"</span>
+    
+    <div class="ml-auto flex items-center gap-2">
+      <span id="highlightCounter" class="bg-indigo-100 dark:bg-indigo-800/50 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded text-xs">
+        ${highlightCount} match${highlightCount !== 1 ? 'es' : ''}
+      </span>
+      <button id="prevHighlight" class="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-400" title="Previous match">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <button id="nextHighlight" class="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-400" title="Next match">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+      <button id="clearHighlights" class="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-400" title="Clear highlights">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  `;
+  
+  // Insert the badge at the beginning of the main content
+  const songContent = document.querySelector('.p-5.sm\\:p-8');
+  if (songContent) {
+    songContent.insertBefore(searchBadge, songContent.firstChild);
+  } else {
+    // Fallback - look for any suitable container
+    const mainContent = document.querySelector('main');
+    if (mainContent) {
+      mainContent.insertBefore(searchBadge, mainContent.firstChild);
+    }
+  }
+  
+  // Set up the highlight navigation system
+  setupHighlightNavigation();
+}
+
+// Function to set up highlight navigation
+function setupHighlightNavigation() {
+  let currentHighlightIndex = -1;
+  const highlights = document.querySelectorAll('mark');
+  
+  // Update the counter text
+  function updateCounter() {
+    const counter = document.getElementById('highlightCounter');
+    if (counter && highlights.length > 0) {
+      counter.textContent = `${currentHighlightIndex + 1} of ${highlights.length}`;
+    }
+  }
+  
+  // Navigate to a specific highlight
+  function navigateToHighlight(index) {
+    if (highlights.length === 0) return;
+    
+    // Remove current highlight effect
+    highlights.forEach(h => h.classList.remove('ring-2', 'ring-indigo-500', 'dark:ring-indigo-400'));
+    
+    // Update index with wrapping
+    currentHighlightIndex = (index + highlights.length) % highlights.length;
+    
+    // Apply highlight effect and scroll into view
+    const currentHighlight = highlights[currentHighlightIndex];
+    currentHighlight.classList.add('ring-2', 'ring-indigo-500', 'dark:ring-indigo-400');
+    
+    // Smooth scroll with offset for header
+    const headerHeight = document.querySelector('header')?.offsetHeight || 0;
+    const elementRect = currentHighlight.getBoundingClientRect();
+    const absoluteElementTop = elementRect.top + window.pageYOffset;
+    const middle = absoluteElementTop - (window.innerHeight / 2);
+    
+    window.scrollTo({
+      top: middle - headerHeight,
+      behavior: 'smooth'
+    });
+    
+    updateCounter();
+  }
+  
+  // Navigate to the next or previous highlight
+  function navigateHighlights(direction) {
+    navigateToHighlight(currentHighlightIndex + direction);
+  }
+  
+  // Clear all highlights
+  function clearHighlights() {
+    // Restore original content to elements with highlights
+    document.querySelectorAll('[data-original-content]').forEach(element => {
+      element.innerHTML = element.dataset.originalContent;
+      delete element.dataset.originalContent;
+    });
+    
+    // Remove the search badge
+    const searchBadge = document.getElementById('search-highlight-badge');
+    if (searchBadge) {
+      searchBadge.remove();
+    }
+    
+    // Clear the search query parameter
+    const url = new URL(window.location);
+    url.searchParams.delete('q');
+    window.history.replaceState({}, '', url);
+    sessionStorage.removeItem('searchQuery');
+  }
+  
+  // Set up event listeners for the navigation buttons
+  document.getElementById('prevHighlight')?.addEventListener('click', () => navigateHighlights(-1));
+  document.getElementById('nextHighlight')?.addEventListener('click', () => navigateHighlights(1));
+  document.getElementById('clearHighlights')?.addEventListener('click', clearHighlights);
+  
+  // Set up keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'F3' || (e.ctrlKey && e.key === 'g')) {
+      e.preventDefault();
+      navigateHighlights(1);
+    } else if ((e.shiftKey && e.key === 'F3') || (e.ctrlKey && e.shiftKey && e.key === 'g')) {
+      e.preventDefault();
+      navigateHighlights(-1);
+    } else if (e.key === 'Escape') {
+      const clearButton = document.getElementById('clearHighlights');
+      if (clearButton) {
+        clearButton.click();
+      }
+    }
+  });
+  
+  // Start by highlighting the first match
+  if (highlights.length > 0) {
+    navigateToHighlight(0);
+  }
+}
+
+// Helper function to safely escape HTML for display
+function escapeHTML(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// Function to ensure URL parameters are preserved when switching languages
+// Function to ensure URL parameters are preserved when switching languages
+function updateSearchParamOnLinks() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const searchQuery = urlParams.get('q');
+  
+  if (searchQuery) {
+    // Store in session storage for persistence across pages
+    sessionStorage.setItem('searchQuery', searchQuery);
+    
+    // Update language switcher to preserve search parameter
+    const languageSelect = document.getElementById('language-select');
+    if (languageSelect) {
+      languageSelect.addEventListener('change', (e) => {
+        const selectedLang = e.target.value;
+        
+        // Get the current URL path components
+        const currentPath = window.location.pathname;
+        const pathParts = currentPath.split('/');
+        
+        // Extract song ID - handle different path formats
+        let songId = '';
+        if (pathParts.length > 0) {
+          // Try the last part of the path first
+          songId = pathParts[pathParts.length - 1];
+          
+          // Check if it looks like a song ID
+          if (!/^\d+$/.test(songId)) {
+            // Try finding it through path pattern
+            const songsIndex = pathParts.indexOf('songs');
+            if (songsIndex >= 0 && songsIndex + 2 < pathParts.length) {
+              songId = pathParts[songsIndex + 2];
+            } else {
+              // Last resort: check data attribute
+              const songElement = document.querySelector('[data-song-id]');
+              if (songElement) {
+                songId = songElement.dataset.songId;
+              }
             }
           }
         }
         
-        // Run the highlight function when the page is loaded
-        document.addEventListener('DOMContentLoaded', highlightSearchTerm);
-        
-        // Persist search query when navigating between songs
-        function updateSearchParamOnLinks() {
-          const urlParams = new URLSearchParams(window.location.search);
-          const searchQuery = urlParams.get('q') || sessionStorage.getItem('searchQuery');
-          
-          if (searchQuery) {
-            // Update links to other songs to include the search parameter
-            document.querySelectorAll('a[href^="/songs/"]').forEach(link => {
-              const url = new URL(link.href, window.location.origin);
-              url.searchParams.set('q', searchQuery);
-              link.href = url.pathname + url.search;
-            });
-          }
+        if (!songId) {
+          console.error('Could not determine song ID');
+          return;
         }
         
+        // Determine the base path - FIXED THIS PART TO AVOID USING 'import' AS A VARIABLE
+        let basePath = '';
+        // Check if we're in an environment with BASE_URL defined
+        if (window.BASE_URL) {
+          basePath = window.BASE_URL;
+        } else if (currentPath.includes('/songbook')) {
+          basePath = '/songbook';
+        }
         
+        // Build the new URL with search parameters preserved
+        const newUrl = `${basePath}/songs/${selectedLang}/${songId}?q=${encodeURIComponent(searchQuery)}`;
         
-            </script>
+        // Navigate to the new URL
+        window.location.href = newUrl;
+        
+        // Prevent default handling
+        e.preventDefault();
+      });
+    }
+  }
+}
+
+// Initialize the highlighting system when the document is ready
+document.addEventListener('DOMContentLoaded', () => {
+  highlightSearchTerm();
+  updateSearchParamOnLinks();
+});
+
+</script>
 <!-- Completely revised print container and function -->
 <div id="print-container" style="display:none;"></div>
 
