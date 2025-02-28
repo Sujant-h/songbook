@@ -5,7 +5,7 @@ import AstroPWA from '@vite-pwa/astro';
 
 export default defineConfig({
   site: 'https://sujanth.de',
-  base: 'songbook',
+  base: '/',
   trailingSlash: 'ignore',
   vite: {
     logLevel: 'info',
