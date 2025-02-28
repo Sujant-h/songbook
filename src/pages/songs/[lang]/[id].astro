@@ -504,7 +504,7 @@ if (lang === 'en') {
 
     <!-- Footer - Updated styling -->
     <footer class="text-center text-gray-500 dark:text-gray-400 text-sm mt-8 pb-6">
-      <p class="py-2 border-t border-gray-200 dark:border-gray-700">© 2025 Tamil Christian Songbook | All Rights Reserved</p>
+      <p class="py-2 border-t border-gray-200 dark:border-gray-700">© 2025 Tamil Christian Songs | All Rights Reserved</p>
     </footer>
   </div>
 
@@ -815,7 +815,7 @@ function showCopiedFeedback(button) {
   }, 2000);
 }
 
-// Enhanced Printing Functionality with Improved Error Handling and Design
+// Enhanced Printing Functionality with Fixed Content Generation
 function setupPrintFunctionality() {
   const printButton = document.getElementById('print-song');
   if (!printButton) return;
@@ -847,7 +847,7 @@ function setupPrintFunctionality() {
         // Original version extraction
         let originalTitle = "";
         let originalText = "";
-        const originalSection = document.querySelector('.mt-6.pt-6');
+        const originalSection = document.querySelector('.mt-8.pt-6');
         if (originalSection) {
           const titleEl = originalSection.querySelector('h4');
           const originalPre = originalSection.querySelector('pre');
@@ -862,14 +862,14 @@ function setupPrintFunctionality() {
       // Get song data
       const { songId, fullTitle, cleanTitle, songText, originalTitle, originalText } = extractSongData();
       
-      // Create HTML for the new window with enhanced styling
+      // Create HTML for the new window with balanced styling
       const printHTML = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>${cleanTitle} - Printout</title>
+          <title>${cleanTitle} - Print Version</title>
           <style>
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
             
@@ -888,7 +888,7 @@ function setupPrintFunctionality() {
             }
             
             @page {
-              margin: 0.5in;
+              margin: 0.4in;
               size: letter;
             }
             
@@ -900,15 +900,16 @@ function setupPrintFunctionality() {
             
             body {
               font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-              line-height: 1.6;
+              line-height: 1.5;
               color: var(--text-dark);
               max-width: 800px;
               margin: 0 auto;
-              padding: 20px;
+              padding: 15px;
               background: white;
               display: flex;
               flex-direction: column;
               min-height: 100vh;
+              font-size: 15px;
             }
             
             .print-container {
@@ -919,18 +920,121 @@ function setupPrintFunctionality() {
             
             .print-header {
               text-align: center;
-              padding-bottom: 20px;
-              border-bottom: 2px solid var(--border-color);
-              margin-bottom: 20px;
+              padding-bottom: 15px;
+              border-bottom: 1px solid var(--border-color);
+              margin-bottom: 15px;
             }
             
             .song-id {
-              display: inline
-
-          }`;
+              display: inline-block;
+              background-color: #f3f4f6;
+              color: var(--primary-color);
+              font-weight: bold;
+              padding: 3px 10px;
+              border-radius: 5px;
+              margin-right: 8px;
+            }
+            
+            h1 {
+              font-size: 24px;
+              margin: 0 0 8px 0;
+              color: var(--primary-color);
+            }
+            
+            .song-details {
+              margin-bottom: 15px;
+              font-size: 12px;
+              color: #6b7280;
+            }
+            
+            .lyrics-container {
+              background-color: var(--background-light);
+              border-radius: 7px;
+              padding: 15px;
+              margin-bottom: 15px;
+              white-space: pre-line;
+              border: 1px solid var(--border-color);
+            }
+            
+            .original-title {
+              font-weight: 600;
+              font-size: 17px;
+              margin: 15px 0 8px 0;
+              padding-top: 15px;
+              border-top: 1px solid var(--border-color);
+              color: var(--primary-color);
+            }
+            
+            .footer {
+              text-align: center;
+              font-size: 11px;
+              color: #6b7280;
+              margin-top: auto;
+              padding-top: 15px;
+              border-top: 1px solid var(--border-color);
+            }
+            
+            .copyright {
+              text-align: center;
+              font-size: 11px;
+              color: #6b7280;
+              margin-top: 15px;
+            }
+            
+            @media print {
+              body {
+                padding: 0;
+              }
+              
+              .print-container {
+                padding: 0.4in;
+              }
+              
+              .no-print {
+                display: none;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="print-container">
+            <div class="print-header">
+              <h1>
+                ${songId ? `<span class="song-id">${songId}</span>` : ''}
+                ${cleanTitle}
+              </h1>
+              <div class="song-details">
+                Tamil Christian Songs | Printed on ${new Date().toLocaleDateString()}
+              </div>
+            </div>
+            
+            <div class="lyrics-container">
+              ${songText.replace(/\n\n\n+/g, '\n\n')}
+            </div>
+            
+            ${originalTitle && originalText ? `
+              <h2 class="original-title">Original Tamil Version: ${originalTitle}</h2>
+              <div class="lyrics-container">
+                ${originalText.replace(/\n\n\n+/g, '\n\n')}
+              </div>
+            ` : ''}
+            
+            <div class="footer">
+              <div class="copyright">
+                © Tamil Christian Songs
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
       
       // Open a new window and write the content
       const printWindow = window.open('', 'PrintSong', 'width=800,height=600');
+      if (!printWindow) {
+        alert("Please allow pop-ups to print this song.");
+        return;
+      }
       
       // Ensure the window is fully loaded before writing content
       printWindow.document.open();
@@ -940,10 +1044,11 @@ function setupPrintFunctionality() {
       // Focus the new window
       printWindow.focus();
       
-      // Automatically open the print dialog after a short delay
+      // Automatically open the print dialog after a short delay to ensure content is rendered
       setTimeout(() => {
         printWindow.print();
-      }, 500);
+        // Don't close the window after printing to allow users to try again if needed
+      }, 800);
     } catch (error) {
       console.error("Error in print function:", error);
       alert("Sorry, there was a problem preparing the song for printing. Please try again.");
@@ -951,8 +1056,8 @@ function setupPrintFunctionality() {
   });
 }
 
-// Ensure the function runs when the page loads
-document.addEventListener('DOMContentLoaded', setupPrintFunctionality);
+// Make sure this function runs when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', setupPrintFunctionality);F
 
 // Centralized language switching function
 function setupLanguageSwitching() {
