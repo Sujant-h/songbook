@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import AstroPWA from '@vite-pwa/astro';
 
 export default defineConfig({
-  site: 'https://sujant-h.github.io',
+  site: 'https://sujanth.de',
   base: 'songbook',
   trailingSlash: 'ignore',
   vite: {
