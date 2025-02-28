@@ -765,7 +765,7 @@ function updateSongDisplay() {
       displayTitle = item.dataset.titleEn || originalTitleText;
       
       if (item.dataset.title && displayTitle !== originalTitleText) {
-        translationTitle.textContent = `Original: ${originalTitleText}`;
+        translationTitle.textContent = ` ${originalTitleText}`;
         translationTitle.classList.remove('hidden');
       } else {
         translationTitle.classList.add('hidden');
@@ -776,7 +776,7 @@ function updateSongDisplay() {
       displayTitle = item.dataset.titleDe || originalTitleText;
       
       if (item.dataset.title && displayTitle !== originalTitleText) {
-        translationTitle.textContent = `Original: ${originalTitleText}`;
+        translationTitle.textContent = `${originalTitleText}`;
         translationTitle.classList.remove('hidden');
       } else {
         translationTitle.classList.add('hidden');
