@@ -1347,6 +1347,7 @@ function addSearchBadge(searchQuery, highlightCount, isMultiWordSearch) {
 }
 
 // Update the search parameter propagation function
+// Update the search parameter propagation function
 function updateSearchParamOnLinks() {
   const urlParams = new URLSearchParams(window.location.search);
   const searchQuery = urlParams.get('q');
@@ -1398,17 +1399,8 @@ function updateSearchParamOnLinks() {
           return;
         }
         
-        // Determine the base path
-        let basePath = '';
-        // Check if we're in an environment with BASE_URL defined
-        if (window.BASE_URL) {
-          basePath = window.BASE_URL;
-        } else if (currentPath.includes('/songbook')) {
-          basePath = '/songbook';
-        }
-        
         // Build the new URL with search parameters preserved
-        const newUrl = `${basePath}/songs/${selectedLang}/${songId}?q=${encodeURIComponent(searchQuery)}`;
+        const newUrl = `https://sujanth.de/songs/${selectedLang}/${songId}?q=${encodeURIComponent(searchQuery)}`;
         
         // Navigate to the new URL
         window.location.href = newUrl;
