@@ -296,24 +296,24 @@ if (lang === 'en') {
             </div>
           )}
 
-          <!-- Audio Player with enhanced design -->
-          <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-            <div class="flex items-center mb-4">
-              <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-300">Listen to the Song</h3>
-            </div>
-            <div class="bg-gray-50 dark:bg-gray-700/40 p-5 rounded-xl border border-gray-100 dark:border-gray-700 shadow-inner">
-              <audio controls class="w-full focus:outline-none">
-                <source src={audioUrl} type="audio/mpeg">
-                Your browser does not support the audio element.
-              </audio>
-            </div>
-          </div>
+        <!-- Audio Player with enhanced design - Will be hidden via JS if audio doesn't exist -->
+<div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 audio-player-section">
+  <div class="flex items-center mb-4">
+    <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-3">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    </div>
+    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-300">Listen to the Song</h3>
+  </div>
+  <div class="bg-gray-50 dark:bg-gray-700/40 p-5 rounded-xl border border-gray-100 dark:border-gray-700 shadow-inner">
+    <audio controls class="w-full focus:outline-none">
+      <source src={audioUrl} type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+</div>
           
           <!-- Social Media Share Buttons with improved styling -->
           <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
@@ -412,6 +412,55 @@ if (lang === 'en') {
 
 <script>
   // Combined JavaScript for the song detail page
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Find the audio player section
+    const audioSection = document.querySelector('.audio-player-section');
+    
+    // If no audio section is found, exit early
+    if (!audioSection) return;
+    
+    // Get the audio source URL
+    const audioElement = audioSection.querySelector('audio');
+    if (!audioElement) return;
+    
+    const audioSource = audioElement.querySelector('source');
+    if (!audioSource || !audioSource.src) {
+      audioSection.style.display = 'none';
+      return;
+    }
+    
+    const audioUrl = audioSource.src;
+    
+    // First, hide the audio section by default
+    audioSection.style.display = 'none';
+    
+    // Quick HEAD request to check if the file exists - much faster than loading the file
+    fetch(audioUrl, { method: 'HEAD' })
+      .then(response => {
+        if (response.ok) {
+          // File exists, show the audio section
+          audioSection.style.display = 'block';
+          
+          // Also listen for errors during playback just to be safe
+          audioElement.addEventListener('error', function() {
+            audioSection.style.display = 'none';
+          });
+        }
+      })
+      .catch(() => {
+        // Keep it hidden on error
+        audioSection.style.display = 'none';
+      });
+    
+    // Short timeout as a final fallback
+    setTimeout(function() {
+      // If we're still loading after 1 second, hide the player
+      if (audioElement.readyState === 0) {
+        audioSection.style.display = 'none';
+      }
+    }, 1000);
+  });
 
 document.addEventListener('DOMContentLoaded', function() {
   // Initialize all functionality
