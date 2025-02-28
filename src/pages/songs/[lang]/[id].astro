@@ -26,7 +26,7 @@ export async function getStaticPaths() {
 }
 
 const { song, lang } = Astro.props;
-const audioUrl = `https://sujant-h.github.io/songbook/audio/${song.id}.mp3`;
+const audioUrl = `https://sujanth.de/audio/${song.id}.mp3`;
 
 // Select content based on language
 let songId = song.id;
