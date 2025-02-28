@@ -556,7 +556,7 @@ function highlightMatches(text, searchTerm) {
   if (!searchTerm || searchTerm.trim() === '' || !text) return text;
   
   const regex = new RegExp(`(${searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
-  return text.replace(regex, '<mark class="bg-yellow-200 text-gray-800">$1</mark>');
+  return text.replace(regex, '<mark class="bg-yellow-200 text-gray-800 dark:bg-yellow-500/60 dark:text-gray-100 px-1 py-0.5 rounded-sm font-medium">$1</mark>');
 }
 
 // Function to find the context around a match
