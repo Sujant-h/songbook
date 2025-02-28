@@ -22,14 +22,14 @@ export default defineConfig({
   integrations: [
     AstroPWA({
       mode: 'production',
-      base: '/songbook/',
-      scope: '/songbook/',
+      base: '/',
+      scope: '/',
       includeAssets: ['favicon.svg'],
       registerType: 'autoUpdate',
       manifest: {
         name: 'Tamil Songbook',
         short_name: 'Songbook',
-        start_url: '/songbook/',
+        start_url: '/',
         theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone',
@@ -53,7 +53,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        navigateFallback: '/songbook/index.html',
+        navigateFallback: '/index.html',
         globPatterns: ['**/*.{css,js,html,svg,png,ico,txt,astro,md}'],
         cleanupOutdatedCaches: true,
         runtimeCaching: [
@@ -72,7 +72,7 @@ export default defineConfig({
       },
       devOptions: {
         enabled: false,
-        navigateFallbackAllowlist: [/^\/songbook\//],
+        navigateFallbackAllowlist: [/^\//], // Changed from /^\/songbook\//
         type: 'module'
       }
     })
