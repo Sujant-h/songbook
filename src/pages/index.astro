@@ -499,83 +499,40 @@ const state = {
   },
 
   // Restore state from session storage - REMOVE SCROLL POSITION
-// Modify the restoreState function in your state object:
-restoreState() {
-  const returnedFromSong = sessionStorage.getItem('returnedFromSong');
-  if (returnedFromSong) {
-    // Restore search query
-    const savedQuery = sessionStorage.getItem('searchQuery');
-    if (savedQuery) {
-      searchInput.value = savedQuery;
-      this.updateClearButtonVisibility();
+  restoreState() {
+    const returnedFromSong = sessionStorage.getItem('returnedFromSong');
+    if (returnedFromSong) {
+      // Restore search query
+      const savedQuery = sessionStorage.getItem('searchQuery');
+      if (savedQuery) {
+        searchInput.value = savedQuery;
+        this.updateClearButtonVisibility();
+      }
+      
+      // Restore language selection
+      const savedLang = sessionStorage.getItem('selectedLang');
+      if (savedLang && savedLang !== langSelect.value) {
+        langSelect.value = savedLang;
+        updateSongDisplay();
+      }
+      
+      // Apply the filter to show only matching results
+      if (savedQuery && savedQuery.trim() !== '') {
+        filterSongs();
+      }
+      
+      // Remove these lines:
+      // const savedPosition = sessionStorage.getItem('scrollPosition');
+      // if (savedPosition) {
+      //   setTimeout(() => {
+      //     window.scrollTo(0, parseInt(savedPosition));
+      //   }, 100);
+      // }
+      
+      // Clear session storage
+      this.clearState();
     }
-    
-    // Restore language selection
-    const savedLang = sessionStorage.getItem('selectedLang');
-    if (savedLang && savedLang !== langSelect.value) {
-      langSelect.value = savedLang;
-      updateSongDisplay();
-    }
-    
-    // Apply the filter to show only matching results
-    if (savedQuery && savedQuery.trim() !== '') {
-      // First make ALL songs hidden to start with a clean slate
-      songItems.forEach(item => {
-        item.classList.add('hidden');
-      });
-      
-      // Then apply the filter which will show only matching items
-      filterSongs();
-      
-      // Additionally, ensure non-matching songs remain hidden after filtering
-      const searchTerm = savedQuery.toLowerCase().trim();
-      const selectedLang = langSelect.value;
-      
-      songItems.forEach(item => {
-        let titleField, textField;
-        
-        // Select the appropriate fields based on language
-        if (selectedLang === 'ta') {
-          titleField = 'title';
-          textField = 'text';
-        } else if (selectedLang === 'en') {
-          titleField = 'titleEn';
-          textField = 'textEn';
-        } else if (selectedLang === 'de') {
-          titleField = 'titleDe';
-          textField = 'textDe';
-        }
-        
-        // Get the appropriate data
-        const title = item.dataset[titleField] ? 
-          item.dataset[titleField].toLowerCase() : 
-          item.dataset.title.toLowerCase();
-          
-        const text = item.dataset[textField] ? 
-          item.dataset[textField].toLowerCase() : 
-          item.dataset.text.toLowerCase();
-        
-        const songId = item.dataset.id;
-        
-        // Check if this item should be visible
-        const idHit = searchTerm !== '' && songId.toLowerCase().includes(searchTerm);
-        const titleHit = searchTerm !== '' && title.includes(searchTerm);
-        const textHit = searchTerm !== '' && text.includes(searchTerm);
-        
-        // If no match, ensure it stays hidden
-        if (!(idHit || titleHit || textHit)) {
-          item.classList.add('hidden');
-        }
-      });
-      
-      // Re-sort results to maintain consistent order
-      reorderSongsByMatchPriority();
-    }
-    
-    // Clear session storage
-    this.clearState();
-  }
-},
+  },
 
   // Clear state from session storage
   clearState() {
