@@ -452,6 +452,7 @@ const songItems = document.querySelectorAll('.song-item');
 const noResultsMessage = document.getElementById('noResultsMessage');
 const goToTopButton = document.getElementById('goToTopButton');
 
+// State management
 const state = {
   // Update clear button visibility based on search input
   updateClearButtonVisibility() {
@@ -462,17 +463,15 @@ const state = {
     }
   },
 
-  // Save current state to session storage - REMOVE SCROLL POSITION
+  // Save current state to session storage
   saveState() {
-    // Remove this line:
-    // sessionStorage.setItem('scrollPosition', window.pageYOffset);
-    
+    sessionStorage.setItem('scrollPosition', window.pageYOffset);
     sessionStorage.setItem('searchQuery', searchInput.value);
     sessionStorage.setItem('selectedLang', langSelect.value);
     sessionStorage.setItem('returnedFromSong', 'true');
   },
 
-  // Restore state from session storage - REMOVE SCROLL POSITION
+  // Restore state from session storage
   restoreState() {
     const returnedFromSong = sessionStorage.getItem('returnedFromSong');
     if (returnedFromSong) {
@@ -491,17 +490,52 @@ const state = {
       }
       
       // Apply the filter to show only matching results
+      // This must be called after restoring search query and language
       if (savedQuery && savedQuery.trim() !== '') {
         filterSongs();
+        
+        // Make sure text matches are shown
+        setTimeout(() => {
+          songItems.forEach(item => {
+            const searchTerm = savedQuery.toLowerCase().trim();
+            let textField;
+            
+            // Get the appropriate field based on language
+            if (langSelect.value === 'ta') {
+              textField = 'text';
+            } else if (langSelect.value === 'en') {
+              textField = 'textEn';
+            } else if (langSelect.value === 'de') {
+              textField = 'textDe';
+            }
+            
+            // Check if this item has a text match
+            const text = item.dataset[textField] ? 
+              item.dataset[textField].toLowerCase() : 
+              item.dataset.text.toLowerCase();
+            
+            // If there's a text match, show the context
+            if (text.includes(searchTerm)) {
+              const matchContext = item.querySelector('.match-context');
+              if (matchContext) {
+                const rawText = item.dataset[textField] || item.dataset.text || '';
+                const context = findMatchContext(rawText, searchTerm);
+                matchContext.innerHTML = highlightMatches(context, searchTerm);
+                matchContext.classList.remove('hidden');
+              }
+            }
+          });
+        }, 50);
       }
       
-      // Remove these lines:
-      // const savedPosition = sessionStorage.getItem('scrollPosition');
-      // if (savedPosition) {
-      //   setTimeout(() => {
-      //     window.scrollTo(0, parseInt(savedPosition));
-      //   }, 100);
-      // }
+      // Restore scroll position
+      const savedPosition = sessionStorage.getItem('scrollPosition');
+      if (savedPosition) {
+        // Use setTimeout to ensure the scroll happens after the DOM is fully updated
+        setTimeout(() => {
+          window.scrollTo(0, parseInt(savedPosition));
+        }, 100);
+      }
       
       // Clear session storage
       this.clearState();
@@ -511,7 +545,7 @@ const state = {
   // Clear state from session storage
   clearState() {
     sessionStorage.removeItem('returnedFromSong');
-    sessionStorage.removeItem('scrollPosition'); // You can keep this to clean up old entries
+    sessionStorage.removeItem('scrollPosition');
     sessionStorage.removeItem('searchQuery');
     sessionStorage.removeItem('selectedLang');
   }

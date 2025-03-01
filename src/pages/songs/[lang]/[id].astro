@@ -432,45 +432,6 @@ if (lang === 'en') {
   </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-  const backButton = document.getElementById('back-button');
-  
-  if (backButton) {
-    // Store the original href for fallback
-    const fallbackUrl = backButton.getAttribute('href');
-    
-    // Add click event listener
-    backButton.addEventListener('click', function(e) {
-      e.preventDefault(); // Prevent default link behavior
-      
-      // Check if browser has history and if previous page was from the same origin
-      if (window.history.length > 1 && document.referrer) {
-        try {
-          // Parse referrer URL to check if it's from our site
-          const referrerUrl = new URL(document.referrer);
-          const currentUrl = new URL(window.location.href);
-          
-          // Check if referrer is from the same origin (same site)
-          if (referrerUrl.origin === currentUrl.origin) {
-            // Use browser's back functionality - this preserves scroll position automatically
-            window.history.back();
-            return;
-          }
-        } catch (error) {
-          console.log('Error parsing referrer:', error);
-          // Continue to fallback in case of error
-        }
-      }
-      
-      // If we can't use history.back() or conditions aren't met, use the fallback URL
-      window.location.href = fallbackUrl;
-    });
-  }
-});
-
-
-
-
  // Enhanced Audio Player initialization
 document.addEventListener('DOMContentLoaded', function() {
   // Find the audio player section
