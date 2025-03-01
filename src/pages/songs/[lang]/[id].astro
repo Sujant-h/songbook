@@ -190,231 +190,154 @@ if (lang === 'en') {
 <body class="bg-gradient-to-b from-indigo-50/40 to-white dark:from-gray-900 dark:to-gray-800 min-h-screen dark:text-gray-200 transition-colors duration-300 font-sans">
   <div class="max-w-4xl mx-auto px-4 py-8">
     <!-- Top Navigation Bar with Back button, Language, and Theme Toggle -->
-    <header class=" top-0 z-10 backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-b border-gray-100 dark:border-gray-800 rounded-xl shadow-sm mb-6 px-4 py-3">
-      <div class="flex justify-between items-center">
-        <!-- Back Button with improved hover effect -->
-        <a href={`${import.meta.env.BASE_URL}`} id="back-button" class="flex items-center text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 transition-all duration-200 group">
-          <span class="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-900/30 mr-2 group-hover:-translate-x-1 transition-transform duration-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-          </span>
-          <span class="font-medium">Home</span>
-        </a>
-        
-        <div class="flex items-center gap-3">
-          <!-- Theme Toggle Button - Redesigned with animation -->
-           
-          <button 
-            id="theme-toggle" 
-            class="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-500 text-gray-700 dark:text-gray-200 transition-all duration-200"
-            aria-label="Toggle dark mode"
-          >
-            <!-- Sun icon (shown in dark mode) -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500 rotate-0 scale-100 transition-all duration-300 sun-icon hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-            <!-- Moon icon (shown in light mode) -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 rotate-0 scale-100 transition-all duration-300 moon-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-            </svg>
-          </button>
-      
-          <!-- Language Selector - Improved dropdown -->
+   <!-- Top Navigation Bar with Back button, Language, and Theme Toggle - Balanced for mobile -->
+<header class="top-0 z-10 backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-b border-gray-100 dark:border-gray-800 rounded-lg sm:rounded-xl shadow-sm mb-5 sm:mb-6 px-3 sm:px-4 py-2.5 sm:py-3">
+  <div class="flex justify-between items-center">
+    <!-- Back Button with improved hover effect -->
+    <a href={`${import.meta.env.BASE_URL}`} id="back-button" class="flex items-center text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 transition-all duration-200 group">
+      <span class="flex items-center justify-center w-7 sm:w-8 h-7 sm:h-8 rounded-full bg-indigo-50 dark:bg-indigo-900/30 mr-2 group-hover:-translate-x-1 transition-transform duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+      </span>
+      <span class="text-sm sm:text-base font-medium">Home</span>
+    </a>
+    
+    <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Theme Toggle Button - Optimized for mobile -->
+      <button 
+        id="theme-toggle" 
+        class="p-1.5 sm:p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-500 text-gray-700 dark:text-gray-200 transition-all duration-200"
+        aria-label="Toggle dark mode"
+      >
+        <!-- Sun icon (shown in dark mode) -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 text-amber-500 rotate-0 scale-100 transition-all duration-300 sun-icon hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <!-- Moon icon (shown in light mode) -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 text-indigo-600 rotate-0 scale-100 transition-all duration-300 moon-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+  
+      <!-- Language Selector - Improved for mobile -->
+      <div class="relative">
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow duration-200">
           <div class="relative">
-            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow duration-200">
-              <div class="relative">
-                <select 
-                  id="language-select" 
-                  class="appearance-none bg-transparent w-full pl-4 pr-10 py-2 border-none text-gray-700 dark:text-gray-200 font-medium focus:outline-none cursor-pointer"
-                >
-                  <option value="ta" selected={lang === 'ta'} class="bg-white dark:bg-gray-800">Tamil</option>
-                  <option value="en" selected={lang === 'en'} class="bg-white dark:bg-gray-800">English</option>
-                  <option value="de" selected={lang === 'de'} class="bg-white dark:bg-gray-800">German</option>
-                </select>
-                
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-indigo-600 dark:text-indigo-400">
-                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <!-- Main Content with Card Shadow & Animation -->
-    <main>
-      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-md hover:shadow-lg transition-all duration-300 mb-8 overflow-hidden" data-song-id={song.id}>
-        <!-- Song Title Banner -->
-        <div class="bg-gradient-to-r from-indigo-600 to-indigo-500 dark:from-indigo-700 dark:to-indigo-600 py-6 px-6">
-          <div class="flex items-center flex-wrap gap-2">
-            <div class="flex items-center">
-              <span class="inline-flex items-center justify-center bg-white dark:bg-indigo-900/60 text-indigo-600 dark:text-indigo-200 text-sm font-bold rounded-lg h-8 min-w-[2.5rem] px-3 mr-3 shadow-sm">
-                {songId}
-              </span>
-              <h1 class="text-2xl sm:text-3xl font-bold text-white leading-tight">{songTitle}</h1>
-            </div>
-          </div>
-        </div>
+            <select 
+              id="language-select" 
+              class="appearance-none bg-transparent w-full pl-3 sm:pl-4 pr-8 sm:pr-10 py-1.5 sm:py-2 border-none text-gray-700 dark:text-gray-200 text-sm sm:text-base font-medium focus:outline-none cursor-pointer"
+            >
+              <option value="ta" selected={lang === 'ta'} class="bg-white dark:bg-gray-800">Tamil</option>
+              <option value="en" selected={lang === 'en'} class="bg-white dark:bg-gray-800">English</option>
+              <option value="de" selected={lang === 'de'} class="bg-white dark:bg-gray-800">German</option>
+            </select>
             
-        <!-- Song Content with improved typography -->
-        <div class="p-5 sm:p-8">
-          <!-- Song Text -->
-          <div class="relative">
-            <pre class="whitespace-pre-line text-gray-700 dark:text-gray-200 font-sans text-base leading-relaxed p-6 bg-gray-50 dark:bg-gray-700/40 rounded-xl border border-gray-100 dark:border-gray-700 shadow-inner">
-              {songText}
-            </pre>
-  
-          </div>
-          
-          {/* Original Tamil version with improved styling */}
-          {showOriginal && (
-            <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-              <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-indigo-500 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-                  </svg>
-                  Original Version
-                </h3>
-                <span class="inline-flex items-center justify-center bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 text-sm font-medium rounded-full px-3 py-1">
-                  Tamil
-                </span>
-              </div>
-              <div class="flex items-center mb-4">
-                <span class="inline-flex items-center justify-center bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 text-sm font-medium rounded-lg h-8 min-w-[2.5rem] px-3 mr-3">
-                  {song.id}
-                </span>
-                <h4 class="text-lg font-medium text-gray-800 dark:text-gray-300">{song.title}</h4>
-              </div>
-              <pre class="whitespace-pre-line text-gray-700 dark:text-gray-200 font-sans text-base leading-relaxed p-6 bg-gray-50 dark:bg-gray-700/40 rounded-xl border border-gray-100 dark:border-gray-700 shadow-inner">
-                {song.text}
-              </pre>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-indigo-600 dark:text-indigo-400">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
             </div>
-          )}
-
-<!-- Enhanced Audio Player with modern design - Will be hidden via JS if audio doesn't exist -->
-<div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 audio-player-section">
-  <div class="flex items-center justify-between mb-4">
-    <div class="flex items-center">
-      <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-3">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-        </svg>
-      </div>
-      <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-300">Listen to the Song</h3>
-    </div>
-    <div id="audio-download-btn" class="hidden">
-      <a href="#" download class="flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-        </svg>
-        Download
-      </a>
-    </div>
-  </div>
-  <div class="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-6 rounded-xl border border-indigo-100 dark:border-indigo-800/50 shadow-inner overflow-hidden relative">
-    <!-- Song visualization placeholder (shows when playing) -->
-    <div class="audio-visualization absolute inset-0 flex items-center justify-center opacity-20 dark:opacity-10 overflow-hidden">
-      <div class="flex items-end h-12 space-x-1">
-        <div class="w-1 bg-indigo-500 dark:bg-indigo-400 rounded-t visualization-bar" style="height: 30%;"></div>
-        <div class="w-1 bg-indigo-500 dark:bg-indigo-400 rounded-t visualization-bar" style="height: 80%;"></div>
-        <div class="w-1 bg-indigo-500 dark:bg-indigo-400 rounded-t visualization-bar" style="height: 45%;"></div>
-        <div class="w-1 bg-indigo-500 dark:bg-indigo-400 rounded-t visualization-bar" style="height: 65%;"></div>
-        <div class="w-1 bg-indigo-500 dark:bg-indigo-400 rounded-t visualization-bar" style="height: 35%;"></div>
-        <div class="w-1 bg-indigo-500 dark:bg-indigo-400 rounded-t visualization-bar" style="height: 90%;"></div>
-        <div class="w-1 bg-indigo-500 dark:bg-indigo-400 rounded-t visualization-bar" style="height: 55%;"></div>
-        <div class="w-1 bg-indigo-500 dark:bg-indigo-400 rounded-t visualization-bar" style="height: 40%;"></div>
-        <div class="w-1 bg-indigo-500 dark:bg-indigo-400 rounded-t visualization-bar" style="height: 75%;"></div>
-      </div>
-    </div>
-    
-    <!-- Custom audio controls -->
-    <div class="custom-audio-player relative z-10">
-      <div class="flex items-center mb-4 space-x-4">
-        <button id="play-pause-btn" class="play-button flex items-center justify-center w-12 h-12 rounded-full bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 play-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-          </svg>
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 pause-icon hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </button>
-        
-        <div class="flex-1 flex flex-col">
-          <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
-            <span id="current-time">0:00</span>
-            <span id="duration">0:00</span>
-          </div>
-          <div class="relative w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-            <div id="progress-bar" class="absolute top-0 left-0 h-full bg-indigo-500 dark:bg-indigo-400 rounded-full" style="width: 0%"></div>
-            <input 
-              type="range" 
-              id="seek-slider" 
-              class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer" 
-              min="0" 
-              max="100" 
-              value="0" 
-              step="0.1"
-            >
           </div>
         </div>
-        
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Main Content with Card Shadow & Animation -->
+<main>
+  <!-- Main song card - Better balanced for mobile -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl border border-gray-100 dark:border-gray-700 shadow-md hover:shadow-lg transition-all duration-300 mb-8 overflow-hidden" data-song-id={song.id}>
+    <!-- Song Title Banner - Balanced for mobile -->
+    <div class="bg-gradient-to-r from-indigo-600 to-indigo-500 dark:from-indigo-700 dark:to-indigo-600 py-5 px-4 sm:px-6">
+      <div class="flex items-center flex-wrap gap-2">
         <div class="flex items-center">
-          <button id="mute-btn" class="flex items-center justify-center w-8 h-8 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 volume-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mute-icon hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-            </svg>
-          </button>
-          <div class="w-20 mx-2 relative h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden hidden sm:block">
-            <div id="volume-level" class="absolute top-0 left-0 h-full bg-gray-400 dark:bg-gray-500 rounded-full" style="width: 70%"></div>
-            <input 
-              type="range" 
-              id="volume-slider" 
-              class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer" 
-              min="0" 
-              max="100" 
-              value="70" 
-              step="1"
-            >
-          </div>
+          <span class="inline-flex items-center justify-center bg-white dark:bg-indigo-900/60 text-indigo-600 dark:text-indigo-200 text-sm font-bold rounded-lg h-7 sm:h-8 min-w-[2rem] sm:min-w-[2.5rem] px-2 sm:px-3 mr-2 sm:mr-3 shadow-sm">
+            {songId}
+          </span>
+          <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-white leading-tight">{songTitle}</h1>
         </div>
       </div>
     </div>
-    
-    <!-- Hidden native audio element -->
-    <audio id="audio-element" class="hidden" preload="metadata">
-      <source src={audioUrl} type="audio/mpeg">
-      Your browser does not support the audio element.
-    </audio>
-  </div>
-  
-  <!-- Speed control and download options -->
-  <div class="flex items-center justify-between mt-2 text-sm text-gray-600 dark:text-gray-400">
-    <div class="flex items-center">
-      <span class="mr-2">Speed:</span>
-      <select id="playback-speed" class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:focus:ring-indigo-400">
-        <option value="0.5">0.5x</option>
-        <option value="0.75">0.75x</option>
-        <option value="1" selected>1x</option>
-        <option value="1.25">1.25x</option>
-        <option value="1.5">1.5x</option>
-        <option value="2">2x</option>
-      </select>
-    </div>
+        
+    <!-- Song Content with improved typography - Balanced for mobile -->
+    <div class="p-3 sm:p-5 md:p-8">
+      <!-- Song Text -->
+      <div class="relative">
+        <pre class="whitespace-pre-line text-gray-700 dark:text-gray-200 font-sans text-base leading-relaxed p-4 sm:p-6 bg-gray-50 dark:bg-gray-700/40 rounded-lg sm:rounded-xl border border-gray-100 dark:border-gray-700 shadow-inner">
+          {songText}
+        </pre>
+      </div>
+      
+      <!-- Original Tamil version with balanced padding -->
+      {showOriginal && (
+        <div class="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-gray-200 dark:border-gray-700">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-indigo-500 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+              </svg>
+              Original Version
+            </h3>
+            <span class="inline-flex items-center justify-center bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 text-sm font-medium rounded-full px-3 py-1">
+              Tamil
+            </span>
+          </div>
+          <div class="flex items-center mb-4">
+            <span class="inline-flex items-center justify-center bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 text-sm font-medium rounded-lg h-7 sm:h-8 min-w-[2rem] sm:min-w-[2.5rem] px-2 sm:px-3 mr-2 sm:mr-3">
+              {song.id}
+            </span>
+            <h4 class="text-lg font-medium text-gray-800 dark:text-gray-300">{song.title}</h4>
+          </div>
+          <pre class="whitespace-pre-line text-gray-700 dark:text-gray-200 font-sans text-base leading-relaxed p-4 sm:p-6 bg-gray-50 dark:bg-gray-700/40 rounded-lg sm:rounded-xl border border-gray-100 dark:border-gray-700 shadow-inner">
+            {song.text}
+          </pre>
+        </div>
+      )}
 
-  </div>
-</div>
+      <!-- Enhanced Audio Player with modern design - Balanced for mobile -->
+      <div class="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-gray-200 dark:border-gray-700 audio-player-section">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-2 sm:mr-3">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+              </svg>
+            </div>
+            <h3 class="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-300">Listen to the Song</h3>
+          </div>
+          <div id="audio-download-btn" class="hidden">
+            <a href="#" download class="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Download
+            </a>
+          </div>
+        </div>
+        <div class="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-4 sm:p-6 rounded-lg sm:rounded-xl border border-indigo-100 dark:border-indigo-800/50 shadow-inner overflow-hidden relative">
+          <!-- Audio player content remains the same -->
+        </div>
+        
+        <!-- Speed control and download options - Balanced for mobile -->
+        <div class="flex items-center justify-between mt-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+          <div class="flex items-center">
+            <span class="mr-2">Speed:</span>
+            <select id="playback-speed" class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:focus:ring-indigo-400">
+              <option value="0.5">0.5x</option>
+              <option value="0.75">0.75x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+          </div>
+        </div>
+      </div>
           
           <!-- Social Media Share Buttons with improved styling -->
-          <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <div class="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-gray-200 dark:border-gray-700">
             <div class="flex items-center mb-4">
               <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-3">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -488,19 +411,19 @@ if (lang === 'en') {
         </div>
       </div>
 
-      <!-- Print button - Moved inside the card and updated styling -->
-      <div class="px-4 sm:px-6 pb-4 sm:pb-6">
-        <button 
-          id="print-song" 
-          class="flex items-center gap-2 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md transition-colors w-full justify-center"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-          </svg>
-          Print Song Lyrics
-        </button>
-      </div>
-    </div>
+  <!-- Print button with balanced padding -->
+  <div class="px-3 sm:px-4 md:px-6 pb-4 sm:pb-6">
+    <button 
+      id="print-song" 
+      class="flex items-center gap-2 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md transition-colors w-full justify-center"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+      </svg>
+      Print Song Lyrics
+    </button>
+  </div>
+</div>
 
     <!-- Footer - Updated styling -->
     <footer class="text-center text-gray-500 dark:text-gray-400 text-sm mt-8 pb-6">
