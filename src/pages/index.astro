@@ -452,35 +452,7 @@ const songItems = document.querySelectorAll('.song-item');
 const noResultsMessage = document.getElementById('noResultsMessage');
 const goToTopButton = document.getElementById('goToTopButton');
 
-// State management
-const state = {
-  // Update clear button visibility based on search input
-  updateClearButtonVisibility() {
-    if (searchInput.value.length > 0) {
-      clearButton.classList.remove('hidden');
-    } else {
-      clearButton.classList.add('hidden');
-    }
-  },
 
-  // Save current state to session storage
-  saveState() {
-    sessionStorage.setItem('scrollPosition', window.pageYOffset);
-    sessionStorage.setItem('searchQuery', searchInput.value);
-    sessionStorage.setItem('selectedLang', langSelect.value);
-    sessionStorage.setItem('returnedFromSong', 'true');
-  },
-
-  // Restore state from session storage
-  restoreState() {
-    const returnedFromSong = sessionStorage.getItem('returnedFromSong');
-    if (returnedFromSong) {
-      // Restore search query
-      const savedQuery = sessionStorage.getItem('searchQuery');
-      if (savedQuery) {
-        searchInput.value = savedQuery;
-        this.updateClearButtonVisibility();
-      }
       
       // Restore language selection
       const savedLang = sessionStorage.getItem('selectedLang');
