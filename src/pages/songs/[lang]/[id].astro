@@ -296,7 +296,7 @@ if (lang === 'en') {
         </div>
       )}
 
-<!-- Enhanced Audio Player with modern design - Balanced for mobile -->
+<!-- Enhanced Audio Player with robust error handling and fallbacks -->
 <div class="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-gray-200 dark:border-gray-700 audio-player-section">
   <div class="flex items-center justify-between mb-4">
     <div class="flex items-center">
@@ -319,16 +319,24 @@ if (lang === 'en') {
 
   <!-- Audio Player Container -->
   <div class="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-4 sm:p-6 rounded-lg sm:rounded-xl border border-indigo-100 dark:border-indigo-800/50 shadow-inner overflow-hidden relative">
-    <!-- Audio Element - Hidden but functional -->
-    <audio id="audio-element" class="hidden">
+    <!-- Preload metadata to avoid initial playback issues -->
+    <audio id="audio-element" class="hidden" preload="metadata">
       <source src={audioUrl} type="audio/mpeg">
+      <source src={audioUrl} type="audio/mp3">
       Your browser does not support the audio element.
     </audio>
+    
+    <!-- Audio Status Message - For debugging and user feedback -->
+    <div id="audio-status" class="hidden absolute top-1 left-0 right-0 text-center text-xs text-indigo-600 dark:text-indigo-400 bg-indigo-100 dark:bg-indigo-900/50 py-1 px-2 rounded-t-lg opacity-80 z-20"></div>
     
     <!-- Custom Audio Controls -->
     <div class="flex items-center gap-4">
       <!-- Play/Pause Button -->
       <button id="play-pause-btn" class="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-700 dark:hover:bg-indigo-600 rounded-full flex items-center justify-center shadow-md transition-all duration-200 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+        <!-- Loading Indicator (hidden by default) -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 loading-icon hidden animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
         <!-- Play Icon (visible by default) -->
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 play-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
@@ -337,6 +345,10 @@ if (lang === 'en') {
         <!-- Pause Icon (hidden by default) -->
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 pause-icon hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <!-- Error Icon (hidden by default) -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 error-icon hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </button>
       
@@ -389,11 +401,34 @@ if (lang === 'en') {
       </div>
     </div>
     
+    <!-- Retry Button (hidden by default) -->
+    <div id="retry-container" class="hidden absolute inset-0 bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm flex items-center justify-center">
+      <button id="retry-button" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg flex items-center gap-2 shadow-lg transform hover:scale-105 transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        Retry Loading
+      </button>
+    </div>
+    
     <!-- Subtle Audio Visualization -->
     <div class="absolute bottom-0 left-0 right-0 h-6 flex items-end justify-center gap-px opacity-20 pointer-events-none">
-      {Array(16).fill().map(() => (
-        <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
-      ))}
+      <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
+      <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
+      <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
+      <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
+      <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
+      <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
+      <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
+      <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
+      <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
+      <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
+      <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
+      <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
+      <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
+      <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
+      <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
+      <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
     </div>
   </div>
   
@@ -527,37 +562,159 @@ document.addEventListener('DOMContentLoaded', function() {
   const playbackSpeed = document.getElementById('playback-speed');
   const playIcon = document.querySelector('.play-icon');
   const pauseIcon = document.querySelector('.pause-icon');
+  const loadingIcon = document.querySelector('.loading-icon');
+  const errorIcon = document.querySelector('.error-icon');
   const volumeIcon = document.querySelector('.volume-icon');
   const muteIcon = document.querySelector('.mute-icon');
   const downloadBtn = document.getElementById('audio-download-btn');
-  const visualizationBars = document.querySelectorAll('.visualization-bar');
+  const audioStatus = document.getElementById('audio-status');
   
-  // Always show the audio section by default
+  // Audio player state
+  let audioLoaded = false;
+  let isPlaying = false;
+  let audioFileExists = true; // Flag to track if the audio file exists
+  
+  // Always show the audio section
   audioSection.style.display = 'block';
   
+  // First, remove any existing visualizations to prevent duplicates
+  const existingVisualizers = document.querySelectorAll('.audio-visualization-container');
+  existingVisualizers.forEach(el => el.remove());
+  
+  // Remove any existing visualization bars
+  const existingBars = document.querySelectorAll('.visualization-bar');
+  existingBars.forEach(el => el.remove());
+  
+  // Create and append visualization container
+  let visualizationContainer = null;
+  const playerContainer = document.querySelector('.bg-gradient-to-r.from-indigo-50');
+  if (playerContainer) {
+    visualizationContainer = document.createElement('div');
+    visualizationContainer.className = 'audio-visualization-container absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden';
+    visualizationContainer.style.zIndex = '1';
+    visualizationContainer.style.height = '40%'; // Reduced height to avoid overlap
+    playerContainer.style.position = 'relative';
+    playerContainer.appendChild(visualizationContainer);
+    
+    // Add CSS for visualization
+    const styleElement = document.createElement('style');
+    styleElement.textContent = `
+      .audio-visualization-container {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding: 0 8px;
+        opacity: 0.2;
+      }
+      .visualization-bar {
+        background-color: rgb(99, 102, 241);
+        transition: height 0.05s ease-out;
+        border-radius: 1px;
+        margin: 0 1px;
+        width: 3px;
+      }
+      .dark .visualization-bar {
+        background-color: rgb(165, 180, 252);
+      }
+      @media (max-width: 640px) {
+        .visualization-bar {
+          width: 2px;
+          margin: 0;
+        }
+      }
+    `;
+    document.head.appendChild(styleElement);
+    
+    // Create visualization bars - more bars for a denser effect
+    const numberOfBars = 80; 
+    for (let i = 0; i < numberOfBars; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'visualization-bar';
+      bar.style.height = '0%';
+      visualizationContainer.appendChild(bar);
+    }
+  }
+  
+  // Get all visualization bars
+  const visualizationBars = document.querySelectorAll('.visualization-bar');
+  
+  // Function to show status message
+  function showStatus(message, isError = false) {
+    if (audioStatus) {
+      audioStatus.textContent = message;
+      audioStatus.classList.remove('hidden');
+      audioStatus.classList.toggle('bg-red-100', isError);
+      audioStatus.classList.toggle('text-red-600', isError);
+      audioStatus.classList.toggle('bg-indigo-100', !isError);
+      audioStatus.classList.toggle('text-indigo-600', !isError);
+      
+      // Hide after a delay unless it's an error
+      if (!isError) {
+        setTimeout(() => {
+          audioStatus.classList.add('hidden');
+        }, 3000);
+      }
+    }
+  }
+  
   // Check if audio element exists
-  if (!audioElement) return;
+  if (!audioElement) {
+    showStatus('Audio element not found', true);
+    return;
+  }
   
   // Check if audio source exists
   const audioSource = audioElement.querySelector('source');
-  if (!audioSource || !audioSource.src) return;
+  if (!audioSource || !audioSource.src) {
+    showStatus('Audio source not defined', true);
+    return;
+  }
   
   const audioUrl = audioSource.src;
   
-  // Function to initialize the audio player
-  function initializeAudioPlayer() {
-    // Format time in minutes and seconds
-    function formatTime(seconds) {
-      if (isNaN(seconds)) return "0:00";
-      const minutes = Math.floor(seconds / 60);
-      const remainingSeconds = Math.floor(seconds % 60);
-      return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-    }
+  // Update UI Icons based on state
+  function updatePlayerIcons(state) {
+    // Hide all icons first
+    playIcon.classList.add('hidden');
+    pauseIcon.classList.add('hidden');
+    if (loadingIcon) loadingIcon.classList.add('hidden');
+    if (errorIcon) errorIcon.classList.add('hidden');
     
-    // Update all UI elements based on current audio state
-    function updateUI() {
-      // Update time displays
-      if (!isNaN(audioElement.duration)) {
+    // Show the appropriate icon
+    switch (state) {
+      case 'loading':
+        if (loadingIcon && audioFileExists) loadingIcon.classList.remove('hidden');
+        else if (errorIcon) errorIcon.classList.remove('hidden');
+        else playIcon.classList.remove('hidden');
+        break;
+      case 'playing':
+        pauseIcon.classList.remove('hidden');
+        break;
+      case 'paused':
+        playIcon.classList.remove('hidden');
+        break;
+      case 'error':
+        if (errorIcon) errorIcon.classList.remove('hidden');
+        else playIcon.classList.remove('hidden');
+        break;
+      default:
+        playIcon.classList.remove('hidden');
+    }
+  }
+  
+  // Format time in minutes and seconds with error handling
+  function formatTime(seconds) {
+    if (isNaN(seconds) || seconds === Infinity || seconds < 0) return "0:00";
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  }
+  
+  // Update all UI elements based on current audio state
+  function updateUI() {
+    try {
+      // Update time displays with error checking
+      if (!isNaN(audioElement.duration) && isFinite(audioElement.duration)) {
         currentTimeDisplay.textContent = formatTime(audioElement.currentTime);
         durationDisplay.textContent = formatTime(audioElement.duration);
         
@@ -573,14 +730,19 @@ document.addEventListener('DOMContentLoaded', function() {
         seekSlider.value = 0;
       }
       
-      // Update play/pause button
+      // Update play/pause button based on actual playing state
       if (audioElement.paused) {
-        playIcon.classList.remove('hidden');
-        pauseIcon.classList.add('hidden');
+        isPlaying = false;
+        // Special handling for missing audio files
+        if (!audioFileExists && errorIcon) {
+          updatePlayerIcons('error');
+        } else {
+          updatePlayerIcons('paused');
+        }
         stopVisualization();
       } else {
-        playIcon.classList.add('hidden');
-        pauseIcon.classList.remove('hidden');
+        isPlaying = true;
+        updatePlayerIcons('playing');
         startVisualization();
       }
       
@@ -596,114 +758,394 @@ document.addEventListener('DOMContentLoaded', function() {
         volumeIcon.classList.remove('hidden');
         muteIcon.classList.add('hidden');
       }
+    } catch (err) {
+      console.error('Error updating UI:', err);
     }
+  }
+  
+  // Improved classic audio visualization
+  let visualizationInterval;
+  const barValues = new Array(visualizationBars.length).fill(0);
+  
+  function startVisualization() {
+    if (visualizationInterval) clearInterval(visualizationInterval);
     
-    // Simple visualization effect
-    let visualizationInterval;
+    // Use a pattern of bar heights that resembles a classic equalizer
+    // Create different patterns and cycle between them
+    const patterns = [
+      // Center peak
+      (index, total) => {
+        const center = total / 2;
+        const distance = Math.abs(index - center);
+        const maxDistance = total / 2;
+        return Math.max(5, 80 - (distance / maxDistance * 75)); // Reduced max height
+      },
+      // Dual peaks
+      (index, total) => {
+        const firstPeak = total / 3;
+        const secondPeak = (total * 2) / 3;
+        const distance = Math.min(Math.abs(index - firstPeak), Math.abs(index - secondPeak));
+        const maxDistance = total / 6;
+        return Math.max(10, 75 - (distance / maxDistance * 65)); // Reduced max height
+      },
+      // Triple peaks
+      (index, total) => {
+        const firstPeak = total / 4;
+        const secondPeak = total / 2;
+        const thirdPeak = (total * 3) / 4;
+        const distance = Math.min(
+          Math.abs(index - firstPeak),
+          Math.abs(index - secondPeak),
+          Math.abs(index - thirdPeak)
+        );
+        const maxDistance = total / 8;
+        return Math.max(5, 70 - (distance / maxDistance * 65)); // Reduced max height
+      },
+      // Random with smoothing
+      (index, total) => {
+        return Math.random() * 60 + 5; // Reduced max height
+      }
+    ];
     
-    function startVisualization() {
-      if (visualizationInterval) clearInterval(visualizationInterval);
-      
-      visualizationInterval = setInterval(() => {
-        visualizationBars.forEach(bar => {
-          const height = Math.floor(Math.random() * 60) + 5;
-          bar.style.height = `${height}%`;
-        });
-      }, 200);
-    }
+    // Use a mix of patterns and smoothly transition between them
+    let currentPatternIndex = 0;
+    const total = visualizationBars.length;
     
-    function stopVisualization() {
-      if (visualizationInterval) {
-        clearInterval(visualizationInterval);
-        visualizationInterval = null;
+    // Smoothing factor for transitions
+    const smoothing = 0.3;
+    
+    // Continuous animation with pattern changes
+    visualizationInterval = setInterval(() => {
+      // Choose pattern and occasionally switch
+      if (Math.random() < 0.02) { // 2% chance to change pattern
+        currentPatternIndex = (currentPatternIndex + 1) % patterns.length;
       }
       
-      // Reset heights to zero
-      visualizationBars.forEach(bar => {
-        bar.style.height = "0%";
+      // Apply the current pattern with randomness and smooth transitions
+      visualizationBars.forEach((bar, index) => {
+        const patternValue = patterns[currentPatternIndex](index, total);
+        
+        // Add randomness based on position (more in the middle, less at edges)
+        const randomFactor = Math.random() * 15 - 7.5; // -7.5 to +7.5 (reduced randomness)
+        
+        // Target height with randomness, clamped to a reasonable range
+        const targetHeight = Math.max(2, Math.min(80, patternValue + randomFactor)); // Reduced max height
+        
+        // Smooth transition to new height
+        barValues[index] = barValues[index] * (1 - smoothing) + targetHeight * smoothing;
+        
+        // Apply height
+        bar.style.height = `${barValues[index]}%`;
       });
+    }, 80); // Update frequently for smooth animation
+  }
+  
+  function stopVisualization() {
+    if (visualizationInterval) {
+      clearInterval(visualizationInterval);
+      visualizationInterval = null;
     }
     
-    // Event Listeners
-    playPauseBtn.addEventListener('click', function() {
-      if (audioElement.paused) {
-        audioElement.play().catch(e => {
-          console.error('Audio playback error:', e);
-          // Show a user-friendly error message if needed
+    // Gradually reduce heights for a fadeout effect
+    let reduction = 1.0;
+    const fadeInterval = setInterval(() => {
+      reduction *= 0.85; // Reduce by 15% each step
+      
+      visualizationBars.forEach((bar, index) => {
+        barValues[index] *= reduction;
+        bar.style.height = `${barValues[index]}%`;
+      });
+      
+      if (reduction < 0.01) {
+        clearInterval(fadeInterval);
+        // Reset all bars to zero
+        visualizationBars.forEach((bar, index) => {
+          barValues[index] = 0;
+          bar.style.height = '0%';
         });
+      }
+    }, 50);
+  }
+  
+  // Play function with robust error handling
+  function playAudio() {
+    if (!audioElement) return;
+    
+    // If we already know the file doesn't exist, don't attempt to play
+    if (!audioFileExists) {
+      showStatus('Audio file not available', true);
+      updatePlayerIcons('error');
+      return;
+    }
+    
+    // Don't attempt to play if already playing
+    if (!audioElement.paused) return;
+    
+    if (!audioLoaded) {
+      showStatus('Loading audio...');
+    }
+    
+    // Show loading state
+    updatePlayerIcons('loading');
+    
+    // Attempt to play with complete error handling
+    const playPromise = audioElement.play();
+    
+    // Modern browsers return a promise from play()
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          // Playback started successfully
+          audioLoaded = true;
+          updatePlayerIcons('playing');
+          showStatus('Playing');
+          isPlaying = true;
+        })
+        .catch(error => {
+          console.error('Play failed:', error);
+          handlePlaybackError(error);
+        });
+    } else {
+      // Fallback for older browsers
+      if (audioElement.error) {
+        handlePlaybackError(audioElement.error);
       } else {
-        audioElement.pause();
+        updatePlayerIcons('playing');
+        isPlaying = true;
       }
-      updateUI();
-    });
+    }
+  }
+  
+  // Handle various playback errors
+  function handlePlaybackError(error) {
+    console.error('Audio playback error:', error);
     
-    muteBtn.addEventListener('click', function() {
-      audioElement.muted = !audioElement.muted;
-      updateUI();
-    });
+    let errorMessage = 'Unable to play audio';
     
-    seekSlider.addEventListener('input', function() {
-      const seekTime = (audioElement.duration * seekSlider.value) / 100;
-      if (!isNaN(seekTime)) {
-        audioElement.currentTime = seekTime;
-        updateUI();
-      }
-    });
+    // Show appropriate error message based on the error
+    if (error.name === 'NotAllowedError') {
+      errorMessage = 'Playback not allowed. User interaction required.';
+    } else if (error.name === 'NotSupportedError') {
+      errorMessage = 'Audio format not supported by your browser.';
+    } else if (error.name === 'AbortError') {
+      errorMessage = 'Playback aborted.';
+    } else if (error.name === 'NetworkError' || error.code === 2) {
+      errorMessage = 'Audio file not available.';
+      audioFileExists = false; // Mark as not existing on network error
+    } else if (error.code === 3) {
+      errorMessage = 'Audio decoding failed.';
+    } else if (error.code === 4) {
+      errorMessage = 'Audio file not available.';
+      audioFileExists = false; // Mark as not existing on file not found
+    }
     
-    volumeSlider.addEventListener('input', function() {
-      audioElement.volume = volumeSlider.value / 100;
-      audioElement.muted = false;
-      updateUI();
-    });
-    
-    playbackSpeed.addEventListener('change', function() {
-      audioElement.playbackRate = parseFloat(playbackSpeed.value);
-    });
-    
-    // Update UI when audio time updates
-    audioElement.addEventListener('timeupdate', updateUI);
-    
-    // When metadata loaded, update duration display
-    audioElement.addEventListener('loadedmetadata', updateUI);
-    
-    // Initial UI update
+    showStatus(errorMessage, true);
+    updatePlayerIcons('error');
+    isPlaying = false;
+  }
+  
+  // Pause audio with error handling
+  function pauseAudio() {
+    try {
+      audioElement.pause();
+      isPlaying = false;
+      updatePlayerIcons('paused');
+      showStatus('Paused');
+    } catch (err) {
+      console.error('Error pausing audio:', err);
+    }
+  }
+  
+  // Toggle play/pause with proper state handling
+  function togglePlayPause() {
+    if (isPlaying) {
+      pauseAudio();
+    } else {
+      playAudio();
+    }
     updateUI();
   }
-
-  // Check if audio file is available (but don't hide the player if it's not)
+  
+  // Initialize the audio player with robust loading
+  function initializeAudioPlayer() {
+    // Check if audio is available
+    if (audioElement.readyState >= 2) {  // HAVE_CURRENT_DATA or higher
+      audioLoaded = true;
+      updateUI();
+      showStatus('Audio ready');
+    }
+    
+    // Set initial volume
+    try {
+      audioElement.volume = 1.0;
+      volumeSlider.value = 100;
+      volumeLevel.style.width = '100%';
+    } catch (err) {
+      console.error('Error setting initial volume:', err);
+    }
+    
+    // Ensure playback rate is set correctly
+    try {
+      audioElement.playbackRate = 1.0;
+      playbackSpeed.value = "1";
+    } catch (err) {
+      console.error('Error setting playback rate:', err);
+    }
+  }
+  
+  // EVENT LISTENERS - With error handling for all events
+  
+  // Play/Pause button
+  if (playPauseBtn) {
+    playPauseBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      togglePlayPause();
+    });
+  }
+  
+  // Mute button
+  if (muteBtn) {
+    muteBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      try {
+        audioElement.muted = !audioElement.muted;
+        updateUI();
+      } catch (err) {
+        console.error('Error toggling mute:', err);
+      }
+    });
+  }
+  
+  // Seek slider
+  if (seekSlider) {
+    seekSlider.addEventListener('input', function() {
+      try {
+        // Don't allow seeking if file doesn't exist
+        if (!audioFileExists) return;
+        
+        const seekTime = (audioElement.duration * seekSlider.value) / 100;
+        if (!isNaN(seekTime) && isFinite(seekTime)) {
+          audioElement.currentTime = seekTime;
+          updateUI();
+        }
+      } catch (err) {
+        console.error('Error seeking:', err);
+      }
+    });
+  }
+  
+  // Volume slider
+  if (volumeSlider) {
+    volumeSlider.addEventListener('input', function() {
+      try {
+        const volume = volumeSlider.value / 100;
+        audioElement.volume = volume;
+        audioElement.muted = false;
+        updateUI();
+      } catch (err) {
+        console.error('Error adjusting volume:', err);
+      }
+    });
+  }
+  
+  // Playback speed
+  if (playbackSpeed) {
+    playbackSpeed.addEventListener('change', function() {
+      try {
+        // Don't allow speed change if file doesn't exist
+        if (!audioFileExists) return;
+        
+        const speed = parseFloat(playbackSpeed.value);
+        if (!isNaN(speed)) {
+          audioElement.playbackRate = speed;
+        }
+      } catch (err) {
+        console.error('Error changing playback speed:', err);
+      }
+    });
+  }
+  
+  // AUDIO ELEMENT EVENTS
+  
+  // Update UI when audio time updates
+  audioElement.addEventListener('timeupdate', function() {
+    updateUI();
+  });
+  
+  // When metadata loaded
+  audioElement.addEventListener('loadedmetadata', function() {
+    audioLoaded = true;
+    updateUI();
+    showStatus('Audio metadata loaded');
+  });
+  
+  // When audio can play
+  audioElement.addEventListener('canplay', function() {
+    audioLoaded = true;
+    audioFileExists = true; // File definitely exists if we can play it
+    updateUI();
+    showStatus('Audio ready to play');
+  });
+  
+  // When audio playback ends
+  audioElement.addEventListener('ended', function() {
+    isPlaying = false;
+    updatePlayerIcons('paused');
+    stopVisualization();
+    showStatus('Playback ended');
+    
+    // Reset to beginning
+    audioElement.currentTime = 0;
+    updateUI();
+  });
+  
+  // Handle errors
+  audioElement.addEventListener('error', function(e) {
+    const error = audioElement.error;
+    if (error && error.code === 4) {
+      // Media not found error
+      audioFileExists = false;
+    }
+    handlePlaybackError(error || { message: 'Unknown audio error' });
+  });
+  
+  // Check if audio file is available
   fetch(audioUrl, { method: 'HEAD' })
     .then(response => {
       if (response.ok) {
-        // File exists, initialize the player
+        // File exists, initialize the player normally
+        audioFileExists = true;
         initializeAudioPlayer();
         
-        // Set download link
+        // Set download link if available
         if (downloadBtn) {
           downloadBtn.classList.remove('hidden');
-          downloadBtn.querySelector('a').href = audioUrl;
+          const downloadLink = downloadBtn.querySelector('a');
+          if (downloadLink) downloadLink.href = audioUrl;
         }
       } else {
-        // File not found, but keep the player visible
-        console.log('Audio file not found, but keeping player visible');
-        initializeAudioPlayer(); // Still initialize the player with basic UI
+        // File not found, mark as not existing
+        audioFileExists = false;
+        console.log('Audio file not found');
+        showStatus('Audio file not available', true);
+        updatePlayerIcons('error');
+        
+        // Still initialize the player with basic UI
+        initializeAudioPlayer();
       }
     })
-    .catch(() => {
-      // Network error or CORS issue, but keep the player visible
-      console.log('Network error checking audio file, but keeping player visible');
-      initializeAudioPlayer(); // Still initialize the player with basic UI
+    .catch(error => {
+      // Network error or CORS issue
+      console.log('Network error checking audio file:', error);
+      showStatus('Audio file not available', true);
+      updatePlayerIcons('error');
+      
+      // Still initialize the player with basic UI
+      initializeAudioPlayer();
     });
   
-  // Handle audio element events
-  audioElement.addEventListener('error', function(e) {
-    // Audio failed to load, but don't hide the player
-    console.log('Audio loading error, but keeping player visible');
-  });
-  
-  // Initialize when playable
-  audioElement.addEventListener('canplaythrough', function() {
-    initializeAudioPlayer();
-  });
+  // Initialize the player
+  initializeAudioPlayer();
 });
 
 document.addEventListener('DOMContentLoaded', function() {
