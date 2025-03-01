@@ -26,7 +26,7 @@ export async function getStaticPaths() {
 }
 
 const { song, lang } = Astro.props;
-const audioUrl = `https://songbook.sujanth.de/audio/${song.id}.mp3`;
+const audioUrl = `https://songs.c-g-m.eu/audio/${song.id}.mp3`;
 
 // Select content based on language
 let songId = song.id;
@@ -1564,7 +1564,7 @@ function switchLanguage(selectedLang) {
           songId = songIdElement.dataset.songId;
         } else {
           console.error('Could not determine song ID. Redirecting to home page.');
-          window.location.href = 'https://songbook.sujanth.de';
+          window.location.href = 'https://songs.c-g-m.eu';
           return;
         }
       }
@@ -1573,7 +1573,7 @@ function switchLanguage(selectedLang) {
   
   // Construct the new URL, preserving any query parameters
   const queryString = window.location.search;
-  const newUrl = `https://songbook.sujanth.de/songs/${selectedLang}/${songId}${queryString}`;
+  const newUrl = `https://songs.c-g-m.eu/songs/${selectedLang}/${songId}${queryString}`;
   
   // Save language preference
   sessionStorage.setItem('selectedLanguage', selectedLang);
@@ -1860,7 +1860,7 @@ function updateSearchParamOnLinks() {
         }
         
         // Build the new URL with search parameters preserved
-        const newUrl = `https://songbook.sujanth.de/songs/${selectedLang}/${songId}?q=${encodeURIComponent(searchQuery)}`;
+        const newUrl = `https://songs.c-g-m.eu/songs/${selectedLang}/${songId}?q=${encodeURIComponent(searchQuery)}`;
         
         // Navigate to the new URL
         window.location.href = newUrl;
