@@ -296,45 +296,120 @@ if (lang === 'en') {
         </div>
       )}
 
-      <!-- Enhanced Audio Player with modern design - Balanced for mobile -->
-      <div class="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-gray-200 dark:border-gray-700 audio-player-section">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-2 sm:mr-3">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-              </svg>
-            </div>
-            <h3 class="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-300">Listen to the Song</h3>
-          </div>
-          <div id="audio-download-btn" class="hidden">
-            <a href="#" download class="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              Download
-            </a>
-          </div>
-        </div>
-        <div class="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-4 sm:p-6 rounded-lg sm:rounded-xl border border-indigo-100 dark:border-indigo-800/50 shadow-inner overflow-hidden relative">
-          <!-- Audio player content remains the same -->
+<!-- Enhanced Audio Player with modern design - Balanced for mobile -->
+<div class="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-gray-200 dark:border-gray-700 audio-player-section">
+  <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center">
+      <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-2 sm:mr-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+        </svg>
+      </div>
+      <h3 class="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-300">Listen to the Song</h3>
+    </div>
+    <div id="audio-download-btn" class="hidden">
+      <a href="#" download class="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        Download
+      </a>
+    </div>
+  </div>
+
+  <!-- Audio Player Container -->
+  <div class="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-4 sm:p-6 rounded-lg sm:rounded-xl border border-indigo-100 dark:border-indigo-800/50 shadow-inner overflow-hidden relative">
+    <!-- Audio Element - Hidden but functional -->
+    <audio id="audio-element" class="hidden">
+      <source src={audioUrl} type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    
+    <!-- Custom Audio Controls -->
+    <div class="flex items-center gap-4">
+      <!-- Play/Pause Button -->
+      <button id="play-pause-btn" class="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 bg-indigo-600 hover:bg-indigo-500 dark:bg-indigo-700 dark:hover:bg-indigo-600 rounded-full flex items-center justify-center shadow-md transition-all duration-200 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+        <!-- Play Icon (visible by default) -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 play-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <!-- Pause Icon (hidden by default) -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 pause-icon hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </button>
+      
+      <!-- Progress and Controls -->
+      <div class="flex-1">
+        <!-- Song info badge -->
+        <div class="flex items-center mb-2">
+          <span class="inline-flex items-center justify-center text-xs font-medium px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-300">
+            Song {songId}
+          </span>
         </div>
         
-        <!-- Speed control and download options - Balanced for mobile -->
-        <div class="flex items-center justify-between mt-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-          <div class="flex items-center">
-            <span class="mr-2">Speed:</span>
-            <select id="playback-speed" class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:focus:ring-indigo-400">
-              <option value="0.5">0.5x</option>
-              <option value="0.75">0.75x</option>
-              <option value="1" selected>1x</option>
-              <option value="1.25">1.25x</option>
-              <option value="1.5">1.5x</option>
-              <option value="2">2x</option>
-            </select>
+        <!-- Timeline -->
+        <div class="relative w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+          <input type="range" id="seek-slider" min="0" max="100" value="0" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+          <div id="progress-bar" class="h-full bg-indigo-500 dark:bg-indigo-400 rounded-full" style="width: 0%"></div>
+        </div>
+        
+        <!-- Time and Volume Controls -->
+        <div class="flex justify-between items-center mt-2 text-xs">
+          <!-- Time Display -->
+          <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+            <span id="current-time">0:00</span>
+            <span>/</span>
+            <span id="duration">0:00</span>
+          </div>
+          
+          <!-- Volume Control (Smaller) -->
+          <div class="flex items-center gap-2 w-24">
+            <!-- Mute/Unmute Button -->
+            <button id="mute-btn" class="w-6 h-6 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+              <!-- Volume Icon (visible by default) -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 volume-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+              </svg>
+              <!-- Mute Icon (hidden by default) -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mute-icon hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+              </svg>
+            </button>
+            
+            <!-- Smaller Volume Slider -->
+            <div class="relative w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+              <input type="range" id="volume-slider" min="0" max="100" value="100" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+              <div id="volume-level" class="h-full bg-indigo-400 dark:bg-indigo-500 rounded-full" style="width: 100%"></div>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+    
+    <!-- Subtle Audio Visualization -->
+    <div class="absolute bottom-0 left-0 right-0 h-6 flex items-end justify-center gap-px opacity-20 pointer-events-none">
+      {Array(16).fill().map(() => (
+        <div class="visualization-bar w-0.5 h-0 bg-indigo-500 dark:bg-indigo-400 rounded-t transition-all duration-200"></div>
+      ))}
+    </div>
+  </div>
+  
+  <!-- Speed control - Simplified -->
+  <div class="flex items-center mt-2 text-xs text-gray-600 dark:text-gray-400">
+    <span class="mr-2">Speed:</span>
+    <select id="playback-speed" class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:focus:ring-indigo-400">
+      <option value="0.5">0.5x</option>
+      <option value="0.75">0.75x</option>
+      <option value="1" selected>1x</option>
+      <option value="1.25">1.25x</option>
+      <option value="1.5">1.5x</option>
+      <option value="2">2x</option>
+    </select>
+  </div>
+</div>
           
           <!-- Social Media Share Buttons with improved styling -->
           <div class="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-gray-200 dark:border-gray-700">
@@ -432,7 +507,6 @@ if (lang === 'en') {
   </div>
 
 <script>
- // Enhanced Audio Player initialization
 document.addEventListener('DOMContentLoaded', function() {
   // Find the audio player section
   const audioSection = document.querySelector('.audio-player-section');
@@ -458,60 +532,23 @@ document.addEventListener('DOMContentLoaded', function() {
   const downloadBtn = document.getElementById('audio-download-btn');
   const visualizationBars = document.querySelectorAll('.visualization-bar');
   
-  // First, hide the audio section by default
-  audioSection.style.display = 'none';
+  // Always show the audio section by default
+  audioSection.style.display = 'block';
   
-  // Check if audio file exists
+  // Check if audio element exists
+  if (!audioElement) return;
+  
+  // Check if audio source exists
   const audioSource = audioElement.querySelector('source');
   if (!audioSource || !audioSource.src) return;
   
   const audioUrl = audioSource.src;
   
-  // Function to show player if audio exists
-  function showPlayerIfAudioExists() {
-    // Quick HEAD request to check if the file exists
-    fetch(audioUrl, { method: 'HEAD' })
-      .then(response => {
-        if (response.ok) {
-          // File exists, show the audio section
-          audioSection.style.display = 'block';
-          initializeAudioPlayer();
-          
-          // Also set download link
-          if (downloadBtn) {
-            downloadBtn.classList.remove('hidden');
-            downloadBtn.querySelector('a').href = audioUrl;
-          }
-        } else {
-          // File not found, keep section hidden
-          audioSection.style.display = 'none';
-        }
-      })
-      .catch(() => {
-        // Network error or CORS issue, keep section hidden
-        audioSection.style.display = 'none';
-      });
-  }
-  
-  // Check if audio file is available
-  showPlayerIfAudioExists();
-  
-  // Also check audio element events
-  audioElement.addEventListener('error', function(e) {
-    // Audio failed to load, hide the player
-    audioSection.style.display = 'none';
-  });
-  
-  // canplaythrough might fire if the file exists and is playable
-  audioElement.addEventListener('canplaythrough', function() {
-    audioSection.style.display = 'block';
-    initializeAudioPlayer();
-  });
-  
-  // Initialize the audio player functionality
+  // Function to initialize the audio player
   function initializeAudioPlayer() {
     // Format time in minutes and seconds
     function formatTime(seconds) {
+      if (isNaN(seconds)) return "0:00";
       const minutes = Math.floor(seconds / 60);
       const remainingSeconds = Math.floor(seconds % 60);
       return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
@@ -528,6 +565,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const progress = (audioElement.currentTime / audioElement.duration) * 100;
         progressBar.style.width = `${progress}%`;
         seekSlider.value = progress;
+      } else {
+        // Handle initial state or invalid duration
+        currentTimeDisplay.textContent = "0:00";
+        durationDisplay.textContent = "0:00";
+        progressBar.style.width = "0%";
+        seekSlider.value = 0;
       }
       
       // Update play/pause button
@@ -563,7 +606,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       visualizationInterval = setInterval(() => {
         visualizationBars.forEach(bar => {
-          const height = Math.floor(Math.random() * 100);
+          const height = Math.floor(Math.random() * 60) + 5;
           bar.style.height = `${height}%`;
         });
       }, 200);
@@ -574,12 +617,20 @@ document.addEventListener('DOMContentLoaded', function() {
         clearInterval(visualizationInterval);
         visualizationInterval = null;
       }
+      
+      // Reset heights to zero
+      visualizationBars.forEach(bar => {
+        bar.style.height = "0%";
+      });
     }
     
     // Event Listeners
     playPauseBtn.addEventListener('click', function() {
       if (audioElement.paused) {
-        audioElement.play().catch(e => console.error('Audio playback error:', e));
+        audioElement.play().catch(e => {
+          console.error('Audio playback error:', e);
+          // Show a user-friendly error message if needed
+        });
       } else {
         audioElement.pause();
       }
@@ -593,8 +644,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     seekSlider.addEventListener('input', function() {
       const seekTime = (audioElement.duration * seekSlider.value) / 100;
-      audioElement.currentTime = seekTime;
-      updateUI();
+      if (!isNaN(seekTime)) {
+        audioElement.currentTime = seekTime;
+        updateUI();
+      }
     });
     
     volumeSlider.addEventListener('input', function() {
@@ -616,6 +669,41 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial UI update
     updateUI();
   }
+
+  // Check if audio file is available (but don't hide the player if it's not)
+  fetch(audioUrl, { method: 'HEAD' })
+    .then(response => {
+      if (response.ok) {
+        // File exists, initialize the player
+        initializeAudioPlayer();
+        
+        // Set download link
+        if (downloadBtn) {
+          downloadBtn.classList.remove('hidden');
+          downloadBtn.querySelector('a').href = audioUrl;
+        }
+      } else {
+        // File not found, but keep the player visible
+        console.log('Audio file not found, but keeping player visible');
+        initializeAudioPlayer(); // Still initialize the player with basic UI
+      }
+    })
+    .catch(() => {
+      // Network error or CORS issue, but keep the player visible
+      console.log('Network error checking audio file, but keeping player visible');
+      initializeAudioPlayer(); // Still initialize the player with basic UI
+    });
+  
+  // Handle audio element events
+  audioElement.addEventListener('error', function(e) {
+    // Audio failed to load, but don't hide the player
+    console.log('Audio loading error, but keeping player visible');
+  });
+  
+  // Initialize when playable
+  audioElement.addEventListener('canplaythrough', function() {
+    initializeAudioPlayer();
+  });
 });
 
 document.addEventListener('DOMContentLoaded', function() {
