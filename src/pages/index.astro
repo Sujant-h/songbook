@@ -351,32 +351,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     <script>
 
-      // Home page code (index.astro) for saving/restoring scroll positions
-document.addEventListener('DOMContentLoaded', function() {
-  // Save scroll position when clicking on a song link
-  const songLinks = document.querySelectorAll('.song-item a');
-  songLinks.forEach(link => {
-    link.addEventListener('click', function() {
-      // Save the current scroll position
-      sessionStorage.setItem('homeScrollPosition', window.pageYOffset);
-    });
-  });
-  
-  // Check if we should restore the scroll position (when returning from a song)
-  if (sessionStorage.getItem('restoreHomePosition') === 'true') {
-    const savedPosition = sessionStorage.getItem('homeScrollPosition');
-    if (savedPosition !== null) {
-      // Use setTimeout to ensure the page is fully loaded
-      setTimeout(() => {
-        window.scrollTo(0, parseInt(savedPosition));
-        
-        // Clear the restore flag (but keep the position for potential future use)
-        sessionStorage.removeItem('restoreHomePosition');
-      }, 100);
-    }
-  }
-});
-
       // Add this to your setupEventListeners function
 
 // Clear Search Button on No Results Message
