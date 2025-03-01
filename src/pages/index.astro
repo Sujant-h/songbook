@@ -452,7 +452,70 @@ const songItems = document.querySelectorAll('.song-item');
 const noResultsMessage = document.getElementById('noResultsMessage');
 const goToTopButton = document.getElementById('goToTopButton');
 
+const state = {
+  // Update clear button visibility based on search input
+  updateClearButtonVisibility() {
+    if (searchInput.value.length > 0) {
+      clearButton.classList.remove('hidden');
+    } else {
+      clearButton.classList.add('hidden');
+    }
+  },
 
+  // Save current state to session storage - REMOVE SCROLL POSITION
+  saveState() {
+    // Remove this line:
+    // sessionStorage.setItem('scrollPosition', window.pageYOffset);
+    
+    sessionStorage.setItem('searchQuery', searchInput.value);
+    sessionStorage.setItem('selectedLang', langSelect.value);
+    sessionStorage.setItem('returnedFromSong', 'true');
+  },
+
+  // Restore state from session storage - REMOVE SCROLL POSITION
+  restoreState() {
+    const returnedFromSong = sessionStorage.getItem('returnedFromSong');
+    if (returnedFromSong) {
+      // Restore search query
+      const savedQuery = sessionStorage.getItem('searchQuery');
+      if (savedQuery) {
+        searchInput.value = savedQuery;
+        this.updateClearButtonVisibility();
+      }
+      
+      // Restore language selection
+      const savedLang = sessionStorage.getItem('selectedLang');
+      if (savedLang && savedLang !== langSelect.value) {
+        langSelect.value = savedLang;
+        updateSongDisplay();
+      }
+      
+      // Apply the filter to show only matching results
+      if (savedQuery && savedQuery.trim() !== '') {
+        filterSongs();
+      }
+      
+      // Remove these lines:
+      // const savedPosition = sessionStorage.getItem('scrollPosition');
+      // if (savedPosition) {
+      //   setTimeout(() => {
+      //     window.scrollTo(0, parseInt(savedPosition));
+      //   }, 100);
+      // }
+      
+      // Clear session storage
+      this.clearState();
+    }
+  },
+
+  // Clear state from session storage
+  clearState() {
+    sessionStorage.removeItem('returnedFromSong');
+    sessionStorage.removeItem('scrollPosition'); // You can keep this to clean up old entries
+    sessionStorage.removeItem('searchQuery');
+    sessionStorage.removeItem('selectedLang');
+  }
+};
       
       // Restore language selection
       const savedLang = sessionStorage.getItem('selectedLang');
