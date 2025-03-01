@@ -509,40 +509,43 @@ if (lang === 'en') {
   </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Find the audio player section
-    const audioSection = document.querySelector('.audio-player-section');
-    
-    // If no audio section is found, exit early
-    if (!audioSection) return;
-    
-    // First, hide the audio section by default
-    audioSection.style.display = 'none';
-    
-    // Get audio element and custom controls
-    const audioElement = document.getElementById('audio-element');
-    const playPauseBtn = document.getElementById('play-pause-btn');
-    const muteBtn = document.getElementById('mute-btn');
-    const seekSlider = document.getElementById('seek-slider');
-    const volumeSlider = document.getElementById('volume-slider');
-    const currentTimeDisplay = document.getElementById('current-time');
-    const durationDisplay = document.getElementById('duration');
-    const progressBar = document.getElementById('progress-bar');
-    const volumeLevel = document.getElementById('volume-level');
-    const playbackSpeed = document.getElementById('playback-speed');
-    const playIcon = document.querySelector('.play-icon');
-    const pauseIcon = document.querySelector('.pause-icon');
-    const volumeIcon = document.querySelector('.volume-icon');
-    const muteIcon = document.querySelector('.mute-icon');
-    const downloadBtn = document.getElementById('audio-download-btn');
-    const visualizationBars = document.querySelectorAll('.visualization-bar');
-    
-    // Check if audio file exists
-    const audioSource = audioElement.querySelector('source');
-    if (!audioSource || !audioSource.src) return;
-    
-    const audioUrl = audioSource.src;
-    
+ // Enhanced Audio Player initialization
+document.addEventListener('DOMContentLoaded', function() {
+  // Find the audio player section
+  const audioSection = document.querySelector('.audio-player-section');
+  
+  // If no audio section is found, exit early
+  if (!audioSection) return;
+  
+  // Get audio element and custom controls
+  const audioElement = document.getElementById('audio-element');
+  const playPauseBtn = document.getElementById('play-pause-btn');
+  const muteBtn = document.getElementById('mute-btn');
+  const seekSlider = document.getElementById('seek-slider');
+  const volumeSlider = document.getElementById('volume-slider');
+  const currentTimeDisplay = document.getElementById('current-time');
+  const durationDisplay = document.getElementById('duration');
+  const progressBar = document.getElementById('progress-bar');
+  const volumeLevel = document.getElementById('volume-level');
+  const playbackSpeed = document.getElementById('playback-speed');
+  const playIcon = document.querySelector('.play-icon');
+  const pauseIcon = document.querySelector('.pause-icon');
+  const volumeIcon = document.querySelector('.volume-icon');
+  const muteIcon = document.querySelector('.mute-icon');
+  const downloadBtn = document.getElementById('audio-download-btn');
+  const visualizationBars = document.querySelectorAll('.visualization-bar');
+  
+  // First, hide the audio section by default
+  audioSection.style.display = 'none';
+  
+  // Check if audio file exists
+  const audioSource = audioElement.querySelector('source');
+  if (!audioSource || !audioSource.src) return;
+  
+  const audioUrl = audioSource.src;
+  
+  // Function to show player if audio exists
+  function showPlayerIfAudioExists() {
     // Quick HEAD request to check if the file exists
     fetch(audioUrl, { method: 'HEAD' })
       .then(response => {
@@ -556,130 +559,141 @@ if (lang === 'en') {
             downloadBtn.classList.remove('hidden');
             downloadBtn.querySelector('a').href = audioUrl;
           }
+        } else {
+          // File not found, keep section hidden
+          audioSection.style.display = 'none';
         }
       })
       .catch(() => {
-        // Keep it hidden on error
+        // Network error or CORS issue, keep section hidden
         audioSection.style.display = 'none';
       });
-    
-    // Short timeout as a final fallback
-    setTimeout(function() {
-      // If we're still loading after 1 second, hide the player
-      if (audioElement.readyState === 0) {
-        audioSection.style.display = 'none';
-      }
-    }, 1000);
-    
-    // Initialize the audio player functionality
-    function initializeAudioPlayer() {
-      // Format time in minutes and seconds
-      function formatTime(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = Math.floor(seconds % 60);
-        return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-      }
-      
-      // Update all UI elements based on current audio state
-      function updateUI() {
-        // Update time displays
-        if (!isNaN(audioElement.duration)) {
-          currentTimeDisplay.textContent = formatTime(audioElement.currentTime);
-          durationDisplay.textContent = formatTime(audioElement.duration);
-          
-          // Update progress bar
-          const progress = (audioElement.currentTime / audioElement.duration) * 100;
-          progressBar.style.width = `${progress}%`;
-          seekSlider.value = progress;
-        }
-        
-        // Update play/pause button
-        if (audioElement.paused) {
-          playIcon.classList.remove('hidden');
-          pauseIcon.classList.add('hidden');
-          stopVisualization();
-        } else {
-          playIcon.classList.add('hidden');
-          pauseIcon.classList.remove('hidden');
-          startVisualization();
-        }
-        
-        // Update volume UI
-        volumeLevel.style.width = `${audioElement.volume * 100}%`;
-        volumeSlider.value = audioElement.volume * 100;
-        
-        // Update mute button
-        if (audioElement.muted) {
-          volumeIcon.classList.add('hidden');
-          muteIcon.classList.remove('hidden');
-        } else {
-          volumeIcon.classList.remove('hidden');
-          muteIcon.classList.add('hidden');
-        }
-      }
-      
-      // Simple visualization effect
-      let visualizationInterval;
-      
-      function startVisualization() {
-        if (visualizationInterval) clearInterval(visualizationInterval);
-        
-        visualizationInterval = setInterval(() => {
-          visualizationBars.forEach(bar => {
-            const height = Math.floor(Math.random() * 100);
-            bar.style.height = `${height}%`;
-          });
-        }, 200);
-      }
-      
-      function stopVisualization() {
-        if (visualizationInterval) {
-          clearInterval(visualizationInterval);
-          visualizationInterval = null;
-        }
-      }
-      
-      // Event Listeners
-      playPauseBtn.addEventListener('click', function() {
-        if (audioElement.paused) {
-          audioElement.play().catch(e => console.error('Audio playback error:', e));
-        } else {
-          audioElement.pause();
-        }
-        updateUI();
-      });
-      
-      muteBtn.addEventListener('click', function() {
-        audioElement.muted = !audioElement.muted;
-        updateUI();
-      });
-      
-      seekSlider.addEventListener('input', function() {
-        const seekTime = (audioElement.duration * seekSlider.value) / 100;
-        audioElement.currentTime = seekTime;
-        updateUI();
-      });
-      
-      volumeSlider.addEventListener('input', function() {
-        audioElement.volume = volumeSlider.value / 100;
-        audioElement.muted = false;
-        updateUI();
-      });
-      
-      playbackSpeed.addEventListener('change', function() {
-        audioElement.playbackRate = parseFloat(playbackSpeed.value);
-      });
-      
-      // Update UI when audio time updates
-      audioElement.addEventListener('timeupdate', updateUI);
-      
-      // When metadata loaded, update duration display
-      audioElement.addEventListener('loadedmetadata', updateUI);
-      
-      // Initial UI update
-      updateUI();
-    }
+  }
+  
+  // Check if audio file is available
+  showPlayerIfAudioExists();
+  
+  // Also check audio element events
+  audioElement.addEventListener('error', function(e) {
+    // Audio failed to load, hide the player
+    audioSection.style.display = 'none';
   });
+  
+  // canplaythrough might fire if the file exists and is playable
+  audioElement.addEventListener('canplaythrough', function() {
+    audioSection.style.display = 'block';
+    initializeAudioPlayer();
+  });
+  
+  // Initialize the audio player functionality
+  function initializeAudioPlayer() {
+    // Format time in minutes and seconds
+    function formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = Math.floor(seconds % 60);
+      return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+    }
+    
+    // Update all UI elements based on current audio state
+    function updateUI() {
+      // Update time displays
+      if (!isNaN(audioElement.duration)) {
+        currentTimeDisplay.textContent = formatTime(audioElement.currentTime);
+        durationDisplay.textContent = formatTime(audioElement.duration);
+        
+        // Update progress bar
+        const progress = (audioElement.currentTime / audioElement.duration) * 100;
+        progressBar.style.width = `${progress}%`;
+        seekSlider.value = progress;
+      }
+      
+      // Update play/pause button
+      if (audioElement.paused) {
+        playIcon.classList.remove('hidden');
+        pauseIcon.classList.add('hidden');
+        stopVisualization();
+      } else {
+        playIcon.classList.add('hidden');
+        pauseIcon.classList.remove('hidden');
+        startVisualization();
+      }
+      
+      // Update volume UI
+      volumeLevel.style.width = `${audioElement.volume * 100}%`;
+      volumeSlider.value = audioElement.volume * 100;
+      
+      // Update mute button
+      if (audioElement.muted) {
+        volumeIcon.classList.add('hidden');
+        muteIcon.classList.remove('hidden');
+      } else {
+        volumeIcon.classList.remove('hidden');
+        muteIcon.classList.add('hidden');
+      }
+    }
+    
+    // Simple visualization effect
+    let visualizationInterval;
+    
+    function startVisualization() {
+      if (visualizationInterval) clearInterval(visualizationInterval);
+      
+      visualizationInterval = setInterval(() => {
+        visualizationBars.forEach(bar => {
+          const height = Math.floor(Math.random() * 100);
+          bar.style.height = `${height}%`;
+        });
+      }, 200);
+    }
+    
+    function stopVisualization() {
+      if (visualizationInterval) {
+        clearInterval(visualizationInterval);
+        visualizationInterval = null;
+      }
+    }
+    
+    // Event Listeners
+    playPauseBtn.addEventListener('click', function() {
+      if (audioElement.paused) {
+        audioElement.play().catch(e => console.error('Audio playback error:', e));
+      } else {
+        audioElement.pause();
+      }
+      updateUI();
+    });
+    
+    muteBtn.addEventListener('click', function() {
+      audioElement.muted = !audioElement.muted;
+      updateUI();
+    });
+    
+    seekSlider.addEventListener('input', function() {
+      const seekTime = (audioElement.duration * seekSlider.value) / 100;
+      audioElement.currentTime = seekTime;
+      updateUI();
+    });
+    
+    volumeSlider.addEventListener('input', function() {
+      audioElement.volume = volumeSlider.value / 100;
+      audioElement.muted = false;
+      updateUI();
+    });
+    
+    playbackSpeed.addEventListener('change', function() {
+      audioElement.playbackRate = parseFloat(playbackSpeed.value);
+    });
+    
+    // Update UI when audio time updates
+    audioElement.addEventListener('timeupdate', updateUI);
+    
+    // When metadata loaded, update duration display
+    audioElement.addEventListener('loadedmetadata', updateUI);
+    
+    // Initial UI update
+    updateUI();
+  }
+});
 
 document.addEventListener('DOMContentLoaded', function() {
   // Initialize all functionality
