@@ -605,12 +605,21 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all functionality
+    // Initialize audio player (if present)
+    initializeAudioPlayer();
+    
+    // Initialize general functionality with proper sequence
     initializeSharing();
     setupPrintFunctionality();
     setupLanguageSwitching();
-    highlightSearchTerm();
-    updateSearchParamOnLinks();
+    addHighlightStyles();
+    
+    // Delay search highlighting slightly to ensure DOM is fully processed
+    setTimeout(() => {
+      highlightSearchTerm();
+      updateSearchParamOnLinks();
+      console.log('Search highlighting initialized');
+    }, 100);
   });
   
   // Social media sharing functionality
@@ -1041,43 +1050,158 @@ document.addEventListener('DOMContentLoaded', function() {
   // Enhanced Search Highlighting Function
   
   // Main highlighting function
-  function highlightSearchTerm() {
-    // Get search query from URL parameters or sessionStorage
-    const urlParams = new URLSearchParams(window.location.search);
-    const searchQuery = urlParams.get('q') || sessionStorage.getItem('searchQuery');
+ // Enhanced highlighting function with better error handling
+function highlightSearchTerm() {
+  try {
+    console.log('Starting search term highlighting');
     
-    if (!searchQuery || searchQuery.trim() === '') return;
+    // Get search query from URL parameters or sessionStorage with better error handling
+    const urlParams = new URLSearchParams(window.location.search);
+    let searchQuery = urlParams.get('q');
+    
+    if (!searchQuery) {
+      // Try getting from sessionStorage with fallback
+      try {
+        searchQuery = sessionStorage.getItem('searchQuery');
+        console.log('Retrieved search query from sessionStorage:', searchQuery);
+      } catch (err) {
+        console.error('Error accessing sessionStorage:', err);
+      }
+    } else {
+      console.log('Retrieved search query from URL parameters:', searchQuery);
+      
+      // Store in sessionStorage for persistence
+      try {
+        sessionStorage.setItem('searchQuery', searchQuery);
+      } catch (err) {
+        console.error('Error storing in sessionStorage:', err);
+      }
+    }
+    
+    if (!searchQuery || searchQuery.trim() === '') {
+      console.log('No search query found, exiting highlighting');
+      return;
+    }
+    
+    // Normalize search query to handle different character encodings
+    searchQuery = searchQuery.trim();
     
     // Split search query into individual words for multi-word matching
-    const searchWords = searchQuery.trim().split(/\s+/).filter(word => word.length > 1);
+    const searchWords = searchQuery.split(/\s+/).filter(word => word.length > 1);
     const isMultiWordSearch = searchWords.length > 1;
     
-    // Function to safely highlight text nodes without breaking HTML structure
-    function highlightTextNodes(element, searchTerms) {
-      if (!element || !searchTerms || (Array.isArray(searchTerms) && searchTerms.length === 0)) return;
-      
-      // Handle both single term and array of terms
-      const terms = Array.isArray(searchTerms) ? searchTerms : [searchTerms];
-      
-      // Process only element nodes (skip text outside elements)
-      if (element.nodeType === Node.ELEMENT_NODE) {
-        // Skip certain elements that shouldn't be highlighted
-        if (['SCRIPT', 'STYLE', 'MARK', 'CODE', 'BUTTON', 'SELECT', 'OPTION'].includes(element.tagName)) {
-          return;
+    console.log('Processing search with terms:', isMultiWordSearch ? searchWords : searchQuery);
+    
+    // Areas to search for the query with more thorough selection
+    const searchAreas = [
+      document.querySelector('h1'), // Song title
+      ...document.querySelectorAll('pre'), // Song lyrics (primary content)
+      ...document.querySelectorAll('.song-content p'), // Alternative content structure
+      document.querySelector('.song-meta') // Song metadata
+    ].filter(el => el !== null); // Filter out null elements
+    
+    if (searchAreas.length === 0) {
+      console.warn('No content areas found for highlighting');
+      return;
+    }
+    
+    // Perform highlighting with robust error handling
+    let highlightCount = 0;
+    let processedAreas = 0;
+    
+    searchAreas.forEach(element => {
+      try {
+        if (!element || !element.innerHTML) return;
+        
+        // Store the original innerHTML for potential reset
+        if (!element.dataset.originalContent) {
+          element.dataset.originalContent = element.innerHTML;
         }
         
-        // Process child nodes recursively
-        const childNodes = [...element.childNodes]; // Create a copy to avoid live collection issues
+        // Apply highlighting with either full phrase or individual words
+        if (isMultiWordSearch) {
+          // Try exact phrase first
+          const exactMatches = countMatches(element.textContent, searchQuery);
+          
+          if (exactMatches > 0) {
+            // Found exact phrase matches, highlight those
+            highlightTextNodes(element, searchQuery);
+            highlightCount += exactMatches;
+            console.log(`Found ${exactMatches} exact matches in element:`, element.tagName);
+          } else {
+            // No exact phrase match, check for individual words
+            highlightTextNodes(element, searchWords);
+            
+            // Count individual word matches
+            let wordMatches = 0;
+            searchWords.forEach(word => {
+              const matches = countMatches(element.textContent, word);
+              wordMatches += matches;
+            });
+            
+            if (wordMatches > 0) {
+              console.log(`Found ${wordMatches} individual word matches in element:`, element.tagName);
+              highlightCount += wordMatches;
+            }
+          }
+        } else {
+          // Single word search
+          const matches = countMatches(element.textContent, searchQuery);
+          if (matches > 0) {
+            highlightTextNodes(element, searchQuery);
+            highlightCount += matches;
+            console.log(`Found ${matches} matches for "${searchQuery}" in element:`, element.tagName);
+          }
+        }
         
-        childNodes.forEach(child => {
+        processedAreas++;
+      } catch (err) {
+        console.error('Error highlighting element:', err, element);
+      }
+    });
+    
+    console.log(`Search highlighting complete: ${highlightCount} matches in ${processedAreas} areas`);
+    
+    // Add a search badge if matches were found
+    if (highlightCount > 0) {
+      addSearchBadge(searchQuery, highlightCount, isMultiWordSearch);
+    } else {
+      console.log('No matches found for the search term');
+    }
+  } catch (err) {
+    console.error('Error in highlightSearchTerm:', err);
+  }
+}
+
+function highlightTextNodes(element, searchTerms) {
+  try {
+    if (!element || !searchTerms || (Array.isArray(searchTerms) && searchTerms.length === 0)) return;
+    
+    // Handle both single term and array of terms
+    const terms = Array.isArray(searchTerms) ? searchTerms : [searchTerms];
+    
+    // Process only element nodes (skip text outside elements)
+    if (element.nodeType === Node.ELEMENT_NODE) {
+      // Skip certain elements that shouldn't be highlighted
+      if (['SCRIPT', 'STYLE', 'MARK', 'CODE', 'BUTTON', 'SELECT', 'OPTION'].includes(element.tagName)) {
+        return;
+      }
+      
+      // Process child nodes recursively
+      const childNodes = [...element.childNodes]; // Create a copy to avoid live collection issues
+      
+      childNodes.forEach(child => {
+        try {
           if (child.nodeType === Node.TEXT_NODE) {
             // This is a text node, check for matches
             const text = child.textContent;
+            if (!text || text.trim() === '') return;
+            
             let hasMatch = false;
             
             // Check if any term matches
             for (const term of terms) {
-              if (term.trim() === '') continue;
+              if (!term || term.trim() === '') continue;
               
               const searchRegex = new RegExp(term.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
               if (searchRegex.test(text)) {
@@ -1094,7 +1218,7 @@ document.addEventListener('DOMContentLoaded', function() {
               
               // Apply highlighting for each term
               for (const term of terms) {
-                if (term.trim() === '') continue;
+                if (!term || term.trim() === '') continue;
                 
                 const searchRegex = new RegExp(term.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
                 
@@ -1120,261 +1244,342 @@ document.addEventListener('DOMContentLoaded', function() {
               }
               
               // Replace the original text node with our fragment
-              element.replaceChild(frag, child);
+              try {
+                element.replaceChild(frag, child);
+              } catch (err) {
+                console.error('Error replacing text node:', err);
+              }
             }
           } else {
             // This is an element node, recurse into it
             highlightTextNodes(child, searchTerms);
           }
-        });
-      }
-    }
-    
-    // Areas to search for the query
-    const searchAreas = [
-      document.querySelector('h1'), // Song title
-      ...document.querySelectorAll('pre') // Song lyrics
-    ];
-    
-    // Perform highlighting - use either full query or individual words based on search type
-    let highlightCount = 0;
-    
-    searchAreas.forEach(element => {
-      if (element) {
-        // Store the original innerHTML for potential reset
-        if (!element.dataset.originalContent) {
-          element.dataset.originalContent = element.innerHTML;
+        } catch (err) {
+          console.error('Error processing child node:', err);
         }
-        
-        // Apply highlighting with either full phrase or individual words
-        if (isMultiWordSearch) {
-          // Try exact phrase first
-          const exactMatches = countMatches(element.textContent, searchQuery);
-          
-          if (exactMatches > 0) {
-            // Found exact phrase matches, highlight those
-            highlightTextNodes(element, searchQuery);
-            highlightCount += exactMatches;
-          } else {
-            // No exact phrase match, check for individual words
-            highlightTextNodes(element, searchWords);
-            
-            // Count individual word matches
-            searchWords.forEach(word => {
-              highlightCount += countMatches(element.textContent, word);
-            });
-          }
-        } else {
-          // Single word search
-          highlightTextNodes(element, searchQuery);
-          highlightCount += countMatches(element.textContent, searchQuery);
-        }
-      }
-    });
-    
-    // Add a search badge if matches were found
-    if (highlightCount > 0) {
-      addSearchBadge(searchQuery, highlightCount, isMultiWordSearch);
+      });
     }
+  } catch (err) {
+    console.error('Error in highlightTextNodes:', err);
   }
+}
+
+
+
   
   // Helper function to count matches of a term in text
-  function countMatches(text, term) {
+// Improved match counting function
+function countMatches(text, term) {
+  try {
     if (!text || !term) return 0;
     
     const regex = new RegExp(term.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
     const matches = text.match(regex);
     return matches ? matches.length : 0;
+  } catch (err) {
+    console.error('Error counting matches:', err);
+    return 0;
   }
+}
   
   // Function to add the search badge with improved navigation controls
   function addSearchBadge(searchQuery, highlightCount, isMultiWordSearch) {
-    // Remove any existing search badge
-    const existingBadge = document.getElementById('search-highlight-badge');
-    if (existingBadge) {
-      existingBadge.remove();
-    }
-    
-    // Create the search badge with improved navigation
-    const searchBadge = document.createElement('div');
-    searchBadge.id = 'search-highlight-badge';
-    searchBadge.className = 'mb-6 flex flex-wrap items-center gap-3 text-sm bg-indigo-50 dark:bg-indigo-900/30 px-4 py-3 rounded-lg border border-indigo-100 dark:border-indigo-800 shadow-sm';
-    
-    // For multi-word searches, add a proper explanation of what was matched
-    let matchTypeText = '';
-    if (isMultiWordSearch) {
-      const searchWords = searchQuery.trim().split(/\s+/).filter(word => word.length > 1);
-      matchTypeText = `<div class="text-gray-600 dark:text-gray-400 text-xs mt-1">
-        ${searchWords.length} words being searched: 
-        ${searchWords.map(word => `<span class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded-md text-xs font-medium">${escapeHTML(word)}</span>`).join(' ')}
-      </div>`;
-    }
-    
-    searchBadge.innerHTML = `
-      <div class="flex-1">
-        <div class="flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <span class="text-gray-800 dark:text-gray-200 font-medium">Showing results for "<span class="font-semibold text-indigo-700 dark:text-indigo-300">${escapeHTML(searchQuery)}</span>"</span>
-        </div>
-        ${matchTypeText}
-      </div>
-      
-      <div class="flex items-center gap-3">
-        <span id="highlightCounter" class="bg-indigo-200 dark:bg-indigo-700 text-indigo-800 dark:text-indigo-200 px-2.5 py-1 rounded-md text-sm font-medium min-w-[70px] text-center">
-          ${highlightCount} match${highlightCount !== 1 ? 'es' : ''}
-        </span>
-        
-        <div class="flex bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-sm">
-          <button id="prevHighlight" class="flex items-center justify-center h-8 w-8 rounded-l-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border-r border-gray-200 dark:border-gray-700 transition-colors" title="Previous match (Shift+F3)">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button id="nextHighlight" class="flex items-center justify-center h-8 w-8 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border-r border-gray-200 dark:border-gray-700 transition-colors" title="Next match (F3)">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-          <button id="clearHighlights" class="flex items-center justify-center h-8 w-8 rounded-r-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors" title="Clear highlights (Esc)">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-      </div>
-    `;
-    
-    // Insert the badge at the beginning of the main content
-    const songContent = document.querySelector('.p-5.sm\\:p-8');
-    if (songContent) {
-      songContent.insertBefore(searchBadge, songContent.firstChild);
-    } else {
-      // Fallback - look for any suitable container
-      const mainContent = document.querySelector('main');
-      if (mainContent) {
-        mainContent.insertBefore(searchBadge, mainContent.firstChild);
+    try {
+      // Remove any existing search badge
+      const existingBadge = document.getElementById('search-highlight-badge');
+      if (existingBadge) {
+        existingBadge.remove();
       }
+      
+      // Create the search badge with improved navigation
+      const searchBadge = document.createElement('div');
+      searchBadge.id = 'search-highlight-badge';
+      searchBadge.className = 'mb-6 flex flex-wrap items-center gap-3 text-sm bg-indigo-50 dark:bg-indigo-900/30 px-4 py-3 rounded-lg border border-indigo-100 dark:border-indigo-800 shadow-sm';
+      
+      // For multi-word searches, add a proper explanation of what was matched
+      let matchTypeText = '';
+      if (isMultiWordSearch) {
+        const searchWords = searchQuery.trim().split(/\s+/).filter(word => word.length > 1);
+        matchTypeText = `<div class="text-gray-600 dark:text-gray-400 text-xs mt-1">
+          ${searchWords.length} words being searched: 
+          ${searchWords.map(word => `<span class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded-md text-xs font-medium">${escapeHTML(word)}</span>`).join(' ')}
+        </div>`;
+      }
+      
+      searchBadge.innerHTML = `
+        <div class="flex-1">
+          <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <span class="text-gray-800 dark:text-gray-200 font-medium">Showing results for "<span class="font-semibold text-indigo-700 dark:text-indigo-300">${escapeHTML(searchQuery)}</span>"</span>
+          </div>
+          ${matchTypeText}
+        </div>
+        
+        <div class="flex items-center gap-3">
+          <span id="highlightCounter" class="bg-indigo-200 dark:bg-indigo-700 text-indigo-800 dark:text-indigo-200 px-2.5 py-1 rounded-md text-sm font-medium min-w-[70px] text-center">
+            ${highlightCount} match${highlightCount !== 1 ? 'es' : ''}
+          </span>
+          
+          <div class="flex bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-sm">
+            <button id="prevHighlight" class="flex items-center justify-center h-8 w-8 rounded-l-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border-r border-gray-200 dark:border-gray-700 transition-colors" title="Previous match (Shift+F3)">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button id="nextHighlight" class="flex items-center justify-center h-8 w-8 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border-r border-gray-200 dark:border-gray-700 transition-colors" title="Next match (F3)">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+            <button id="clearHighlights" class="flex items-center justify-center h-8 w-8 rounded-r-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors" title="Clear highlights (Esc)">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      `;
+      
+      // Insert the badge - attempt multiple locations for better reliability
+      let badgeInserted = false;
+      
+      // First try: specific container class in song page
+      const songContent = document.querySelector('.p-5.sm\\:p-8');
+      if (songContent) {
+        songContent.insertBefore(searchBadge, songContent.firstChild);
+        badgeInserted = true;
+      }
+      
+      if (!badgeInserted) {
+        // Second try: main content area
+        const mainContent = document.querySelector('main');
+        if (mainContent) {
+          mainContent.insertBefore(searchBadge, mainContent.firstChild);
+          badgeInserted = true;
+        }
+      }
+      
+      if (!badgeInserted) {
+        // Third try: any content area
+        const contentDiv = document.querySelector('.content') || document.querySelector('.container');
+        if (contentDiv) {
+          contentDiv.insertBefore(searchBadge, contentDiv.firstChild);
+          badgeInserted = true;
+        }
+      }
+      
+      if (!badgeInserted) {
+        // Last resort: just append to body
+        document.body.insertBefore(searchBadge, document.body.firstChild);
+      }
+      
+      // Set up the highlight navigation system
+      setupHighlightNavigation();
+    } catch (err) {
+      console.error('Error adding search badge:', err);
     }
-    
-    // Set up the highlight navigation system
-    setupHighlightNavigation();
   }
   
-  // Update the search parameter propagation function
-  // Update the search parameter propagation function
   function updateSearchParamOnLinks() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const searchQuery = urlParams.get('q');
-    
-    if (searchQuery) {
-      // Store in session storage for persistence across pages
-      sessionStorage.setItem('searchQuery', searchQuery);
+    try {
+      // Get search query with better error handling
+      let searchQuery = '';
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        searchQuery = urlParams.get('q') || '';
+      } catch (urlErr) {
+        console.warn('Error getting URL parameters:', urlErr);
+      }
       
-      // Also store search terms for multi-word searches
-      const searchWords = searchQuery.trim().split(/\s+/).filter(word => word.length > 1);
-      if (searchWords.length > 1) {
-        sessionStorage.setItem('searchWords', JSON.stringify(searchWords));
+      // Try session storage as fallback
+      if (!searchQuery) {
+        try {
+          searchQuery = sessionStorage.getItem('searchQuery') || '';
+        } catch (storageErr) {
+          console.warn('Error accessing session storage:', storageErr);
+        }
+      }
+      
+      if (!searchQuery) {
+        console.log('No search query to propagate to links');
+        return;
+      }
+      
+      console.log('Updating links with search query:', searchQuery);
+      
+      // Store in session storage for persistence across pages
+      try {
+        sessionStorage.setItem('searchQuery', searchQuery);
+        
+        // Also store search terms for multi-word searches
+        const searchWords = searchQuery.trim().split(/\s+/).filter(word => word.length > 1);
+        if (searchWords.length > 1) {
+          sessionStorage.setItem('searchWords', JSON.stringify(searchWords));
+        }
+      } catch (storageErr) {
+        console.warn('Error storing in session storage:', storageErr);
       }
       
       // Update language switcher to preserve search parameter
       const languageSelect = document.getElementById('language-select');
       if (languageSelect) {
-        languageSelect.addEventListener('change', (e) => {
-          const selectedLang = e.target.value;
-          
-          // Get the current URL path components
-          const currentPath = window.location.pathname;
-          const pathParts = currentPath.split('/');
-          
-          // Extract song ID - handle different path formats
-          let songId = '';
-          if (pathParts.length > 0) {
-            // Try the last part of the path first
-            songId = pathParts[pathParts.length - 1];
+        // Remove any existing listener first to prevent duplicates
+        const newLanguageSelect = languageSelect.cloneNode(true);
+        languageSelect.parentNode.replaceChild(newLanguageSelect, languageSelect);
+        
+        newLanguageSelect.addEventListener('change', (e) => {
+          try {
+            const selectedLang = e.target.value;
             
-            // Check if it looks like a song ID
-            if (!/^\d+$/.test(songId)) {
-              // Try finding it through path pattern
-              const songsIndex = pathParts.indexOf('songs');
-              if (songsIndex >= 0 && songsIndex + 2 < pathParts.length) {
-                songId = pathParts[songsIndex + 2];
-              } else {
-                // Last resort: check data attribute
-                const songElement = document.querySelector('[data-song-id]');
-                if (songElement) {
-                  songId = songElement.dataset.songId;
+            // Get the current URL path components
+            const currentPath = window.location.pathname;
+            const pathParts = currentPath.split('/');
+            
+            // Extract song ID with multiple fallbacks
+            let songId = '';
+            
+            // Try data attribute first (most reliable)
+            const songElement = document.querySelector('[data-song-id]');
+            if (songElement) {
+              songId = songElement.dataset.songId;
+            }
+            
+            // If not found via data attribute, try path
+            if (!songId && pathParts.length > 0) {
+              // Try the last part of the path first
+              songId = pathParts[pathParts.length - 1];
+              
+              // Check if it looks like a song ID
+              if (!/^\d+$/.test(songId)) {
+                // Try finding it through path pattern
+                const songsIndex = pathParts.indexOf('songs');
+                if (songsIndex >= 0 && songsIndex + 2 < pathParts.length) {
+                  songId = pathParts[songsIndex + 2];
                 }
               }
             }
+            
+            // Last resort: try to extract from title
+            if (!songId) {
+              const titleElement = document.querySelector('h1');
+              if (titleElement && titleElement.textContent.includes(':')) {
+                songId = titleElement.textContent.split(':')[0].trim();
+              }
+            }
+            
+            if (!songId) {
+              console.error('Could not determine song ID, using default navigation');
+              return;
+            }
+            
+            // Build the new URL with search parameters preserved
+            const newUrl = `https://songs.c-g-m.eu/songs/${selectedLang}/${songId}?q=${encodeURIComponent(searchQuery)}`;
+            console.log('Navigating to:', newUrl);
+            
+            // Navigate to the new URL
+            window.location.href = newUrl;
+            
+            // Prevent default handling
+            e.preventDefault();
+          } catch (err) {
+            console.error('Error in language change handler:', err);
           }
-          
-          if (!songId) {
-            console.error('Could not determine song ID');
-            return;
-          }
-          
-          // Build the new URL with search parameters preserved
-          const newUrl = `https://songs.c-g-m.eu/songs/${selectedLang}/${songId}?q=${encodeURIComponent(searchQuery)}`;
-          
-          // Navigate to the new URL
-          window.location.href = newUrl;
-          
-          // Prevent default handling
-          e.preventDefault();
         });
+        
+        console.log('Language switcher updated to preserve search parameters');
       }
+      
+      // Update all song links to preserve search parameter
+      try {
+        const songLinks = document.querySelectorAll('.song-list a, .related-songs a');
+        songLinks.forEach(link => {
+          // Only add parameter if it doesn't already have query parameters
+          const href = link.getAttribute('href');
+          if (href && !href.includes('?')) {
+            link.setAttribute('href', href + '?q=' + encodeURIComponent(searchQuery));
+          }
+        });
+        console.log(`Updated ${songLinks.length} song links with search parameter`);
+      } catch (linkErr) {
+        console.warn('Error updating song links:', linkErr);
+      }
+    } catch (err) {
+      console.error('Error in updateSearchParamOnLinks:', err);
     }
   }
   
+  
   // Function to set up highlight navigation with improved visibility
   function setupHighlightNavigation() {
-    let currentHighlightIndex = -1;
-    const highlights = document.querySelectorAll('mark');
-    
-    // Update the counter text
-    function updateCounter() {
-      const counter = document.getElementById('highlightCounter');
-      if (counter && highlights.length > 0) {
-        counter.textContent = `${currentHighlightIndex + 1} of ${highlights.length}`;
+    try {
+      let currentHighlightIndex = -1;
+      const highlights = document.querySelectorAll('mark');
+      
+      if (highlights.length === 0) {
+        console.warn('No highlights found for navigation');
+        return;
       }
-    }
+      
+      console.log(`Setting up navigation for ${highlights.length} highlights`);
+      
+      // Update the counter text
+      function updateCounter() {
+        try {
+          const counter = document.getElementById('highlightCounter');
+          if (counter && highlights.length > 0) {
+            counter.textContent = `${currentHighlightIndex + 1} of ${highlights.length}`;
+          }
+        } catch (err) {
+          console.error('Error updating counter:', err);
+        }
+      }
     
     // Navigate to a specific highlight with improved visibility
     function navigateToHighlight(index) {
-      if (highlights.length === 0) return;
-      
-      // Remove current active highlight effect from all
-      highlights.forEach(h => {
-        h.classList.remove('ring', 'ring-offset-2', 'ring-indigo-500', 'dark:ring-indigo-400', 'ring-offset-white', 'dark:ring-offset-gray-800', 'animate-pulse');
-      });
-      
-      // Update index with wrapping
-      currentHighlightIndex = (index + highlights.length) % highlights.length;
-      
-      // Apply enhanced highlight effect
-      const currentHighlight = highlights[currentHighlightIndex];
-      currentHighlight.classList.add('ring', 'ring-offset-2', 'ring-indigo-500', 'dark:ring-indigo-400', 'ring-offset-white', 'dark:ring-offset-gray-800');
-      
-      // Add a brief pulse animation
-      currentHighlight.classList.add('animate-pulse');
-      setTimeout(() => {
-        currentHighlight.classList.remove('animate-pulse');
-      }, 1000);
-      
-      // Smooth scroll with offset for header and better positioning
-      const headerHeight = document.querySelector('header')?.offsetHeight || 0;
-      const elementRect = currentHighlight.getBoundingClientRect();
-      const absoluteElementTop = elementRect.top + window.pageYOffset;
-      const middle = absoluteElementTop - (window.innerHeight / 3); // Position in the upper third
-      
-      window.scrollTo({
-        top: middle - headerHeight - 20, // Add extra padding
-        behavior: 'smooth'
-      });
-      
-      updateCounter();
+      try {
+        if (highlights.length === 0) return;
+        
+        // Remove current active highlight effect from all
+        highlights.forEach(h => {
+          h.classList.remove('ring', 'ring-offset-2', 'ring-indigo-500', 'dark:ring-indigo-400', 'ring-offset-white', 'dark:ring-offset-gray-800', 'animate-pulse');
+        });
+        
+        // Update index with wrapping
+        currentHighlightIndex = (index + highlights.length) % highlights.length;
+        
+        // Apply enhanced highlight effect
+        const currentHighlight = highlights[currentHighlightIndex];
+        currentHighlight.classList.add('ring', 'ring-offset-2', 'ring-indigo-500', 'dark:ring-indigo-400', 'ring-offset-white', 'dark:ring-offset-gray-800');
+        
+        // Add a brief pulse animation
+        currentHighlight.classList.add('animate-pulse');
+        setTimeout(() => {
+          currentHighlight.classList.remove('animate-pulse');
+        }, 1000);
+        
+        // Smooth scroll with improved positioning
+        try {
+          const headerHeight = document.querySelector('header')?.offsetHeight || 0;
+          const elementRect = currentHighlight.getBoundingClientRect();
+          const absoluteElementTop = elementRect.top + window.pageYOffset;
+          const middle = absoluteElementTop - (window.innerHeight / 3); // Position in the upper third
+          
+          window.scrollTo({
+            top: Math.max(0, middle - headerHeight - 20), // Prevent negative scroll
+            behavior: 'smooth'
+          });
+        } catch (scrollErr) {
+          // Fallback scroll method
+          console.warn('Error in smooth scroll, using fallback:', scrollErr);
+          currentHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        updateCounter();
+      } catch (err) {
+        console.error('Error navigating to highlight:', err);
+      }
     }
     
     // Navigate to the next or previous highlight
@@ -1382,57 +1587,79 @@ document.addEventListener('DOMContentLoaded', function() {
       navigateToHighlight(currentHighlightIndex + direction);
     }
     
-    // Clear all highlights
-    function clearHighlights() {
-      // Restore original content to elements with highlights
-      document.querySelectorAll('[data-original-content]').forEach(element => {
-        element.innerHTML = element.dataset.originalContent;
-        delete element.dataset.originalContent;
-      });
-      
-      // Remove the search badge
-      const searchBadge = document.getElementById('search-highlight-badge');
-      if (searchBadge) {
-        searchBadge.remove();
-      }
-      
-      // Clear the search query parameter
-      const url = new URL(window.location);
-      url.searchParams.delete('q');
-      window.history.replaceState({}, '', url);
-      sessionStorage.removeItem('searchQuery');
-      sessionStorage.removeItem('searchWords');
-    }
-    
-    // Set up event listeners for the navigation buttons
-    document.getElementById('prevHighlight')?.addEventListener('click', () => navigateHighlights(-1));
-    document.getElementById('nextHighlight')?.addEventListener('click', () => navigateHighlights(1));
-    document.getElementById('clearHighlights')?.addEventListener('click', clearHighlights);
-    
-    // Set up keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'F3' || (e.ctrlKey && e.key === 'g')) {
-        e.preventDefault();
-        navigateHighlights(1);
-      } else if ((e.shiftKey && e.key === 'F3') || (e.ctrlKey && e.shiftKey && e.key === 'g')) {
-        e.preventDefault();
-        navigateHighlights(-1);
-      } else if (e.key === 'Escape') {
-        const clearButton = document.getElementById('clearHighlights');
-        if (clearButton) {
-          clearButton.click();
+       // Clear all highlights with improved reliability
+       function clearHighlights() {
+        try {
+          // Restore original content to elements with highlights
+          document.querySelectorAll('[data-original-content]').forEach(element => {
+            try {
+              element.innerHTML = element.dataset.originalContent;
+              delete element.dataset.originalContent;
+            } catch (err) {
+              console.error('Error restoring original content:', err, element);
+            }
+          });
+          
+          // Remove the search badge
+          const searchBadge = document.getElementById('search-highlight-badge');
+          if (searchBadge) {
+            searchBadge.remove();
+          }
+          
+          // Clear the search query parameter from URL
+          try {
+            const url = new URL(window.location);
+            url.searchParams.delete('q');
+            window.history.replaceState({}, '', url);
+          } catch (urlErr) {
+            console.warn('Error updating URL:', urlErr);
+          }
+          
+          // Clear from session storage
+          try {
+            sessionStorage.removeItem('searchQuery');
+            sessionStorage.removeItem('searchWords');
+          } catch (storageErr) {
+            console.warn('Error clearing session storage:', storageErr);
+          }
+        } catch (err) {
+          console.error('Error clearing highlights:', err);
         }
       }
-    });
-    
-    // Start by highlighting the first match
-    if (highlights.length > 0) {
-      navigateToHighlight(0);
+      
+      // Set up event listeners for the navigation buttons
+      document.getElementById('prevHighlight')?.addEventListener('click', () => navigateHighlights(-1));
+      document.getElementById('nextHighlight')?.addEventListener('click', () => navigateHighlights(1));
+      document.getElementById('clearHighlights')?.addEventListener('click', clearHighlights);
+      
+      // Set up keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'F3' || (e.ctrlKey && e.key === 'g')) {
+          e.preventDefault();
+          navigateHighlights(1);
+        } else if ((e.shiftKey && e.key === 'F3') || (e.ctrlKey && e.shiftKey && e.key === 'g')) {
+          e.preventDefault();
+          navigateHighlights(-1);
+        } else if (e.key === 'Escape') {
+          const clearButton = document.getElementById('clearHighlights');
+          if (clearButton) {
+            clearButton.click();
+          }
+        }
+      });
+      
+      // Start by highlighting the first match
+      if (highlights.length > 0) {
+        navigateToHighlight(0);
+      }
+    } catch (err) {
+      console.error('Error setting up highlight navigation:', err);
     }
   }
   
   // Helper function to safely escape HTML for display
   function escapeHTML(str) {
+    if (!str) return '';
     return str
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
@@ -1443,27 +1670,54 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Create and add CSS animation styles for highlights
   function addHighlightStyles() {
-    const styleElement = document.createElement('style');
-    styleElement.textContent = `
-      @keyframes highlightPulse {
-        0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
-        70% { box-shadow: 0 0 0 6px rgba(99, 102, 241, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+    try {
+      // Remove any existing style to prevent duplicates
+      const existingStyle = document.getElementById('highlight-styles');
+      if (existingStyle) {
+        existingStyle.remove();
       }
       
-      .highlight-pulse {
-        animation: highlightPulse 1.5s ease-out;
-      }
-      
-      mark {
-        transition: all 0.2s ease-in-out;
-      }
-      
-      mark.current {
-        transform: scale(1.05);
-      }
-    `;
-    document.head.appendChild(styleElement);
+      const styleElement = document.createElement('style');
+      styleElement.id = 'highlight-styles';
+      styleElement.textContent = `
+        @keyframes highlightPulse {
+          0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
+          70% { box-shadow: 0 0 0 6px rgba(99, 102, 241, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        }
+        
+        .highlight-pulse {
+          animation: highlightPulse 1.5s ease-out;
+        }
+        
+        mark {
+          transition: all 0.2s ease-in-out;
+          position: relative;
+          z-index: 5;
+        }
+        
+        mark.current {
+          transform: scale(1.05);
+        }
+        
+        .animate-pulse {
+          animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.7;
+          }
+        }
+      `;
+      document.head.appendChild(styleElement);
+      console.log('Highlight styles added');
+    } catch (err) {
+      console.error('Error adding highlight styles:', err);
+    }
   }
   
   // Initialize everything when document is ready
