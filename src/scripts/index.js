@@ -540,11 +540,89 @@ function filterSongs() {
           noResultsMessage.appendChild(document.createElement('div')).appendChild(wordsList);
           noResultsMessage.appendChild(document.createElement('div')).appendChild(clearButton);
           
-          // Add event listener to the new clear button
           clearButton.addEventListener('click', function() {
+            // Clear the search input
             searchInput.value = '';
+            
+            // Hide the clear button
             clearButton.classList.add('hidden');
-            filterSongs();
+            
+            // IMPORTANT: First, explicitly make ALL songs visible
+            songItems.forEach(item => {
+              item.classList.remove('hidden');
+              
+              // Reset any DOM modifications that might have occurred during search
+              
+              // 1. Reset match context elements 
+              const matchContext = item.querySelector('.match-context');
+              if (matchContext) {
+                matchContext.classList.add('hidden');
+                const matchTextEl = matchContext.querySelector('p');
+                if (matchTextEl) {
+                  matchTextEl.textContent = ''; // Clear any highlighted text
+                }
+              }
+              
+              // 2. Reset match badge (both class and inline styles)
+              const matchBadge = item.querySelector('.match-badge');
+              if (matchBadge) {
+                matchBadge.classList.add('hidden');
+                matchBadge.className = 'match-badge hidden absolute top-0 right-0 z-20 text-xs font-medium px-1.5 py-0.5 rounded-md bg-opacity-90 shadow-sm mt-3 mr-3';
+                // Also reset any inline styles
+                matchBadge.style.backgroundColor = '';
+                matchBadge.style.color = '';
+                matchBadge.textContent = '';
+              }
+              
+              // 3. Reset text snippets
+              const textSnippet = item.querySelector('.relative');
+              if (textSnippet) {
+                textSnippet.classList.add('hidden');
+                const snippetText = textSnippet.querySelector('.text-snippet');
+                if (snippetText) {
+                  snippetText.textContent = '';
+                }
+              }
+              
+              // 4. Restore original title without highlights
+              const originalTitle = item.querySelector('.original-title');
+              if (originalTitle) {
+                // Get the current language selection
+                const selectedLang = langSelect.value;
+                let titleField;
+                
+                if (selectedLang === 'ta') {
+                  titleField = 'title';
+                } else if (selectedLang === 'en') {
+                  titleField = 'titleEn';
+                } else if (selectedLang === 'de') {
+                  titleField = 'titleDe';
+                }
+                
+                // Explicitly set textContent to remove any HTML/highlights
+                const titleText = item.dataset[titleField] || item.dataset.title || '';
+                originalTitle.textContent = titleText;
+              }
+            });
+            
+            // Hide the no results message
+            noResultsMessage.classList.add('hidden');
+            
+            // Reset the order of songs to their original order
+            // This is important as search might have reordered them
+            const songItemsArray = Array.from(songItems);
+            songItemsArray.sort((a, b) => {
+              return parseInt(a.dataset.index) - parseInt(b.dataset.index);
+            }).forEach(item => {
+              songsList.appendChild(item);
+            });
+            
+            // Ensure the view is updated by triggering a window resize event
+            // This can help refresh the layout in some browsers
+            window.dispatchEvent(new Event('resize'));
+            
+            // Focus back on the search input
+            searchInput.focus();
           });
           
           // Show the modified message
