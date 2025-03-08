@@ -269,291 +269,298 @@ function reorderSongsByMatchPriority() {
       songsList.appendChild(item);
     });
 }
-// Update the filterSongs function to handle badge classes properly
-// Enhanced filterSongs function that checks individual words when no results are found
-// Enhanced filterSongs function that checks individual words when no results are found
-function filterSongs() {
-  const searchTerm = searchInput.value.toLowerCase().trim();
-  const selectedLang = langSelect.value;
-  let visibleCount = 0;
-  
-  // First, hide all text snippets completely
-  document.querySelectorAll('.song-item .relative').forEach(snippet => {
-    snippet.classList.add('hidden');
-  });
-  
-  // Reset match badges - hide all of them first and reset classes
-  document.querySelectorAll('.match-badge').forEach(badge => {
-    badge.classList.add('hidden');
-    badge.className = 'match-badge hidden absolute top-0 right-0 z-20 text-xs font-medium px-1.5 py-0.5 rounded-md bg-opacity-90 shadow-sm mt-3 mr-3';
-  });
-  
-  // Perform initial search with the full search term
-  songItems.forEach(item => {
-    let titleField, textField;
-    
-    // Select the appropriate fields based on language
-    if (selectedLang === 'ta') {
-      titleField = 'title';
-      textField = 'text';
-    } else if (selectedLang === 'en') {
-      titleField = 'titleEn';
-      textField = 'textEn';
-    } else if (selectedLang === 'de') {
-      titleField = 'titleDe';
-      textField = 'textDe';
-    }
-    
-    // Get the appropriate data for the selected language
-    // Fall back to Tamil if translation is missing
-    const title = item.dataset[titleField] ? 
-      item.dataset[titleField].toLowerCase() : 
-      item.dataset.title.toLowerCase();
-      
-    const text = item.dataset[textField] ? 
-      item.dataset[textField].toLowerCase() : 
-      item.dataset.text.toLowerCase();
-    
-    // Get song ID and compare as a string
-    const songId = item.dataset.id;
-    
-    const originalTitle = item.querySelector('.original-title');
-    const matchBadge = item.querySelector('.match-badge');
-    const matchContext = item.querySelector('.match-context');
-    const matchTextEl = matchContext ? matchContext.querySelector('p') : null;
-    
-    // Separate check for each type of match
-    const idHit = searchTerm !== '' && songId.toLowerCase().includes(searchTerm);
-    const titleHit = searchTerm !== '' && title.includes(searchTerm);
-    const textHit = searchTerm !== '' && text.includes(searchTerm);
+// Replace the problematic section in the filterSongs function where the error occurs
+// In the part where individual words are checked - we need to use searchWords instead of matchingWords
 
-    // Mark as visible if any hit is found or if no search term
-    if (idHit || titleHit || textHit || searchTerm === '') {
-      item.classList.remove('hidden');
-      visibleCount++;
+// The problematic section is around line 467 in your code, where you're trying to use matchingWords
+// Here's the corrected version of that section:
+
+function filterSongs() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    const selectedLang = langSelect.value;
+    let visibleCount = 0;
+    
+    // First, hide all text snippets completely
+    document.querySelectorAll('.song-item .relative').forEach(snippet => {
+      snippet.classList.add('hidden');
+    });
+    
+    // Reset match badges - hide all of them first and reset classes
+    document.querySelectorAll('.match-badge').forEach(badge => {
+      badge.classList.add('hidden');
+      badge.className = 'match-badge hidden absolute top-0 right-0 z-20 text-xs font-medium px-1.5 py-0.5 rounded-md bg-opacity-90 shadow-sm mt-3 mr-3';
+    });
+    
+    // Perform initial search with the full search term
+    songItems.forEach(item => {
+      let titleField, textField;
       
-      // Handle search results
-      if (searchTerm !== '') {
-        if (idHit || titleHit || textHit) {
-          // Show and style the match badge appropriately based on match type
-          matchBadge.classList.remove('hidden');
-          
-          // If ID hit, show as an ID match (purple badge)
-          if (idHit) {
-            matchBadge.style.backgroundColor = '#f3e8ff'; // purple-100
-            matchBadge.style.color = '#6b21a8';          // purple-800
-            matchBadge.textContent = 'ID';
+      // Select the appropriate fields based on language
+      if (selectedLang === 'ta') {
+        titleField = 'title';
+        textField = 'text';
+      } else if (selectedLang === 'en') {
+        titleField = 'titleEn';
+        textField = 'textEn';
+      } else if (selectedLang === 'de') {
+        titleField = 'titleDe';
+        textField = 'textDe';
+      }
+      
+      // Get the appropriate data for the selected language
+      // Fall back to Tamil if translation is missing
+      const title = item.dataset[titleField] ? 
+        item.dataset[titleField].toLowerCase() : 
+        item.dataset.title.toLowerCase();
+        
+      const text = item.dataset[textField] ? 
+        item.dataset[textField].toLowerCase() : 
+        item.dataset.text.toLowerCase();
+      
+      // Get song ID and compare as a string
+      const songId = item.dataset.id;
+      
+      const originalTitle = item.querySelector('.original-title');
+      const matchBadge = item.querySelector('.match-badge');
+      const matchContext = item.querySelector('.match-context');
+      const matchTextEl = matchContext ? matchContext.querySelector('p') : null;
+      
+      // Separate check for each type of match
+      const idHit = searchTerm !== '' && songId.toLowerCase().includes(searchTerm);
+      const titleHit = searchTerm !== '' && title.includes(searchTerm);
+      const textHit = searchTerm !== '' && text.includes(searchTerm);
+  
+      // Mark as visible if any hit is found or if no search term
+      if (idHit || titleHit || textHit || searchTerm === '') {
+        item.classList.remove('hidden');
+        visibleCount++;
+        
+        // Handle search results
+        if (searchTerm !== '') {
+          if (idHit || titleHit || textHit) {
+            // Show and style the match badge appropriately based on match type
+            matchBadge.classList.remove('hidden');
+            
+            // If ID hit, show as an ID match (purple badge)
+            if (idHit) {
+              matchBadge.style.backgroundColor = '#f3e8ff'; // purple-100
+              matchBadge.style.color = '#6b21a8';          // purple-800
+              matchBadge.textContent = 'ID';
+            }
+            // If title hit (but not ID hit), show as a title match (green badge)
+            else if (titleHit) {
+              matchBadge.style.backgroundColor = '#dcfce7'; // green-100
+              matchBadge.style.color = '#166534';          // green-800
+              matchBadge.textContent = 'Title';
+            } 
+            // If only text hit, show as a text match (blue badge)
+            else {
+              matchBadge.style.backgroundColor = '#dbeafe'; // blue-100
+              matchBadge.style.color = '#1e40af';          // blue-800
+              matchBadge.textContent = 'Text';
+            }
+          } else {
+            // No matches - ensure badge is hidden
+            matchBadge.classList.add('hidden');
           }
-          // If title hit (but not ID hit), show as a title match (green badge)
-          else if (titleHit) {
-            matchBadge.style.backgroundColor = '#dcfce7'; // green-100
-            matchBadge.style.color = '#166534';          // green-800
-            matchBadge.textContent = 'Title';
+          
+          // Show match context for text hits
+          if (textHit && !idHit && !titleHit && matchTextEl) {
+            const rawText = item.dataset[textField] || item.dataset.text || '';
+            const context = findMatchContext(rawText, searchTerm);
+            matchTextEl.innerHTML = highlightMatches(context, searchTerm);
+            matchContext.classList.remove('hidden');
+          } else if (matchContext) {
+            matchContext.classList.add('hidden');
+          }
+          
+          // Highlight title if there's a title match
+          if (titleHit) {
+            const rawTitle = item.dataset[titleField] || item.dataset.title || '';
+            originalTitle.innerHTML = highlightMatches(rawTitle, searchTerm);
           } 
-          // If only text hit, show as a text match (blue badge)
+          // For ID matches, don't modify the title display - just use the original title
           else {
-            matchBadge.style.backgroundColor = '#dbeafe'; // blue-100
-            matchBadge.style.color = '#1e40af';          // blue-800
-            matchBadge.textContent = 'Text';
+            // Use plain text for title when no match
+            originalTitle.textContent = item.dataset[titleField] || item.dataset.title || '';
           }
         } else {
-          // No matches - ensure badge is hidden
+          // When no search term, make sure badges and contexts are hidden
           matchBadge.classList.add('hidden');
-        }
-        
-        // Show match context for text hits
-        if (textHit && !idHit && !titleHit && matchTextEl) {
-          const rawText = item.dataset[textField] || item.dataset.text || '';
-          const context = findMatchContext(rawText, searchTerm);
-          matchTextEl.innerHTML = highlightMatches(context, searchTerm);
-          matchContext.classList.remove('hidden');
-        } else if (matchContext) {
-          matchContext.classList.add('hidden');
-        }
-        
-        // Highlight title if there's a title match
-        if (titleHit) {
-          const rawTitle = item.dataset[titleField] || item.dataset.title || '';
-          originalTitle.innerHTML = highlightMatches(rawTitle, searchTerm);
-        } 
-        // For ID matches, don't modify the title display - just use the original title
-        else {
-          // Use plain text for title when no match
+          if (matchContext) matchContext.classList.add('hidden');
+          
+          // Restore original title as plain text
           originalTitle.textContent = item.dataset[titleField] || item.dataset.title || '';
         }
       } else {
-        // When no search term, make sure badges and contexts are hidden
-        matchBadge.classList.add('hidden');
-        if (matchContext) matchContext.classList.add('hidden');
-        
-        // Restore original title as plain text
-        originalTitle.textContent = item.dataset[titleField] || item.dataset.title || '';
+        item.classList.add('hidden');
       }
-    } else {
-      item.classList.add('hidden');
-    }
-  });
-  
-  // If no songs are visible and we have a search term with multiple words, try searching for songs that contain ALL individual words
-  if (visibleCount === 0 && searchTerm !== '') {
-    // Split the search term into individual words
-    const searchWords = searchTerm.split(/\s+/).filter(word => word.length > 1);
+    });
     
-    // Only proceed if we have multiple words to search
-    if (searchWords.length > 0) {
-      // Create a status message for the no results panel
-      const statusMessageEl = document.createElement('div');
-      statusMessageEl.className = 'text-gray-600 dark:text-gray-400 text-sm mt-2';
-      statusMessageEl.innerHTML = 'No exact phrase matches found. Showing results containing all words:';
+    // If no songs are visible and we have a search term with multiple words, try searching for songs that contain ALL individual words
+    if (visibleCount === 0 && searchTerm !== '') {
+      // Split the search term into individual words
+      const searchWords = searchTerm.split(/\s+/).filter(word => word.length > 1);
       
-      // Add a list of the words we're searching for
-      const wordsList = document.createElement('div');
-      wordsList.className = 'flex flex-wrap gap-2 mt-2';
-      searchWords.forEach(word => {
-        const wordBadge = document.createElement('span');
-        wordBadge.className = 'px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-md text-xs font-medium';
-        wordBadge.textContent = word;
-        wordsList.appendChild(wordBadge);
-      });
-      
-      // Check individual words
-      songItems.forEach(item => {
-        let titleField, textField;
+      // Only proceed if we have multiple words to search
+      if (searchWords.length > 0) {
+        // Create a status message for the no results panel
+        const statusMessageEl = document.createElement('div');
+        statusMessageEl.className = 'text-gray-600 dark:text-gray-400 text-sm mt-2';
+        statusMessageEl.innerHTML = 'No exact phrase matches found. Showing results containing all words:';
         
-        // Select the appropriate fields based on language
-        if (selectedLang === 'ta') {
-          titleField = 'title';
-          textField = 'text';
-        } else if (selectedLang === 'en') {
-          titleField = 'titleEn';
-          textField = 'textEn';
-        } else if (selectedLang === 'de') {
-          titleField = 'titleDe';
-          textField = 'textDe';
-        }
+        // Add a list of the words we're searching for
+        const wordsList = document.createElement('div');
+        wordsList.className = 'flex flex-wrap gap-2 mt-2';
+        searchWords.forEach(word => {
+          const wordBadge = document.createElement('span');
+          wordBadge.className = 'px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-md text-xs font-medium';
+          wordBadge.textContent = word;
+          wordsList.appendChild(wordBadge);
+        });
         
-        // Get text content
-        const title = item.dataset[titleField] ? 
-          item.dataset[titleField].toLowerCase() : 
-          item.dataset.title.toLowerCase();
+        // Check individual words
+        songItems.forEach(item => {
+          let titleField, textField;
           
-        const text = item.dataset[textField] ? 
-          item.dataset[textField].toLowerCase() : 
-          item.dataset.text.toLowerCase();
-        
-        const songId = item.dataset.id;
-        
-        const originalTitle = item.querySelector('.original-title');
-        const matchBadge = item.querySelector('.match-badge');
-        const matchContext = item.querySelector('.match-context');
-        const matchTextEl = matchContext ? matchContext.querySelector('p') : null;
-        
-        // Check if ALL individual words match (must be in the text)
-        const allWordsMatch = searchWords.every(word => text.includes(word));
-        
-        if (allWordsMatch) {
-          // Mark as visible
-          item.classList.remove('hidden');
-          visibleCount++;
+          // Select the appropriate fields based on language
+          if (selectedLang === 'ta') {
+            titleField = 'title';
+            textField = 'text';
+          } else if (selectedLang === 'en') {
+            titleField = 'titleEn';
+            textField = 'textEn';
+          } else if (selectedLang === 'de') {
+            titleField = 'titleDe';
+            textField = 'textDe';
+          }
           
-          // Show match badge
-          matchBadge.classList.remove('hidden');
-          matchBadge.style.backgroundColor = '#dbeafe'; // blue-100
-          matchBadge.style.color = '#1e40af';          // blue-800
-          matchBadge.textContent = `All ${searchWords.length} words`;
+          // Get text content
+          const title = item.dataset[titleField] ? 
+            item.dataset[titleField].toLowerCase() : 
+            item.dataset.title.toLowerCase();
+            
+          const text = item.dataset[textField] ? 
+            item.dataset[textField].toLowerCase() : 
+            item.dataset.text.toLowerCase();
           
-          // Find and highlight the first matching word in the text
-          if (matchTextEl) {
-            let context = '';
-            for (const word of matchingWords) {
-              if (text.includes(word)) {
-                const rawText = item.dataset[textField] || item.dataset.text || '';
-                context = findMatchContext(rawText, word);
-                if (context) {
-                  // Highlight all matching words in the context
-                  let highlightedContext = context;
-                  for (const matchWord of matchingWords) {
-                    highlightedContext = highlightMatches(highlightedContext, matchWord);
+          const songId = item.dataset.id;
+          
+          const originalTitle = item.querySelector('.original-title');
+          const matchBadge = item.querySelector('.match-badge');
+          const matchContext = item.querySelector('.match-context');
+          const matchTextEl = matchContext ? matchContext.querySelector('p') : null;
+          
+          // Check if ALL individual words match (must be in the text)
+          const allWordsMatch = searchWords.every(word => text.includes(word));
+          
+          if (allWordsMatch) {
+            // Mark as visible
+            item.classList.remove('hidden');
+            visibleCount++;
+            
+            // Show match badge
+            matchBadge.classList.remove('hidden');
+            matchBadge.style.backgroundColor = '#dbeafe'; // blue-100
+            matchBadge.style.color = '#1e40af';          // blue-800
+            matchBadge.textContent = `All ${searchWords.length} words`;
+            
+            // Find and highlight the first matching word in the text
+            if (matchTextEl) {
+              let context = '';
+              // FIXED: Use searchWords instead of matchingWords
+              for (const word of searchWords) {
+                if (text.includes(word)) {
+                  const rawText = item.dataset[textField] || item.dataset.text || '';
+                  context = findMatchContext(rawText, word);
+                  if (context) {
+                    // Highlight all matching words in the context
+                    let highlightedContext = context;
+                    // FIXED: Use searchWords instead of matchingWords
+                    for (const matchWord of searchWords) {
+                      highlightedContext = highlightMatches(highlightedContext, matchWord);
+                    }
+                    matchTextEl.innerHTML = highlightedContext;
+                    matchContext.classList.remove('hidden');
+                    break;
                   }
-                  matchTextEl.innerHTML = highlightedContext;
-                  matchContext.classList.remove('hidden');
-                  break;
                 }
               }
-            }
-            
-            // If no context found in text, try title
-            if (!context && title) {
-              for (const word of matchingWords) {
-                if (title.includes(word)) {
-                  const rawTitle = item.dataset[titleField] || item.dataset.title || '';
-                  // Highlight all matching words in the title
-                  let highlightedTitle = rawTitle;
-                  for (const matchWord of matchingWords) {
-                    highlightedTitle = highlightMatches(highlightedTitle, matchWord);
+              
+              // If no context found in text, try title
+              if (!context && title) {
+                // FIXED: Use searchWords instead of matchingWords
+                for (const word of searchWords) {
+                  if (title.includes(word)) {
+                    const rawTitle = item.dataset[titleField] || item.dataset.title || '';
+                    // Highlight all matching words in the title
+                    let highlightedTitle = rawTitle;
+                    // FIXED: Use searchWords instead of matchingWords
+                    for (const matchWord of searchWords) {
+                      highlightedTitle = highlightMatches(highlightedTitle, matchWord);
+                    }
+                    originalTitle.innerHTML = highlightedTitle;
+                    break;
                   }
-                  originalTitle.innerHTML = highlightedTitle;
-                  break;
                 }
               }
             }
           }
-        }
-      });
-      
-      // If we now have results, modify the no results message
-      if (visibleCount > 0) {
-        // Clear existing no results message content
-        while (noResultsMessage.firstChild) {
-          noResultsMessage.removeChild(noResultsMessage.firstChild);
-        }
-        
-        // Create new elements for the modified message
-        const icon = document.createElement('svg');
-        icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto text-yellow-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>';
-        
-        const title = document.createElement('h3');
-        title.className = 'text-base font-medium text-gray-700 dark:text-gray-300 mb-1';
-        title.textContent = 'No exact phrase matches found';
-        
-        const subtitle = document.createElement('p');
-        subtitle.className = 'text-gray-500 dark:text-gray-400 text-sm mb-3';
-        subtitle.textContent = `Showing ${visibleCount} results containing all search words`;
-        
-        // Add button for clear search
-        const clearButton = document.createElement('button');
-        clearButton.id = 'clearPartialSearchButton';
-        clearButton.className = 'inline-flex items-center px-4 py-2 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-800/50 border border-indigo-200 dark:border-indigo-700 rounded-lg text-indigo-700 dark:text-indigo-300 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-600';
-        clearButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>Clear Search';
-        
-        // Add elements to the no results message
-        noResultsMessage.appendChild(icon);
-        noResultsMessage.appendChild(title);
-        noResultsMessage.appendChild(subtitle);
-        noResultsMessage.appendChild(document.createElement('div')).appendChild(wordsList);
-        noResultsMessage.appendChild(document.createElement('div')).appendChild(clearButton);
-        
-        // Add event listener to the new clear button
-        clearButton.addEventListener('click', function() {
-          searchInput.value = '';
-          clearButton.classList.add('hidden');
-          filterSongs();
         });
         
-        // Show the modified message
-        noResultsMessage.classList.remove('hidden');
+        // If we now have results, modify the no results message
+        if (visibleCount > 0) {
+          // Clear existing no results message content
+          while (noResultsMessage.firstChild) {
+            noResultsMessage.removeChild(noResultsMessage.firstChild);
+          }
+          
+          // Create new elements for the modified message
+          const icon = document.createElement('svg');
+          icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto text-yellow-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>';
+          
+          const title = document.createElement('h3');
+          title.className = 'text-base font-medium text-gray-700 dark:text-gray-300 mb-1';
+          title.textContent = 'No exact phrase matches found';
+          
+          const subtitle = document.createElement('p');
+          subtitle.className = 'text-gray-500 dark:text-gray-400 text-sm mb-3';
+          subtitle.textContent = `Showing ${visibleCount} results containing all search words`;
+          
+          // Add button for clear search
+          const clearButton = document.createElement('button');
+          clearButton.id = 'clearPartialSearchButton';
+          clearButton.className = 'inline-flex items-center px-4 py-2 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-800/50 border border-indigo-200 dark:border-indigo-700 rounded-lg text-indigo-700 dark:text-indigo-300 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-600';
+          clearButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>Clear Search';
+          
+          // Add elements to the no results message
+          noResultsMessage.appendChild(icon);
+          noResultsMessage.appendChild(title);
+          noResultsMessage.appendChild(subtitle);
+          noResultsMessage.appendChild(document.createElement('div')).appendChild(wordsList);
+          noResultsMessage.appendChild(document.createElement('div')).appendChild(clearButton);
+          
+          // Add event listener to the new clear button
+          clearButton.addEventListener('click', function() {
+            searchInput.value = '';
+            clearButton.classList.add('hidden');
+            filterSongs();
+          });
+          
+          // Show the modified message
+          noResultsMessage.classList.remove('hidden');
+        }
       }
     }
+    
+    // Show/hide no results message
+    noResultsMessage.classList.toggle('hidden', visibleCount > 0);
+    
+    // Reorder songs to prioritize ID, title, and then text matches
+    if (searchTerm !== '' && visibleCount > 0) {
+      reorderSongsByMatchPriority();
+    }
   }
-  
-  // Show/hide no results message
-  noResultsMessage.classList.toggle('hidden', visibleCount > 0);
-  
-  // Reorder songs to prioritize ID, title, and then text matches
-  if (searchTerm !== '' && visibleCount > 0) {
-    reorderSongsByMatchPriority();
-  }
-}
 
 
 
