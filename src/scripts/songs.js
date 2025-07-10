@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const progressBar = document.getElementById('progress-bar');
     const volumeLevel = document.getElementById('volume-level');
     const playbackSpeed = document.getElementById('playback-speed');
+    const loopBtn = document.getElementById('loop-btn');
     const playIcon = document.querySelector('.play-icon');
     const pauseIcon = document.querySelector('.pause-icon');
     const loadingIcon = document.querySelector('.loading-icon');
@@ -519,6 +520,27 @@ document.addEventListener('DOMContentLoaded', function() {
           console.error('Error changing playback speed:', err);
         }
       });
+    }
+
+    // Loop toggle
+    function updateLoopButton() {
+      if (!loopBtn) return;
+      if (audioElement.loop) {
+        loopBtn.classList.remove('text-gray-600', 'dark:text-gray-300');
+        loopBtn.classList.add('text-indigo-600', 'dark:text-indigo-400');
+      } else {
+        loopBtn.classList.add('text-gray-600', 'dark:text-gray-300');
+        loopBtn.classList.remove('text-indigo-600', 'dark:text-indigo-400');
+      }
+    }
+
+    if (loopBtn) {
+      loopBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        audioElement.loop = !audioElement.loop;
+        updateLoopButton();
+      });
+      updateLoopButton();
     }
     
     // AUDIO ELEMENT EVENTS
